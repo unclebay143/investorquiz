@@ -61,35 +61,68 @@ export default function QuestionInterface({
         </div>
 
         <div className='space-y-3'>
-          {shuffled &&
-            Object.entries(shuffled.shuffledOptions).map(([key, value]) => (
-              <button
-                key={key}
-                onClick={() => onAnswerSelect(key)}
-                disabled={exam.reviewMode === "immediate" ? showResult : false}
-                className={`w-full text-left p-4 rounded-xl border transition-all duration-200 hover:bg-gray-50 disabled:hover:bg-transparent ${
-                  selectedAnswer === shuffled.keyMapping[key]
-                    ? "border-blue-500 bg-blue-50 shadow-sm"
-                    : ""
-                } ${
-                  exam.reviewMode === "immediate" &&
-                  showResult &&
-                  key === shuffled.correctShuffledKey
-                    ? "border-green-500 bg-green-50 shadow-sm"
-                    : ""
-                } ${
-                  exam.reviewMode === "immediate" &&
-                  showResult &&
-                  selectedAnswer === shuffled.keyMapping[key] &&
-                  key !== shuffled.correctShuffledKey
-                    ? "border-red-500 bg-red-50 shadow-sm"
-                    : ""
-                }`}
-              >
-                <span className='font-medium mr-3'>{key}.</span>
-                {value}
-              </button>
-            ))}
+          {shuffled && Object.keys(shuffled.shuffledOptions).length > 0
+            ? Object.entries(shuffled.shuffledOptions).map(([key, value]) => (
+                <button
+                  key={key}
+                  onClick={() => onAnswerSelect(key)}
+                  disabled={
+                    exam.reviewMode === "immediate" ? showResult : false
+                  }
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-200 hover:bg-gray-50 disabled:hover:bg-transparent ${
+                    selectedAnswer === shuffled.keyMapping[key]
+                      ? "border-blue-500 bg-blue-50 shadow-sm"
+                      : ""
+                  } ${
+                    exam.reviewMode === "immediate" &&
+                    showResult &&
+                    key === shuffled.correctShuffledKey
+                      ? "border-green-500 bg-green-50 shadow-sm"
+                      : ""
+                  } ${
+                    exam.reviewMode === "immediate" &&
+                    showResult &&
+                    selectedAnswer === shuffled.keyMapping[key] &&
+                    key !== shuffled.correctShuffledKey
+                      ? "border-red-500 bg-red-50 shadow-sm"
+                      : ""
+                  }`}
+                >
+                  <span className='font-medium mr-3'>{key}.</span>
+                  {value}
+                </button>
+              ))
+            : // Fallback to original options if shuffled data is not available
+              Object.entries(question.options).map(([key, value]) => (
+                <button
+                  key={key}
+                  onClick={() => onAnswerSelect(key)}
+                  disabled={
+                    exam.reviewMode === "immediate" ? showResult : false
+                  }
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-200 hover:bg-gray-50 disabled:hover:bg-transparent ${
+                    selectedAnswer === key
+                      ? "border-blue-500 bg-blue-50 shadow-sm"
+                      : ""
+                  } ${
+                    exam.reviewMode === "immediate" &&
+                    showResult &&
+                    key === question.correctKey
+                      ? "border-green-500 bg-green-50 shadow-sm"
+                      : ""
+                  } ${
+                    exam.reviewMode === "immediate" &&
+                    showResult &&
+                    selectedAnswer === key &&
+                    key !== question.correctKey
+                      ? "border-red-500 bg-red-50 shadow-sm"
+                      : ""
+                  }`}
+                >
+                  <span className='font-medium mr-3'>{key}.</span>
+                  {value}
+                </button>
+              ))}
         </div>
 
         {exam.reviewMode === "immediate" ? (

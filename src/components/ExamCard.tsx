@@ -7,6 +7,8 @@ interface ExamCardProps {
   selectedExam: string | null;
   onStartExam: (examId: string) => void;
   onViewAuthor: (author: any) => void;
+  onViewResult?: (examId: string) => void;
+  isCompleted?: boolean;
 }
 
 export default function ExamCard({
@@ -14,6 +16,8 @@ export default function ExamCard({
   selectedExam,
   onStartExam,
   onViewAuthor,
+  onViewResult,
+  isCompleted = false,
 }: ExamCardProps) {
   return (
     <div
@@ -79,13 +83,22 @@ export default function ExamCard({
             {exam.totalPoints} points
           </span>
         </div>
-        <button
-          onClick={() => onStartExam(exam.id)}
-          className='px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-          disabled={!!selectedExam}
-        >
-          Start Exam
-        </button>
+        {isCompleted && onViewResult ? (
+          <button
+            onClick={() => onViewResult(exam.id)}
+            className='px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition-colors'
+          >
+            View Result
+          </button>
+        ) : (
+          <button
+            onClick={() => onStartExam(exam.id)}
+            className='px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+            disabled={!!selectedExam}
+          >
+            Start Exam
+          </button>
+        )}
       </div>
     </div>
   );
