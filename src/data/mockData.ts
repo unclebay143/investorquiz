@@ -128,7 +128,7 @@ export const MOCK_TOPICS: Topic[] = [
         retakeSettings: {
           enabled: true,
           maxAttempts: 2,
-          cooldownDays: 0.0001, // ~5 seconds for testing
+          coolDownDays: 0.0001, // ~5 seconds for testing
         },
         questions: [
           {
@@ -164,7 +164,7 @@ export const MOCK_TOPICS: Topic[] = [
         retakeSettings: {
           enabled: true,
           maxAttempts: 2,
-          cooldownDays: 0.0001, // ~5 seconds for testing
+          coolDownDays: 0.0001, // ~5 seconds for testing
         },
         questions: [
           {
@@ -200,7 +200,7 @@ export const MOCK_TOPICS: Topic[] = [
         retakeSettings: {
           enabled: true,
           maxAttempts: 2,
-          cooldownDays: 0.0001, // ~5 seconds for testing
+          coolDownDays: 0.0001, // ~5 seconds for testing
         },
         questions: [
           {

@@ -9,7 +9,7 @@ interface QuestionInterfaceProps {
   selectedAnswer: string | null;
   showResult: boolean;
   score: number;
-  timeSpent: number;
+  timeSpentInSeconds: number;
   shuffledQuestions: {
     [questionId: number]: {
       shuffledOptions: { [key: string]: string };
@@ -28,7 +28,7 @@ export default function QuestionInterface({
   selectedAnswer,
   showResult,
   score,
-  timeSpent,
+  timeSpentInSeconds,
   shuffledQuestions,
   onAnswerSelect,
   onSubmit,
@@ -46,8 +46,8 @@ export default function QuestionInterface({
         <div className='flex items-center gap-2 text-sm text-gray-600'>
           <Clock className='h-4 w-4' />
           <span className='font-mono'>
-            {Math.floor(timeSpent / 60)}:
-            {(timeSpent % 60).toString().padStart(2, "0")}
+            {Math.floor(timeSpentInSeconds / 60)}:
+            {(timeSpentInSeconds % 60).toString().padStart(2, "0")}
           </span>
         </div>
       </div>

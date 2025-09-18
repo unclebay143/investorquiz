@@ -42,7 +42,7 @@ export type Exam = {
   retakeSettings?: {
     enabled: boolean;
     maxAttempts: number;
-    cooldownDays: number;
+    coolDownDays: number;
   };
 };
 
@@ -68,7 +68,7 @@ export type UserScore = {
     topicId: string;
     examId: string;
     score: number;
-    timeSpent: number;
+    timeSpentInSeconds: number;
     completedAt: string;
   }[];
 };
@@ -99,7 +99,7 @@ export type ExamAttempt = {
   topicId: string;
   attemptNumber: number;
   score: number;
-  timeSpent: number;
+  timeSpentInSeconds: number;
   completedAt: string;
   answers: { [questionId: number]: string };
   grade: string;

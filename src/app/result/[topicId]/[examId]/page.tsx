@@ -17,7 +17,7 @@ export default function ResultPage() {
 
   const [examData, setExamData] = useState<{
     score: number;
-    timeSpent: number;
+    timeSpentInSeconds: number;
     postExamAnswers: { [questionId: number]: string };
     shuffledQuestions?: {
       [questionId: number]: {
@@ -109,7 +109,7 @@ export default function ResultPage() {
         <ResultsScreen
           exam={exam}
           score={examData.score}
-          timeSpent={examData.timeSpent}
+          timeSpentInSeconds={examData.timeSpentInSeconds}
           postExamAnswers={examData.postExamAnswers}
           shuffledQuestions={examData.shuffledQuestions || {}}
           topicId={topicId}

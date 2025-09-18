@@ -23,7 +23,7 @@ export default function ExamPage() {
   }>({});
   const [score, setScore] = useState(0);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [timeSpent, setTimeSpent] = useState(0);
+  const [timeSpentInSeconds, setTimeSpent] = useState(0);
   const [examStartTime, setExamStartTime] = useState<number | null>(null);
   const [shuffledQuestions, setShuffledQuestions] = useState<{
     [questionId: number]: {
@@ -59,7 +59,7 @@ export default function ExamPage() {
       setPostExamAnswers(data.postExamAnswers || {});
       // showSummary no longer needed - we navigate to result page
       setScore(data.score || 0);
-      setTimeSpent(data.timeSpent || 0);
+      setTimeSpent(data.timeSpentInSeconds || 0);
       setExamStartTime(data.examStartTime || Date.now());
       setShuffledQuestions(data.shuffledQuestions || {});
     } else if (exam) {
@@ -93,7 +93,7 @@ export default function ExamPage() {
         postExamAnswers,
         // showSummary removed
         score,
-        timeSpent,
+        timeSpentInSeconds,
         examStartTime,
         shuffledQuestions,
       };
@@ -106,7 +106,7 @@ export default function ExamPage() {
     postExamAnswers,
     // showSummary removed
     score,
-    timeSpent,
+    timeSpentInSeconds,
     examStartTime,
     shuffledQuestions,
     topicId,
@@ -264,7 +264,7 @@ export default function ExamPage() {
       const timeDiff = Math.abs(now.getTime() - attemptTime.getTime());
       return (
         attempt.score === score &&
-        attempt.timeSpent === timeSpent &&
+        attempt.timeSpentInSeconds === timeSpentInSeconds &&
         timeDiff < 120000
       ); // 2 minutes
     });
@@ -273,14 +273,14 @@ export default function ExamPage() {
       console.log(
         "Saving new attempt - score:",
         score,
-        "timeSpent:",
-        timeSpent
+        "timeSpentInSeconds:",
+        timeSpentInSeconds
       );
       const updatedAttempts = saveExamAttempt(
         exam,
         topicId,
         score,
-        timeSpent,
+        timeSpentInSeconds,
         answersOverride || postExamAnswers,
         currentAttempts
       );
@@ -294,7 +294,7 @@ export default function ExamPage() {
     const resultKey = `result-${topicId}-${examId}`;
     const resultData = {
       score,
-      timeSpent,
+      timeSpentInSeconds,
       postExamAnswers: answersOverride || postExamAnswers,
       shuffledQuestions,
     };
@@ -323,7 +323,7 @@ export default function ExamPage() {
     const resultKey = `result-${topicId}-${examId}`;
     const resultData = {
       score,
-      timeSpent,
+      timeSpentInSeconds,
       postExamAnswers,
       shuffledQuestions,
     };
@@ -378,7 +378,7 @@ export default function ExamPage() {
           selectedAnswer={selectedAnswer}
           showResult={showResult}
           score={score}
-          timeSpent={timeSpent}
+          timeSpentInSeconds={timeSpentInSeconds}
           shuffledQuestions={shuffledQuestions}
           onAnswerSelect={handleAnswerSelect}
           onSubmit={handleSubmit}

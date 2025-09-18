@@ -15,7 +15,7 @@ import ResultsHeader from "./ResultsHeader";
 interface ResultsScreenProps {
   exam: Exam;
   score: number;
-  timeSpent: number;
+  timeSpentInSeconds: number;
   postExamAnswers: { [questionId: number]: string };
   shuffledQuestions?: {
     [questionId: number]: {
@@ -34,7 +34,7 @@ interface ResultsScreenProps {
 export default function ResultsScreen({
   exam,
   score,
-  timeSpent,
+  timeSpentInSeconds,
   postExamAnswers,
   shuffledQuestions = {},
   topicId,
@@ -202,7 +202,7 @@ export default function ResultsScreen({
       attemptNumber: attempt.attemptNumber,
       score: attempt.score,
       isBestScore: attempt.isBestScore,
-      timeSpent: attempt.timeSpent,
+      timeSpentInSeconds: attempt.timeSpentInSeconds,
     });
   });
 
@@ -349,8 +349,8 @@ export default function ResultsScreen({
                 <Clock className='h-6 w-6 text-white' />
               </div>
               <div className='text-2xl sm:text-3xl font-bold text-purple-600 mb-1 font-mono'>
-                {Math.floor(selectedAttemptData.timeSpent / 60)}:
-                {(selectedAttemptData.timeSpent % 60)
+                {Math.floor(selectedAttemptData.timeSpentInSeconds / 60)}:
+                {(selectedAttemptData.timeSpentInSeconds % 60)
                   .toString()
                   .padStart(2, "0")}
               </div>

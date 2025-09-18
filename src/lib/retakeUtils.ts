@@ -39,7 +39,7 @@ export const getRetakeStatus = (
   const retakeSettings = exam.retakeSettings || {
     enabled: true,
     maxAttempts: 2,
-    cooldownDays: 0.0001, // ~5 seconds for testing (0.0001 days = ~8.6 seconds)
+    coolDownDays: 0.0001, // ~5 seconds for testing (0.0001 days = ~8.6 seconds)
   };
 
   // If retake is disabled
@@ -76,14 +76,14 @@ export const getRetakeStatus = (
   const lastAttemptDate = new Date(lastAttempt.completedAt);
   const cooldownEndDate = new Date(
     lastAttemptDate.getTime() +
-      retakeSettings.cooldownDays * 24 * 60 * 60 * 1000
+      retakeSettings.coolDownDays * 24 * 60 * 60 * 1000
   );
   const now = new Date();
 
   if (now < cooldownEndDate) {
     return {
       canRetake: false,
-      reason: `Wait ${retakeSettings.cooldownDays} days between attempts`,
+      reason: `Wait ${retakeSettings.coolDownDays} days between attempts`,
       nextRetakeDate: cooldownEndDate.toISOString(),
       attemptsRemaining: retakeSettings.maxAttempts - examAttempts.length - 1, // -1 for current attempt
       currentAttempt: examAttempts.length + 1, // +1 for current attempt
@@ -102,7 +102,7 @@ export const saveExamAttempt = (
   exam: Exam,
   topicId: string,
   score: number,
-  timeSpent: number,
+  timeSpentInSeconds: number,
   answers: { [questionId: number]: string },
   attempts: ExamAttempts
 ): ExamAttempts => {
@@ -141,7 +141,7 @@ export const saveExamAttempt = (
     topicId,
     attemptNumber,
     score,
-    timeSpent,
+    timeSpentInSeconds,
     completedAt: new Date().toISOString(),
     answers,
     grade: gradeInfo.grade,
