@@ -1,12 +1,11 @@
 "use client";
 
 import AuthorModal from "@/components/AuthorModal";
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import QuestionInterface from "@/components/QuestionInterface";
-import ResultsScreen from "@/components/ResultsScreen";
-import Sidebar from "@/components/Sidebar";
 import { MOCK_TOPICS } from "@/data/mockData";
-import { Author, Question } from "@/types";
+import { saveExamAttempt } from "@/lib/retakeUtils";
+import { Author, ExamAttempts, Question } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,13 +21,10 @@ export default function ExamPage() {
   const [postExamAnswers, setPostExamAnswers] = useState<{
     [questionId: number]: string;
   }>({});
-  const [showSummary, setShowSummary] = useState(false);
   const [score, setScore] = useState(0);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [examStartTime, setExamStartTime] = useState<number | null>(null);
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState<{
     [questionId: number]: {
       shuffledOptions: { [key: string]: string };
@@ -36,9 +32,19 @@ export default function ExamPage() {
       correctShuffledKey: string;
     };
   }>({});
+  const [attempts, setAttempts] = useState<ExamAttempts>({});
+  const [examCompleted, setExamCompleted] = useState(false);
 
   const topic = MOCK_TOPICS.find((t) => t.id === topicId);
   const exam = topic?.exams.find((e) => e.id === examId);
+
+  // Load attempts from localStorage
+  useEffect(() => {
+    const savedAttempts = localStorage.getItem("exam-attempts");
+    if (savedAttempts) {
+      setAttempts(JSON.parse(savedAttempts));
+    }
+  }, []);
 
   // Load session data from localStorage
   useEffect(() => {
@@ -51,10 +57,10 @@ export default function ExamPage() {
       setSelectedAnswer(data.selectedAnswer || null);
       setShowResult(data.showResult || false);
       setPostExamAnswers(data.postExamAnswers || {});
-      setShowSummary(data.showSummary || false);
+      // showSummary no longer needed - we navigate to result page
       setScore(data.score || 0);
       setTimeSpent(data.timeSpent || 0);
-      setExamStartTime(data.examStartTime || null);
+      setExamStartTime(data.examStartTime || Date.now());
       setShuffledQuestions(data.shuffledQuestions || {});
     } else if (exam) {
       // Start new exam
@@ -85,7 +91,7 @@ export default function ExamPage() {
         selectedAnswer,
         showResult,
         postExamAnswers,
-        showSummary,
+        // showSummary removed
         score,
         timeSpent,
         examStartTime,
@@ -98,7 +104,7 @@ export default function ExamPage() {
     selectedAnswer,
     showResult,
     postExamAnswers,
-    showSummary,
+    // showSummary removed
     score,
     timeSpent,
     examStartTime,
@@ -141,15 +147,16 @@ export default function ExamPage() {
   // Timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (examStartTime && exam && !showSummary) {
+    if (examStartTime && exam) {
       interval = setInterval(() => {
-        setTimeSpent(Math.floor((Date.now() - examStartTime) / 1000));
+        const currentTime = Math.floor((Date.now() - examStartTime) / 1000);
+        setTimeSpent(currentTime);
       }, 1000);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [examStartTime, exam, showSummary]);
+  }, [examStartTime, exam]);
 
   const handleAnswerSelect = (key: string) => {
     if (showResult || !exam) return;
@@ -167,7 +174,13 @@ export default function ExamPage() {
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswer || !exam) return;
+    if (!selectedAnswer || !exam || examCompleted) return;
+    console.log(
+      "handleSubmit called - currentQuestion:",
+      currentQuestion,
+      "examCompleted:",
+      examCompleted
+    );
     const pointsPerQuestion = exam.totalPoints / exam.questions.length;
 
     if (exam.reviewMode === "immediate") {
@@ -188,22 +201,111 @@ export default function ExamPage() {
           if (finalAnswers[q.id] === q.correctKey) total += pointsPerQuestion;
         }
         setScore(total);
-        setShowSummary(true);
+        // Ensure the final answers are persisted in state before completing
+        setPostExamAnswers(finalAnswers);
+        console.log("handleSubmit - calling handleCompleteExam in setTimeout");
+        // Navigate to result page instead of showing inline
+        setTimeout(() => {
+          handleCompleteExam(finalAnswers);
+        }, 50);
       }
     }
   };
 
   const handleNext = () => {
-    if (!exam) return;
+    if (!exam || examCompleted) return;
+    console.log(
+      "handleNext called - currentQuestion:",
+      currentQuestion,
+      "examCompleted:",
+      examCompleted
+    );
     if (exam.reviewMode === "immediate") {
       if (currentQuestion < exam.questions.length - 1) {
         setCurrentQuestion((prev) => prev + 1);
         setSelectedAnswer(null);
         setShowResult(false);
       } else {
-        setShowSummary(true);
+        console.log("handleNext - calling handleCompleteExam");
+        // Navigate to result page instead of showing inline
+        handleCompleteExam(postExamAnswers);
       }
     }
+  };
+
+  const handleCompleteExam = (answersOverride?: {
+    [questionId: number]: string;
+  }) => {
+    if (!exam || examCompleted) return;
+
+    console.log("handleCompleteExam called - saving attempt");
+    setExamCompleted(true);
+
+    // Mark exam as completed
+    const completedExams = JSON.parse(
+      localStorage.getItem("completedExams") || "[]"
+    );
+    const examKey = `${topicId}-${examId}`;
+    if (!completedExams.includes(examKey)) {
+      completedExams.push(examKey);
+      localStorage.setItem("completedExams", JSON.stringify(completedExams));
+    }
+
+    // Save attempt to history - get fresh attempts from localStorage
+    const currentAttempts = JSON.parse(
+      localStorage.getItem("exam-attempts") || "{}"
+    );
+    const existingAttempts = currentAttempts[examKey] || [];
+
+    // Check if we already have an attempt with the same score and time (within 2 minutes)
+    const now = new Date();
+    const alreadyExists = existingAttempts.some((attempt: any) => {
+      const attemptTime = new Date(attempt.completedAt);
+      const timeDiff = Math.abs(now.getTime() - attemptTime.getTime());
+      return (
+        attempt.score === score &&
+        attempt.timeSpent === timeSpent &&
+        timeDiff < 120000
+      ); // 2 minutes
+    });
+
+    if (!alreadyExists) {
+      console.log(
+        "Saving new attempt - score:",
+        score,
+        "timeSpent:",
+        timeSpent
+      );
+      const updatedAttempts = saveExamAttempt(
+        exam,
+        topicId,
+        score,
+        timeSpent,
+        answersOverride || postExamAnswers,
+        currentAttempts
+      );
+      setAttempts(updatedAttempts);
+      localStorage.setItem("exam-attempts", JSON.stringify(updatedAttempts));
+    } else {
+      console.log("Attempt already exists - skipping save");
+    }
+
+    // Save result data
+    const resultKey = `result-${topicId}-${examId}`;
+    const resultData = {
+      score,
+      timeSpent,
+      postExamAnswers: answersOverride || postExamAnswers,
+      shuffledQuestions,
+    };
+    localStorage.setItem(resultKey, JSON.stringify(resultData));
+
+    // Clear session data
+    const sessionKey = `exam-${topicId}-${examId}`;
+    localStorage.removeItem(sessionKey);
+
+    // Navigate to result page
+    router.push(`/result/${topicId}/${examId}`);
   };
 
   const handleBackToExams = () => {
@@ -223,6 +325,7 @@ export default function ExamPage() {
       score,
       timeSpent,
       postExamAnswers,
+      shuffledQuestions,
     };
     localStorage.setItem(resultKey, JSON.stringify(resultData));
 
@@ -231,6 +334,14 @@ export default function ExamPage() {
     localStorage.removeItem(sessionKey);
 
     router.push(`/topic/${topicId}`);
+  };
+
+  const handleTopicSelect = (id: string) => {
+    if (id === "leaderboard") {
+      router.push("/leaderboard");
+    } else {
+      router.push(`/topic/${id}`);
+    }
   };
 
   if (!topic || !exam) {
@@ -254,64 +365,32 @@ export default function ExamPage() {
     );
   }
 
-  const filtered = MOCK_TOPICS.filter((t) =>
-    `${t.title} ${t.description}`
-      .toLowerCase()
-      .includes(query.trim().toLowerCase())
-  );
-
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <Header isOpen={open} onToggleMenu={() => setOpen((v) => !v)} />
-
-      <div className='flex h-[calc(100vh-73px)]'>
-        {/* Sidebar */}
-        <Sidebar
-          topics={filtered}
-          activeId={topicId}
-          query={query}
-          selectedExam={examId}
-          isOpen={open}
-          onTopicSelect={(id) => router.push(`/topic/${id}`)}
-          onQueryChange={setQuery}
-          onClose={() => setOpen(false)}
+    <>
+      <Layout
+        activeId={topicId}
+        selectedExam={examId}
+        onTopicSelect={handleTopicSelect}
+      >
+        <QuestionInterface
+          exam={exam}
+          currentQuestion={currentQuestion}
+          selectedAnswer={selectedAnswer}
+          showResult={showResult}
+          score={score}
+          timeSpent={timeSpent}
+          shuffledQuestions={shuffledQuestions}
+          onAnswerSelect={handleAnswerSelect}
+          onSubmit={handleSubmit}
+          onNext={handleNext}
         />
-
-        {/* Main Content */}
-        <main className='flex-1 overflow-y-auto bg-gray-50'>
-          <div className='p-4 sm:p-6 lg:p-8'>
-            {showSummary ? (
-              <ResultsScreen
-                exam={exam}
-                score={score}
-                timeSpent={timeSpent}
-                postExamAnswers={postExamAnswers}
-                onBackToExams={handleBackToExams}
-                onViewAuthor={setSelectedAuthor}
-              />
-            ) : (
-              <QuestionInterface
-                exam={exam}
-                currentQuestion={currentQuestion}
-                selectedAnswer={selectedAnswer}
-                showResult={showResult}
-                score={score}
-                timeSpent={timeSpent}
-                shuffledQuestions={shuffledQuestions}
-                onAnswerSelect={handleAnswerSelect}
-                onSubmit={handleSubmit}
-                onNext={handleNext}
-              />
-            )}
-          </div>
-        </main>
-      </div>
+      </Layout>
 
       {/* Author Profile Modal */}
       <AuthorModal
         author={selectedAuthor}
         onClose={() => setSelectedAuthor(null)}
       />
-    </div>
+    </>
   );
 }

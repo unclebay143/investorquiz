@@ -2,6 +2,7 @@
 
 import { Topic } from "@/types";
 import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   topics: Topic[];
@@ -24,6 +25,8 @@ export default function Sidebar({
   onQueryChange,
   onClose,
 }: SidebarProps) {
+  const pathname = usePathname();
+  const isResultPage = pathname.includes("/result/");
   return (
     <>
       {/* Mobile overlay */}
@@ -50,14 +53,39 @@ export default function Sidebar({
               onChange={(e) => onQueryChange(e.target.value)}
               placeholder='Search topics...'
               className='w-full h-10 rounded-lg border border-gray-300 pl-9 pr-3 bg-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50'
-              disabled={!!selectedExam}
+              disabled={!isResultPage && !!selectedExam}
             />
           </div>
         </div>
         <nav className='flex-1 overflow-y-auto p-4 space-y-1'>
+          {/* Leaderboard Link */}
+          {/* <button
+            onClick={() => {
+              onTopicSelect("leaderboard");
+              onClose();
+            }}
+            className={`w-full text-left rounded-lg px-3 py-3 text-sm transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
+              activeId === "leaderboard"
+                ? "bg-blue-50 text-blue-900 border border-blue-200 shadow-sm"
+                : "text-gray-700 hover:text-gray-900"
+            }`}
+          >
+            <div className='flex items-center space-x-3'>
+              <Trophy className='h-4 w-4' />
+              <div>
+                <div className='text-sm font-medium'>Leaderboard</div>
+                <div className='text-xs text-gray-500'>Top performers</div>
+              </div>
+            </div>
+          </button> */}
+
+          {/* Divider */}
+          {/* <div className='my-4 border-t border-gray-200'></div> */}
+
           {topics.map((topic) => {
             const isActive = topic.id === activeId;
-            const disableInteractions = !!selectedExam;
+            // Allow navigation on result pages, disable only when actively taking an exam
+            const disableInteractions = !isResultPage && !!selectedExam;
             const hasExams = topic.exams.length > 0;
             const isDisabled = disableInteractions || !hasExams;
 

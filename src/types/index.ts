@@ -39,6 +39,11 @@ export type Exam = {
   reviewMode: "immediate" | "post"; // immediate: feedback per question, post: feedback after exam
   isNew?: boolean;
   author?: Author;
+  retakeSettings?: {
+    enabled: boolean;
+    maxAttempts: number;
+    cooldownDays: number;
+  };
 };
 
 export type Topic = {
@@ -47,4 +52,68 @@ export type Topic = {
   description: string;
   exams: Exam[];
   isNew?: boolean;
+};
+
+export type UserScore = {
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  totalScore: number;
+  totalExams: number;
+  averageScore: number;
+  bestScore: number;
+  totalTimeSpent: number; // in seconds
+  lastActivity: string; // ISO date string
+  completedExams: {
+    topicId: string;
+    examId: string;
+    score: number;
+    timeSpent: number;
+    completedAt: string;
+  }[];
+};
+
+export type LeaderboardEntry = {
+  rank: number;
+  user: UserScore;
+  change?: number; // rank change from previous period (+1, -2, etc.)
+};
+
+export type LeaderboardFilter = {
+  timePeriod: "all" | "week" | "month" | "year";
+  topicId?: string; // filter by specific topic
+  sortBy: "score" | "exams" | "average" | "time";
+};
+
+export type CurrentUser = {
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  totalScore: number;
+  rank: number;
+  examsCompleted: number;
+};
+
+export type ExamAttempt = {
+  examId: string;
+  topicId: string;
+  attemptNumber: number;
+  score: number;
+  timeSpent: number;
+  completedAt: string;
+  answers: { [questionId: number]: string };
+  grade: string;
+  isBestScore: boolean; // Track if this is the user's best attempt
+};
+
+export type ExamAttempts = {
+  [examKey: string]: ExamAttempt[]; // examKey = `${topicId}-${examId}`
+};
+
+export type RetakeStatus = {
+  canRetake: boolean;
+  reason?: string;
+  nextRetakeDate?: string;
+  attemptsRemaining: number;
+  currentAttempt: number;
 };

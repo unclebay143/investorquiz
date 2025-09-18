@@ -125,6 +125,11 @@ export const MOCK_TOPICS: Topic[] = [
         totalPoints: 80,
         reviewMode: "post",
         author: MOCK_AUTHORS["sarah-chen"],
+        retakeSettings: {
+          enabled: true,
+          maxAttempts: 2,
+          cooldownDays: 0.0001, // ~5 seconds for testing
+        },
         questions: [
           {
             id: 1,
@@ -156,6 +161,11 @@ export const MOCK_TOPICS: Topic[] = [
         totalPoints: 60,
         reviewMode: "post",
         author: MOCK_AUTHORS["michael-rodriguez"],
+        retakeSettings: {
+          enabled: true,
+          maxAttempts: 2,
+          cooldownDays: 0.0001, // ~5 seconds for testing
+        },
         questions: [
           {
             id: 1,
@@ -187,6 +197,11 @@ export const MOCK_TOPICS: Topic[] = [
         totalPoints: 40,
         reviewMode: "post",
         author: MOCK_AUTHORS["jennifer-kim"],
+        retakeSettings: {
+          enabled: true,
+          maxAttempts: 2,
+          cooldownDays: 0.0001, // ~5 seconds for testing
+        },
         questions: [
           {
             id: 1,

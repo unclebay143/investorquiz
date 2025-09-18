@@ -1,11 +1,11 @@
 "use client";
 
 import AuthorModal from "@/components/AuthorModal";
-import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import ResultsScreen from "@/components/ResultsScreen";
-import Sidebar from "@/components/Sidebar";
 import { MOCK_TOPICS } from "@/data/mockData";
-import { Author } from "@/types";
+import { cleanupAttempts } from "@/lib/retakeUtils";
+import { Author, ExamAttempts } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,18 +19,26 @@ export default function ResultPage() {
     score: number;
     timeSpent: number;
     postExamAnswers: { [questionId: number]: string };
+    shuffledQuestions?: {
+      [questionId: number]: {
+        shuffledOptions: { [key: string]: string };
+        keyMapping: { [key: string]: string };
+        correctShuffledKey: string;
+      };
+    };
   } | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
+  const [attempts, setAttempts] = useState<ExamAttempts>({});
+  const [attemptSaved, setAttemptSaved] = useState(false);
 
   const topic = MOCK_TOPICS.find((t) => t.id === topicId);
   const exam = topic?.exams.find((e) => e.id === examId);
 
-  // Load result data from localStorage
+  // Load result data and attempts from localStorage
   useEffect(() => {
     const resultKey = `result-${topicId}-${examId}`;
     const resultData = localStorage.getItem(resultKey);
+    const savedAttempts = localStorage.getItem("exam-attempts");
 
     if (resultData) {
       setExamData(JSON.parse(resultData));
@@ -38,10 +46,36 @@ export default function ResultPage() {
       // If no result data, redirect to topic
       router.push(`/topic/${topicId}`);
     }
+
+    if (savedAttempts) {
+      const parsedAttempts = JSON.parse(savedAttempts);
+      // Clean up duplicate attempts and keep only the latest 5 per exam
+      const cleanedAttempts = cleanupAttempts(parsedAttempts, 5);
+      setAttempts(cleanedAttempts);
+      // Save the cleaned attempts back to localStorage
+      localStorage.setItem("exam-attempts", JSON.stringify(cleanedAttempts));
+    }
   }, [topicId, examId, router]);
+
+  // Note: Attempts are saved when the exam is completed, not when viewing results
 
   const handleBackToExams = () => {
     router.push(`/topic/${topicId}`);
+  };
+
+  const handleRetakeExam = () => {
+    // Clear current exam session and start fresh
+    const sessionKey = `exam-${topicId}-${examId}`;
+    localStorage.removeItem(sessionKey);
+    router.push(`/exam/${topicId}/${examId}`);
+  };
+
+  const handleTopicSelect = (id: string) => {
+    if (id === "leaderboard") {
+      router.push("/leaderboard");
+    } else {
+      router.push(`/topic/${id}`);
+    }
   };
 
   if (!topic || !exam || !examData) {
@@ -65,49 +99,31 @@ export default function ResultPage() {
     );
   }
 
-  const filtered = MOCK_TOPICS.filter((t) =>
-    `${t.title} ${t.description}`
-      .toLowerCase()
-      .includes(query.trim().toLowerCase())
-  );
-
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <Header isOpen={open} onToggleMenu={() => setOpen((v) => !v)} />
-
-      <div className='flex h-[calc(100vh-73px)]'>
-        {/* Sidebar */}
-        <Sidebar
-          topics={filtered}
-          activeId={topicId}
-          query={query}
-          selectedExam={null}
-          isOpen={open}
-          onTopicSelect={(id) => router.push(`/topic/${id}`)}
-          onQueryChange={setQuery}
-          onClose={() => setOpen(false)}
+    <>
+      <Layout
+        activeId={topicId}
+        selectedExam={null}
+        onTopicSelect={handleTopicSelect}
+      >
+        <ResultsScreen
+          exam={exam}
+          score={examData.score}
+          timeSpent={examData.timeSpent}
+          postExamAnswers={examData.postExamAnswers}
+          shuffledQuestions={examData.shuffledQuestions || {}}
+          topicId={topicId}
+          onBackToExams={handleBackToExams}
+          onViewAuthor={setSelectedAuthor}
+          onRetakeExam={handleRetakeExam}
         />
-
-        {/* Main Content */}
-        <main className='flex-1 overflow-y-auto bg-gray-50'>
-          <div className='p-4 sm:p-6 lg:p-8'>
-            <ResultsScreen
-              exam={exam}
-              score={examData.score}
-              timeSpent={examData.timeSpent}
-              postExamAnswers={examData.postExamAnswers}
-              onBackToExams={handleBackToExams}
-              onViewAuthor={setSelectedAuthor}
-            />
-          </div>
-        </main>
-      </div>
+      </Layout>
 
       {/* Author Profile Modal */}
       <AuthorModal
         author={selectedAuthor}
         onClose={() => setSelectedAuthor(null)}
       />
-    </div>
+    </>
   );
 }

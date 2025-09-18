@@ -2,8 +2,7 @@
 
 import AuthorModal from "@/components/AuthorModal";
 import ExamCard from "@/components/ExamCard";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import Layout from "@/components/Layout";
 import { MOCK_TOPICS } from "@/data/mockData";
 import { Author } from "@/types";
 import { useParams, useRouter } from "next/navigation";
@@ -14,10 +13,8 @@ export default function TopicPage() {
   const router = useRouter();
   const topicId = params.topicId as string;
 
-  const [query, setQuery] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [completedExams, setCompletedExams] = useState<Set<string>>(new Set());
-  const [open, setOpen] = useState(false);
 
   const topic = MOCK_TOPICS.find((t) => t.id === topicId);
 
@@ -29,11 +26,7 @@ export default function TopicPage() {
     }
   }, []);
 
-  const filtered = MOCK_TOPICS.filter((t) =>
-    `${t.title} ${t.description}`
-      .toLowerCase()
-      .includes(query.trim().toLowerCase())
-  );
+  // This is now handled by the Layout component
 
   if (!topic) {
     return (
@@ -64,72 +57,63 @@ export default function TopicPage() {
     router.push(`/result/${topicId}/${examId}`);
   };
 
+  const handleTopicSelect = (id: string) => {
+    if (id === "leaderboard") {
+      router.push("/leaderboard");
+    } else {
+      router.push(`/topic/${id}`);
+    }
+  };
+
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <Header isOpen={open} onToggleMenu={() => setOpen((v) => !v)} />
+    <>
+      <Layout
+        activeId={topicId}
+        selectedExam={null}
+        onTopicSelect={handleTopicSelect}
+      >
+        <div className='mb-8'>
+          <h1 className='text-3xl font-bold text-gray-900 mb-2'>
+            {topic.title}
+          </h1>
+          <p className='text-gray-600 text-lg'>{topic.description}</p>
+        </div>
 
-      <div className='flex h-[calc(100vh-73px)]'>
-        {/* Sidebar */}
-        <Sidebar
-          topics={filtered}
-          activeId={topicId}
-          query={query}
-          selectedExam={null}
-          isOpen={open}
-          onTopicSelect={(id) => router.push(`/topic/${id}`)}
-          onQueryChange={setQuery}
-          onClose={() => setOpen(false)}
-        />
-
-        {/* Main Content */}
-        <main className='flex-1 overflow-y-auto bg-gray-50'>
-          <div className='p-4 sm:p-6 lg:p-8'>
-            <div className='mb-8'>
-              <h1 className='text-3xl font-bold text-gray-900 mb-2'>
-                {topic.title}
-              </h1>
-              <p className='text-gray-600 text-lg'>{topic.description}</p>
+        <section className='grid gap-3'>
+          {topic.exams.length > 0 ? (
+            topic.exams.map((exam) => {
+              const isCompleted = completedExams.has(`${topicId}-${exam.id}`);
+              return (
+                <ExamCard
+                  key={exam.id}
+                  exam={exam}
+                  selectedExam={null}
+                  onStartExam={handleStartExam}
+                  onViewAuthor={setSelectedAuthor}
+                  onViewResult={isCompleted ? handleViewResult : undefined}
+                  isCompleted={isCompleted}
+                />
+              );
+            })
+          ) : (
+            <div className='text-center py-12'>
+              <div className='w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-xl flex items-center justify-center'>
+                <div className='w-8 h-8 bg-gray-300 rounded-lg'></div>
+              </div>
+              <h3 className='text-lg font-semibold text-gray-900 mb-2'>
+                No exams available
+              </h3>
+              <p className='text-gray-500'>Content will be added soon.</p>
             </div>
-
-            <section className='grid gap-3'>
-              {topic.exams.length > 0 ? (
-                topic.exams.map((exam) => {
-                  const isCompleted = completedExams.has(
-                    `${topicId}-${exam.id}`
-                  );
-                  return (
-                    <ExamCard
-                      key={exam.id}
-                      exam={exam}
-                      selectedExam={null}
-                      onStartExam={handleStartExam}
-                      onViewAuthor={setSelectedAuthor}
-                      onViewResult={isCompleted ? handleViewResult : undefined}
-                      isCompleted={isCompleted}
-                    />
-                  );
-                })
-              ) : (
-                <div className='text-center py-12'>
-                  <div className='w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-xl flex items-center justify-center'>
-                    <div className='w-8 h-8 bg-gray-300 rounded-lg'></div>
-                  </div>
-                  <h3 className='text-lg font-semibold text-gray-900 mb-2'>
-                    No exams available
-                  </h3>
-                  <p className='text-gray-500'>Content will be added soon.</p>
-                </div>
-              )}
-            </section>
-          </div>
-        </main>
-      </div>
+          )}
+        </section>
+      </Layout>
 
       {/* Author Profile Modal */}
       <AuthorModal
         author={selectedAuthor}
         onClose={() => setSelectedAuthor(null)}
       />
-    </div>
+    </>
   );
 }
