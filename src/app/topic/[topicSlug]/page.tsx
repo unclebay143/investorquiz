@@ -5,8 +5,10 @@ import ExamCard from "@/components/ExamCard";
 import Layout from "@/components/Layout";
 import { investmentTips } from "@/components/LoadingScreen";
 import QuotesModal from "@/components/QuotesModal";
+import { useExams } from "@/hooks/useExams";
+import { useTopics } from "@/hooks/useTopics";
 import { buttonStyles } from "@/lib/utils";
-import { Author, Exam, Topic } from "@/types";
+import { Author, Exam } from "@/types";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,128 +20,69 @@ export default function TopicPage() {
   const topicSlug = params.topicSlug as string;
 
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [topic, setTopic] = useState<Topic | null>(null);
-  const [exams, setExams] = useState<Exam[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showQuotesModal, setShowQuotesModal] = useState(false);
-  const [attemptStatuses, setAttemptStatuses] = useState<{
-    [examSlug: string]: {
-      status: "none" | "in-progress" | "completed";
-      attemptId?: string;
-      attemptNumber?: number;
-      canRetake?: boolean;
-      attemptsRemaining?: number;
-      nextRetakeDate?: string;
-    };
-  }>({});
 
-  // Fetch topic and exams from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  // Use TanStack Query for data
+  const { data: topics } = useTopics();
+  const { data: examsData, isLoading: loading, error } = useExams(topicSlug);
 
-        // Wait for session to load
-        if (status === "loading") {
-          return;
-        }
+  // Find current topic from topics data
+  const topic = topics?.find((t) => t.id === topicSlug);
 
-        if (!session?.user) {
-          console.log("No session, redirecting to home");
-          router.push("/");
-          return;
-        }
-
-        // Fetch topic info
-        const topicsResponse = await fetch("/api/topics");
-        if (topicsResponse.ok) {
-          const topicsData = await topicsResponse.json();
-          const topicData = topicsData.find((t: any) => t.slug === topicSlug);
-          if (topicData) {
-            setTopic({
-              id: topicData.slug,
-              title: topicData.title,
-              description: topicData.description || "",
-              exams: [],
-            });
-          } else {
-            // Topic not found, set loading to false to show "Topic Not Found"
-            setLoading(false);
-            return;
+  const exams: Exam[] =
+    examsData?.exams?.map((exam: any) => ({
+      id: exam.slug,
+      title: exam.title,
+      description: exam.description || "",
+      totalPoints: exam.totalPoints,
+      questions: exam.questions || [],
+      reviewMode: exam.reviewMode,
+      isNew: exam.isNew,
+      author: exam.author
+        ? {
+            id: exam.author._id || exam.author.slug,
+            name: exam.author.name,
+            title: exam.author.title || "",
+            bio: exam.author.bio || "",
+            profileImage: exam.author.profileImage,
+            socialLinks: exam.author.socialLinks,
+            books: exam.author.books,
+            quote: exam.author.quote,
           }
-        } else if (topicsResponse.status === 401) {
-          router.push("/");
-          return;
-        } else {
-          // API error, set loading to false
-          setLoading(false);
-          return;
-        }
+        : undefined,
+      retakeSettings: exam.retakeSettings,
+    })) || [];
 
-        // Fetch exams for this topic (now includes attempt statuses)
-        const examsResponse = await fetch(`/api/topics/${topicSlug}/exams`, {
-          // Use default caching - let the server control cache headers
-          // This allows for 30-second user-specific caching
-        });
-        if (examsResponse.ok) {
-          const data = await examsResponse.json();
-          const transformedExams: Exam[] = data.exams.map((exam: any) => ({
-            id: exam.slug,
-            title: exam.title,
-            description: exam.description || "",
-            totalPoints: exam.totalPoints,
-            questions: exam.questions || [], // Use actual questions from API
-            reviewMode: exam.reviewMode,
-            isNew: exam.isNew,
-            author: exam.author
-              ? {
-                  id: exam.author._id || exam.author.slug,
-                  name: exam.author.name,
-                  title: exam.author.title || "",
-                  bio: exam.author.bio || "",
-                  profileImage: exam.author.profileImage,
-                  socialLinks: exam.author.socialLinks,
-                  books: exam.author.books,
-                  quote: exam.author.quote,
-                }
-              : undefined,
-            retakeSettings: exam.retakeSettings,
-          }));
-          setExams(transformedExams);
+  const attemptStatuses = examsData?.attemptStatuses || {};
 
-          // Set attempt statuses from the API response
-          setAttemptStatuses(data.attemptStatuses || {});
+  // Handle authentication
+  useEffect(() => {
+    if (status === "loading") return;
 
-          // Successfully loaded everything, set loading to false
-          setLoading(false);
-        } else if (examsResponse.status === 401) {
-          router.push("/");
-          return;
-        } else {
-          // Exams API error, set loading to false
-          setLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.error("Failed to fetch topic data:", error);
-        setLoading(false);
-      }
-    };
-
-    if (topicSlug) {
-      fetchData();
+    if (!session?.user) {
+      console.log("No session, redirecting to home");
+      router.push("/");
+      return;
     }
-  }, [topicSlug, session, status, router]);
+  }, [session, status, router]);
 
-  if (!loading && !topic) {
+  // Handle API errors
+  useEffect(() => {
+    if (error) {
+      console.error("Failed to fetch exams:", error);
+    }
+  }, [error]);
+
+  // Handle error state
+  if (error) {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='text-center'>
           <h1 className='text-2xl font-bold text-gray-900 mb-2'>
-            Topic Not Found
+            Error Loading Topic
           </h1>
           <p className='text-gray-600 mb-4'>
-            The topic you're looking for doesn't exist.
+            There was an error loading the topic data.
           </p>
           <button
             onClick={() => router.push("/")}

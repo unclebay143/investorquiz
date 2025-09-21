@@ -3,8 +3,9 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { MOCK_CURRENT_USER } from "@/data/leaderboardData";
-import { CurrentUser, Topic } from "@/types";
-import { ReactNode, useEffect, useState } from "react";
+import { useTopics } from "@/hooks/useTopics";
+import { CurrentUser } from "@/types";
+import { ReactNode, useState } from "react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,50 +26,9 @@ export default function Layout({
 }: LayoutProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch topics from API (only once)
-  useEffect(() => {
-    // Check if topics are already cached in sessionStorage
-    const cachedTopics = sessionStorage.getItem("topics");
-    if (cachedTopics) {
-      try {
-        const parsedTopics = JSON.parse(cachedTopics);
-        setTopics(parsedTopics);
-        setLoading(false);
-        return;
-      } catch (error) {
-        console.error("Failed to parse cached topics:", error);
-      }
-    }
-
-    const fetchTopics = async () => {
-      try {
-        const response = await fetch("/api/topics");
-        if (response.ok) {
-          const topicsData = await response.json();
-          // Transform API data to match our Topic type
-          const transformedTopics: Topic[] = topicsData.map((topic: any) => ({
-            id: topic.slug,
-            title: topic.title,
-            description: topic.description || "",
-            exams: Array(topic.examCount || 0).fill(null), // Mock exams array for count
-            isNew: topic.isNew,
-          }));
-          setTopics(transformedTopics);
-          // Cache topics in sessionStorage
-          sessionStorage.setItem("topics", JSON.stringify(transformedTopics));
-        }
-      } catch (error) {
-        console.error("Failed to fetch topics:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTopics();
-  }, []);
+  // Use TanStack Query for topics
+  const { data: topics = [], isLoading: loading } = useTopics();
 
   const filtered = topics.filter((t) =>
     `${t.title} ${t.description}`

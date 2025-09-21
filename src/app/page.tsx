@@ -1,40 +1,19 @@
 "use client";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useTopics } from "@/hooks/useTopics";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const { data: topics, isLoading: loading } = useTopics();
 
   useEffect(() => {
-    const go = async () => {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
-      try {
-        const res = await fetch("/api/topics", {
-          cache: "no-store",
-          signal: controller.signal,
-        });
-        if (res.ok) {
-          const topics = await res.json();
-          if (Array.isArray(topics) && topics.length > 0) {
-            router.push(`/topic/${topics[0].slug}`);
-            return;
-          }
-        }
-        // No topics yet: stay here (could render a CTA instead)
-        setLoading(false);
-      } catch {
-        // Network error/timeout: stay here
-        setLoading(false);
-      } finally {
-        clearTimeout(timeout);
-      }
-    };
-    go();
-  }, [router]);
+    if (topics && topics.length > 0) {
+      router.push(`/topic/${topics[0].id}`);
+    }
+  }, [topics, router]);
 
   if (loading) {
     return (
