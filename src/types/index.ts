@@ -51,7 +51,7 @@ export type Topic = {
   title: string;
   description: string;
   exams: Exam[];
-  isNew?: boolean;
+  createdAt?: Date;
 };
 
 export type UserScore = {

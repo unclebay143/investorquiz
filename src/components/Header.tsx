@@ -2,8 +2,9 @@
 
 import { MOCK_CURRENT_USER } from "@/data/leaderboardData";
 import { CurrentUser } from "@/types";
-import { Menu, Trophy, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AuthModal from "./AuthModal";
@@ -37,21 +38,21 @@ export default function Header({
         >
           {isOpen ? <X className='h-5 w-5' /> : <Menu className='h-5 w-5' />}
         </button>
-        <div className='font-bold text-xl text-gray-900'>
+        <Link href='/' className='font-bold text-xl text-gray-900'>
           Investment Questions
-        </div>
+        </Link>
 
         {/* User Score Section */}
         <div className='ml-auto flex items-center space-x-2 sm:space-x-4'>
-          {status === "authenticated" ? (
+          {/* {status === "authenticated" ? (
             <div className='hidden sm:flex items-center space-x-3 text-sm text-gray-600'>
               <span>{currentUser.examsCompleted} exams</span>
               <span className='text-gray-300'>•</span>
               <span>Rank #{currentUser.rank}</span>
             </div>
-          ) : null}
+          ) : null} */}
 
-          <button
+          {/* <button
             onClick={handleLeaderboardClick}
             className='flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 hover:from-yellow-100 hover:to-orange-100 transition-all duration-200 group'
             title='View Leaderboard'
@@ -60,7 +61,7 @@ export default function Header({
             <span className='font-semibold text-gray-900 text-xs sm:text-sm hidden sm:inline'>
               Leaderboard
             </span>
-          </button>
+          </button> */}
 
           {status === "authenticated" ? (
             <button

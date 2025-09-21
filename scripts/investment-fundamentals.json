@@ -1,0 +1,797 @@
+{
+  "authors": [],
+  "topics": [
+    {
+      "slug": "investment-fundamentals",
+      "title": "Investment Fundamentals",
+      "description": "Master the essential concepts every investor needs to know before making their first investment",
+      "isNewTopic": true
+    }
+  ],
+  "exams": [
+    {
+      "slug": "what-is-investing",
+      "topic": "investment-fundamentals",
+      "title": "What is Investing?",
+      "description": "Test your knowledge of fundamental investing concepts, including the difference between investing and saving, compound interest, and setting investment goals.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is the primary difference between investing and saving?",
+          "options": {
+            "A": "Investing is riskier but offers higher potential returns",
+            "B": "Saving is always better than investing",
+            "C": "There is no difference between the two",
+            "D": "Investing is only for wealthy people"
+          },
+          "correctKey": "A",
+          "explanation": "Investing involves taking calculated risks to potentially earn higher returns over time, while saving typically involves lower risk but also lower returns. Both serve important but different purposes in financial planning."
+        },
+        {
+          "id": 2,
+          "prompt": "What is compound interest?",
+          "options": {
+            "A": "Interest earned only on the principal amount",
+            "B": "Interest earned on both principal and previously earned interest",
+            "C": "Interest that compounds daily instead of annually",
+            "D": "Interest that is compounded by the bank"
+          },
+          "correctKey": "B",
+          "explanation": "Compound interest is interest earned on both the original principal and the interest that has been added to it. This creates exponential growth over time, making it one of the most powerful concepts in investing."
+        },
+        {
+          "id": 3,
+          "prompt": "Which of the following is NOT a typical investment goal?",
+          "options": {
+            "A": "Building an emergency fund",
+            "B": "Saving for retirement",
+            "C": "Funding a child's education",
+            "D": "Buying a home"
+          },
+          "correctKey": "A",
+          "explanation": "Building an emergency fund is typically a savings goal rather than an investment goal. Emergency funds should be kept in easily accessible, low-risk accounts like savings accounts or money market funds."
+        },
+        {
+          "id": 4,
+          "prompt": "What does 'time horizon' refer to in investing?",
+          "options": {
+            "A": "The time it takes to open an investment account",
+            "B": "The length of time you plan to hold an investment",
+            "C": "The time it takes for an investment to double",
+            "D": "The time when markets are most active"
+          },
+          "correctKey": "B",
+          "explanation": "Time horizon is the length of time you expect to hold an investment before needing the money. It's crucial for determining appropriate investment strategies and risk levels."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the 'Rule of 72' used for?",
+          "options": {
+            "A": "Calculating how much to invest each month",
+            "B": "Estimating how long it takes for money to double",
+            "C": "Determining the best time to buy stocks",
+            "D": "Calculating investment fees"
+          },
+          "correctKey": "B",
+          "explanation": "The Rule of 72 is a simple way to estimate how long it takes for an investment to double. You divide 72 by the annual interest rate to get the approximate number of years."
+        },
+        {
+          "id": 6,
+          "prompt": "Which statement about risk and return is most accurate?",
+          "options": {
+            "A": "Higher risk always guarantees higher returns",
+            "B": "Lower risk investments always have lower returns",
+            "C": "Higher risk investments have the potential for higher returns",
+            "D": "Risk and return are completely unrelated"
+          },
+          "correctKey": "C",
+          "explanation": "Higher risk investments have the potential for higher returns, but this is not guaranteed. Risk represents the uncertainty of returns, and investors typically require higher potential returns to compensate for taking on more risk."
+        },
+        {
+          "id": 7,
+          "prompt": "What is diversification in investing?",
+          "options": {
+            "A": "Investing only in one type of asset",
+            "B": "Spreading investments across different assets to reduce risk",
+            "C": "Investing only in high-risk assets",
+            "D": "Timing the market perfectly"
+          },
+          "correctKey": "B",
+          "explanation": "Diversification is the practice of spreading investments across different assets, sectors, or geographic regions to reduce overall portfolio risk. It's often called 'not putting all your eggs in one basket.'"
+        },
+        {
+          "id": 8,
+          "prompt": "What is inflation and how does it affect investments?",
+          "options": {
+            "A": "Inflation is when stock prices go up, and it always helps investments",
+            "B": "Inflation is the general increase in prices over time, and it erodes purchasing power",
+            "C": "Inflation only affects bonds, not stocks",
+            "D": "Inflation is when the economy grows too fast"
+          },
+          "correctKey": "B",
+          "explanation": "Inflation is the general increase in prices of goods and services over time. It erodes the purchasing power of money, which is why investors need returns that outpace inflation to maintain and grow their real wealth."
+        },
+        {
+          "id": 9,
+          "prompt": "What is the difference between active and passive investing?",
+          "options": {
+            "A": "Active investing is riskier than passive investing",
+            "B": "Active investing involves frequent buying and selling, while passive investing follows a buy-and-hold strategy",
+            "C": "Passive investing is only for beginners",
+            "D": "There is no difference between the two"
+          },
+          "correctKey": "B",
+          "explanation": "Active investing involves frequent buying and selling of securities in an attempt to outperform the market, while passive investing typically involves buying and holding investments that track market indexes with minimal trading."
+        },
+        {
+          "id": 10,
+          "prompt": "What is dollar-cost averaging?",
+          "options": {
+            "A": "Investing a fixed amount at regular intervals regardless of market conditions",
+            "B": "Only investing when the market is down",
+            "C": "Investing more when the market is up",
+            "D": "Timing the market perfectly"
+          },
+          "correctKey": "A",
+          "explanation": "Dollar-cost averaging is an investment strategy where you invest a fixed amount of money at regular intervals, regardless of market conditions. This helps reduce the impact of market volatility on your investments."
+        },
+        {
+          "id": 11,
+          "prompt": "What is the primary purpose of an emergency fund?",
+          "options": {
+            "A": "To generate high investment returns",
+            "B": "To provide financial security for unexpected expenses",
+            "C": "To save for retirement",
+            "D": "To buy stocks when they're cheap"
+          },
+          "correctKey": "B",
+          "explanation": "An emergency fund is money set aside to cover unexpected expenses like medical bills, job loss, or major repairs. It should be easily accessible and kept in low-risk accounts, separate from your investment portfolio."
+        },
+        {
+          "id": 12,
+          "prompt": "What does 'asset allocation' mean?",
+          "options": {
+            "A": "How much money you have in your bank account",
+            "B": "The distribution of investments across different asset classes",
+            "C": "The fees you pay for investment advice",
+            "D": "The time it takes to buy and sell investments"
+          },
+          "correctKey": "B",
+          "explanation": "Asset allocation is the process of dividing your investment portfolio among different asset categories, such as stocks, bonds, and cash. It's one of the most important factors in determining your portfolio's risk and return characteristics."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the difference between a stock and a bond?",
+          "options": {
+            "A": "Stocks are always safer than bonds",
+            "B": "Stocks represent ownership in a company, while bonds represent a loan to a company or government",
+            "C": "Bonds always pay higher returns than stocks",
+            "D": "There is no difference between stocks and bonds"
+          },
+          "correctKey": "B",
+          "explanation": "Stocks represent ownership shares in a company, giving you a claim on the company's assets and earnings. Bonds represent a loan you make to a company or government, and they typically pay fixed interest over time."
+        },
+        {
+          "id": 14,
+          "prompt": "What is the 'pay yourself first' principle?",
+          "options": {
+            "A": "Always pay your bills before investing",
+            "B": "Set aside money for investing before spending on other things",
+            "C": "Only invest in companies you work for",
+            "D": "Always take profits from investments first"
+          },
+          "correctKey": "B",
+          "explanation": "The 'pay yourself first' principle means setting aside money for savings and investments before spending on other expenses. This ensures that building wealth becomes a priority rather than an afterthought."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the most important factor for long-term investment success?",
+          "options": {
+            "A": "Timing the market perfectly",
+            "B": "Starting early and staying consistent",
+            "C": "Only investing in the best-performing stocks",
+            "D": "Having a large amount of money to start with"
+          },
+          "correctKey": "B",
+          "explanation": "Starting early and staying consistent with your investments is the most important factor for long-term success. Time allows compound interest to work its magic, and consistency helps you benefit from dollar-cost averaging and market cycles."
+        }
+      ]
+    },
+    {
+      "slug": "risk-and-return",
+      "topic": "investment-fundamentals",
+      "title": "Risk and Return",
+      "description": "Test your understanding of the relationship between risk, return, and time. Assess your knowledge of risk tolerance and investment strategy decision-making.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is the relationship between risk and potential return?",
+          "options": {
+            "A": "Higher risk always leads to higher returns",
+            "B": "Lower risk investments have no potential for returns",
+            "C": "Higher risk investments have the potential for higher returns, but it's not guaranteed",
+            "D": "Risk and return are completely independent"
+          },
+          "correctKey": "C",
+          "explanation": "While higher risk investments have the potential for higher returns, this relationship is not guaranteed. Risk represents uncertainty, and investors demand higher potential returns to compensate for taking on more uncertainty."
+        },
+        {
+          "id": 2,
+          "prompt": "What is market volatility?",
+          "options": {
+            "A": "The total value of all stocks in the market",
+            "B": "The degree of price fluctuations in the market over time",
+            "C": "The number of stocks traded each day",
+            "D": "The average return of the stock market"
+          },
+          "correctKey": "B",
+          "explanation": "Market volatility refers to the degree of price fluctuations in the market over time. High volatility means prices change dramatically, while low volatility means prices are relatively stable."
+        },
+        {
+          "id": 3,
+          "prompt": "Which of the following is considered the lowest risk investment?",
+          "options": {
+            "A": "Individual stocks",
+            "B": "Government bonds",
+            "C": "Real estate",
+            "D": "Cryptocurrency"
+          },
+          "correctKey": "B",
+          "explanation": "Government bonds, especially those from stable countries, are generally considered the lowest risk investments because they are backed by the government's ability to tax and print money."
+        },
+        {
+          "id": 4,
+          "prompt": "What is risk tolerance?",
+          "options": {
+            "A": "The amount of money you can afford to lose",
+            "B": "Your ability and willingness to endure market volatility and potential losses",
+            "C": "The maximum return you expect from investments",
+            "D": "The time you can wait for investments to grow"
+          },
+          "correctKey": "B",
+          "explanation": "Risk tolerance is your ability and willingness to endure market volatility and potential losses. It's influenced by your financial situation, investment goals, and psychological comfort with uncertainty."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the difference between systematic and unsystematic risk?",
+          "options": {
+            "A": "Systematic risk affects individual companies, unsystematic risk affects the entire market",
+            "B": "Systematic risk affects the entire market, unsystematic risk affects individual companies",
+            "C": "There is no difference between the two",
+            "D": "Systematic risk is always higher than unsystematic risk"
+          },
+          "correctKey": "B",
+          "explanation": "Systematic risk affects the entire market (like economic recessions), while unsystematic risk affects individual companies or sectors (like a company's management issues). Diversification can reduce unsystematic risk but not systematic risk."
+        },
+        {
+          "id": 6,
+          "prompt": "What is the risk-free rate?",
+          "options": {
+            "A": "The return on the stock market",
+            "B": "The return on government bonds, typically used as a benchmark",
+            "C": "The return on savings accounts",
+            "D": "The return on real estate"
+          },
+          "correctKey": "B",
+          "explanation": "The risk-free rate is typically the return on government bonds, used as a benchmark because they're considered virtually risk-free. It represents the minimum return investors expect for taking no risk."
+        },
+        {
+          "id": 7,
+          "prompt": "What does 'risk-adjusted return' mean?",
+          "options": {
+            "A": "The return after accounting for inflation",
+            "B": "The return after accounting for taxes",
+            "C": "The return relative to the amount of risk taken",
+            "D": "The return after accounting for fees"
+          },
+          "correctKey": "C",
+          "explanation": "Risk-adjusted return measures how much return an investment generates relative to the amount of risk taken. It helps compare investments that have different risk levels."
+        },
+        {
+          "id": 8,
+          "prompt": "What is the Sharpe ratio used for?",
+          "options": {
+            "A": "Measuring the total return of an investment",
+            "B": "Measuring risk-adjusted returns",
+            "C": "Measuring market volatility",
+            "D": "Measuring investment fees"
+          },
+          "correctKey": "B",
+          "explanation": "The Sharpe ratio measures risk-adjusted returns by comparing the excess return of an investment to its volatility. A higher Sharpe ratio indicates better risk-adjusted performance."
+        },
+        {
+          "id": 9,
+          "prompt": "What is the difference between short-term and long-term risk?",
+          "options": {
+            "A": "Short-term risk is always higher than long-term risk",
+            "B": "Long-term risk is always higher than short-term risk",
+            "C": "Short-term risk involves more volatility, long-term risk involves more uncertainty about outcomes",
+            "D": "There is no difference between short-term and long-term risk"
+          },
+          "correctKey": "C",
+          "explanation": "Short-term risk involves more price volatility and market fluctuations, while long-term risk involves more uncertainty about future economic conditions and outcomes over extended periods."
+        },
+        {
+          "id": 10,
+          "prompt": "What is correlation in investing?",
+          "options": {
+            "A": "The total return of two investments",
+            "B": "How two investments move in relation to each other",
+            "C": "The fees charged by investment managers",
+            "D": "The time it takes for investments to mature"
+          },
+          "correctKey": "B",
+          "explanation": "Correlation measures how two investments move in relation to each other. Positive correlation means they move together, negative correlation means they move in opposite directions, and zero correlation means they move independently."
+        },
+        {
+          "id": 11,
+          "prompt": "What is the benefit of negative correlation in a portfolio?",
+          "options": {
+            "A": "It guarantees higher returns",
+            "B": "It reduces overall portfolio risk through diversification",
+            "C": "It eliminates all investment risk",
+            "D": "It increases the volatility of the portfolio"
+          },
+          "correctKey": "B",
+          "explanation": "Negative correlation between investments can reduce overall portfolio risk because when one investment performs poorly, the other may perform well, helping to balance out the portfolio's performance."
+        },
+        {
+          "id": 12,
+          "prompt": "What is value at risk (VaR)?",
+          "options": {
+            "A": "The maximum return you can expect from an investment",
+            "B": "The maximum potential loss over a specific time period with a given confidence level",
+            "C": "The average return of an investment",
+            "D": "The total value of your investment portfolio"
+          },
+          "correctKey": "B",
+          "explanation": "Value at Risk (VaR) is a statistical measure that estimates the maximum potential loss over a specific time period with a given confidence level (e.g., 95% confidence that losses won't exceed X%)."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the difference between risk capacity and risk tolerance?",
+          "options": {
+            "A": "Risk capacity is psychological, risk tolerance is financial",
+            "B": "Risk capacity is your financial ability to take risk, risk tolerance is your psychological willingness",
+            "C": "There is no difference between the two",
+            "D": "Risk capacity is always higher than risk tolerance"
+          },
+          "correctKey": "B",
+          "explanation": "Risk capacity is your financial ability to take risk (based on your financial situation), while risk tolerance is your psychological willingness to endure volatility and potential losses."
+        },
+        {
+          "id": 14,
+          "prompt": "What is the relationship between time horizon and risk tolerance?",
+          "options": {
+            "A": "Longer time horizons allow for higher risk tolerance",
+            "B": "Shorter time horizons require higher risk tolerance",
+            "C": "Time horizon has no effect on risk tolerance",
+            "D": "Time horizon and risk tolerance are the same thing"
+          },
+          "correctKey": "A",
+          "explanation": "Longer time horizons generally allow for higher risk tolerance because you have more time to recover from market downturns and benefit from long-term growth trends."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the most important factor in determining your investment risk level?",
+          "options": {
+            "A": "Your age",
+            "B": "Your income level",
+            "C": "Your investment goals and time horizon",
+            "D": "The current market conditions"
+          },
+          "correctKey": "C",
+          "explanation": "Your investment goals and time horizon are the most important factors in determining your risk level because they define what you're trying to achieve and how long you have to achieve it."
+        }
+      ]
+    },
+    {
+      "slug": "investment-vehicles",
+      "topic": "investment-fundamentals",
+      "title": "Investment Vehicles",
+      "description": "Test your knowledge of different investment vehicles and their characteristics, benefits, and risks.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is a stock?",
+          "options": {
+            "A": "A loan to a company",
+            "B": "Ownership share in a company",
+            "C": "A type of bond",
+            "D": "A savings account"
+          },
+          "correctKey": "B",
+          "explanation": "A stock represents ownership share in a company. When you buy stock, you become a shareholder and own a portion of that company, giving you rights to potential dividends and capital appreciation."
+        },
+        {
+          "id": 2,
+          "prompt": "What is a bond?",
+          "options": {
+            "A": "Ownership in a company",
+            "B": "A loan to a company or government",
+            "C": "A type of stock",
+            "D": "A savings account"
+          },
+          "correctKey": "B",
+          "explanation": "A bond is essentially a loan you make to a company or government. In return, they promise to pay you back the principal plus interest over a specified period."
+        },
+        {
+          "id": 3,
+          "prompt": "What is a mutual fund?",
+          "options": {
+            "A": "A single stock",
+            "B": "A pool of money from many investors used to buy a diversified portfolio",
+            "C": "A type of bond",
+            "D": "A savings account"
+          },
+          "correctKey": "B",
+          "explanation": "A mutual fund pools money from many investors to buy a diversified portfolio of stocks, bonds, or other securities. This allows individual investors to access professional management and diversification."
+        },
+        {
+          "id": 4,
+          "prompt": "What is an ETF (Exchange-Traded Fund)?",
+          "options": {
+            "A": "A mutual fund that trades on stock exchanges like individual stocks",
+            "B": "A type of bond",
+            "C": "A single stock",
+            "D": "A savings account"
+          },
+          "correctKey": "A",
+          "explanation": "An ETF is a type of investment fund that trades on stock exchanges like individual stocks. It typically tracks an index and offers the diversification of a mutual fund with the trading flexibility of a stock."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the main advantage of index funds?",
+          "options": {
+            "A": "They always outperform the market",
+            "B": "They have low fees and provide broad market exposure",
+            "C": "They guarantee returns",
+            "D": "They have no risk"
+          },
+          "correctKey": "B",
+          "explanation": "Index funds have low fees because they simply track a market index rather than trying to beat it. They provide broad market exposure and are a cost-effective way to invest in the overall market."
+        },
+        {
+          "id": 6,
+          "prompt": "What is a REIT (Real Estate Investment Trust)?",
+          "options": {
+            "A": "A type of stock",
+            "B": "A company that owns and operates income-producing real estate",
+            "C": "A type of bond",
+            "D": "A savings account"
+          },
+          "correctKey": "B",
+          "explanation": "A REIT is a company that owns and operates income-producing real estate. It allows investors to invest in real estate without having to buy property directly, and it typically pays regular dividends."
+        },
+        {
+          "id": 7,
+          "prompt": "What is the difference between a growth stock and a value stock?",
+          "options": {
+            "A": "Growth stocks are always more expensive than value stocks",
+            "B": "Growth stocks are expected to grow faster, value stocks are undervalued relative to their fundamentals",
+            "C": "There is no difference between the two",
+            "D": "Growth stocks are riskier than value stocks"
+          },
+          "correctKey": "B",
+          "explanation": "Growth stocks are expected to grow earnings faster than the market average, while value stocks are considered undervalued relative to their fundamentals like earnings, book value, or dividends."
+        },
+        {
+          "id": 8,
+          "prompt": "What is a dividend?",
+          "options": {
+            "A": "The total return of a stock",
+            "B": "A portion of a company's profits paid to shareholders",
+            "C": "The price of a stock",
+            "D": "The fees charged by brokers"
+          },
+          "correctKey": "B",
+          "explanation": "A dividend is a portion of a company's profits that is paid to shareholders, typically on a regular basis (quarterly or annually). Not all companies pay dividends."
+        },
+        {
+          "id": 9,
+          "prompt": "What is the difference between a large-cap and small-cap stock?",
+          "options": {
+            "A": "Large-cap stocks are always more expensive",
+            "B": "Large-cap stocks have larger market capitalization (company value), small-cap stocks have smaller market capitalization",
+            "C": "There is no difference between the two",
+            "D": "Small-cap stocks are always riskier"
+          },
+          "correctKey": "B",
+          "explanation": "Large-cap stocks are from companies with large market capitalization (typically over $10 billion), while small-cap stocks are from companies with smaller market capitalization (typically under $2 billion)."
+        },
+        {
+          "id": 10,
+          "prompt": "What is a money market fund?",
+          "options": {
+            "A": "A type of stock",
+            "B": "A type of bond",
+            "C": "A fund that invests in short-term, low-risk securities",
+            "D": "A savings account"
+          },
+          "correctKey": "C",
+          "explanation": "A money market fund invests in short-term, low-risk securities like Treasury bills and commercial paper. It aims to maintain a stable value while providing slightly higher returns than savings accounts."
+        },
+        {
+          "id": 11,
+          "prompt": "What is the difference between a load and no-load mutual fund?",
+          "options": {
+            "A": "Load funds always perform better",
+            "B": "Load funds charge sales fees, no-load funds don't",
+            "C": "There is no difference between the two",
+            "D": "No-load funds are always riskier"
+          },
+          "correctKey": "B",
+          "explanation": "Load funds charge sales fees (loads) when you buy or sell shares, while no-load funds don't charge these fees. No-load funds are generally more cost-effective for investors."
+        },
+        {
+          "id": 12,
+          "prompt": "What is a target-date fund?",
+          "options": {
+            "A": "A fund that targets specific companies",
+            "B": "A fund that automatically adjusts its asset allocation based on your target retirement date",
+            "C": "A fund that only invests in bonds",
+            "D": "A fund that guarantees returns"
+          },
+          "correctKey": "B",
+          "explanation": "A target-date fund automatically adjusts its asset allocation (stocks vs. bonds) based on your target retirement date. It starts more aggressive when you're young and becomes more conservative as you approach retirement."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the difference between a traditional IRA and a Roth IRA?",
+          "options": {
+            "A": "Traditional IRAs are always better",
+            "B": "Traditional IRAs offer tax deductions now but taxes on withdrawals, Roth IRAs offer no tax deduction now but tax-free withdrawals",
+            "C": "There is no difference between the two",
+            "D": "Roth IRAs are always better"
+          },
+          "correctKey": "B",
+          "explanation": "Traditional IRAs offer tax deductions on contributions now but you pay taxes on withdrawals in retirement. Roth IRAs offer no tax deduction now but withdrawals in retirement are tax-free."
+        },
+        {
+          "id": 14,
+          "prompt": "What is a 401(k) plan?",
+          "options": {
+            "A": "A type of stock",
+            "B": "An employer-sponsored retirement savings plan",
+            "C": "A type of bond",
+            "D": "A savings account"
+          },
+          "correctKey": "B",
+          "explanation": "A 401(k) is an employer-sponsored retirement savings plan that allows employees to contribute pre-tax money, often with employer matching contributions, to save for retirement."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the main benefit of employer matching in a 401(k)?",
+          "options": {
+            "A": "It reduces your taxes",
+            "B": "It provides free money that doubles your contribution up to the match limit",
+            "C": "It guarantees returns",
+            "D": "It reduces fees"
+          },
+          "correctKey": "B",
+          "explanation": "Employer matching provides free money that effectively doubles your contribution up to the match limit. For example, if your employer matches 50% up to 6% of your salary, contributing 6% gets you an additional 3% from your employer."
+        }
+      ]
+    },
+    {
+      "slug": "building-your-portfolio",
+      "topic": "investment-fundamentals",
+      "title": "Building Your Portfolio",
+      "description": "Test your ability to create a personalized investment strategy. Assess your knowledge of portfolio building, monitoring, and rebalancing.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is the first step in building an investment portfolio?",
+          "options": {
+            "A": "Choosing specific stocks",
+            "B": "Determining your investment goals and time horizon",
+            "C": "Opening a brokerage account",
+            "D": "Researching market trends"
+          },
+          "correctKey": "B",
+          "explanation": "The first step is determining your investment goals and time horizon, as these will guide all other decisions about asset allocation, risk tolerance, and investment selection."
+        },
+        {
+          "id": 2,
+          "prompt": "What is the 60/40 portfolio rule?",
+          "options": {
+            "A": "Invest 60% in stocks and 40% in bonds",
+            "B": "Invest 60% in bonds and 40% in stocks",
+            "C": "Keep 60% in cash and 40% in investments",
+            "D": "Invest 60% domestically and 40% internationally"
+          },
+          "correctKey": "A",
+          "explanation": "The 60/40 rule is a traditional balanced portfolio allocation of 60% stocks and 40% bonds. It's a starting point that can be adjusted based on your age, risk tolerance, and goals."
+        },
+        {
+          "id": 3,
+          "prompt": "What is portfolio rebalancing?",
+          "options": {
+            "A": "Changing all your investments",
+            "B": "Adjusting your portfolio back to your target asset allocation",
+            "C": "Selling all your stocks",
+            "D": "Buying more of the same investments"
+          },
+          "correctKey": "B",
+          "explanation": "Portfolio rebalancing involves adjusting your portfolio back to your target asset allocation by buying or selling investments. This helps maintain your desired risk level and can improve returns."
+        },
+        {
+          "id": 4,
+          "prompt": "How often should you rebalance your portfolio?",
+          "options": {
+            "A": "Daily",
+            "B": "Weekly",
+            "C": "Annually or when your allocation drifts significantly from targets",
+            "D": "Never"
+          },
+          "correctKey": "C",
+          "explanation": "Most experts recommend rebalancing annually or when your allocation drifts significantly (typically 5-10%) from your target allocation. Too frequent rebalancing can increase costs and taxes."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the difference between strategic and tactical asset allocation?",
+          "options": {
+            "A": "Strategic is short-term, tactical is long-term",
+            "B": "Strategic is long-term target allocation, tactical involves short-term adjustments",
+            "C": "There is no difference between the two",
+            "D": "Strategic is for stocks, tactical is for bonds"
+          },
+          "correctKey": "B",
+          "explanation": "Strategic asset allocation is your long-term target allocation based on your goals and risk tolerance. Tactical asset allocation involves making short-term adjustments based on market conditions or opportunities."
+        },
+        {
+          "id": 6,
+          "prompt": "What is the '100 minus age' rule?",
+          "options": {
+            "A": "The percentage of your portfolio that should be in stocks",
+            "B": "The percentage of your portfolio that should be in bonds",
+            "C": "The number of years you should hold investments",
+            "D": "The percentage of your income you should save"
+          },
+          "correctKey": "A",
+          "explanation": "The '100 minus age' rule suggests that the percentage of your portfolio in stocks should equal 100 minus your age. For example, a 30-year-old would have 70% in stocks and 30% in bonds."
+        },
+        {
+          "id": 7,
+          "prompt": "What is dollar-cost averaging in portfolio building?",
+          "options": {
+            "A": "Investing more when the market is up",
+            "B": "Investing a fixed amount at regular intervals regardless of market conditions",
+            "C": "Only investing when the market is down",
+            "D": "Timing the market perfectly"
+          },
+          "correctKey": "B",
+          "explanation": "Dollar-cost averaging involves investing a fixed amount at regular intervals regardless of market conditions. This helps reduce the impact of market volatility and can lower your average cost per share."
+        },
+        {
+          "id": 8,
+          "prompt": "What is the benefit of international diversification?",
+          "options": {
+            "A": "It guarantees higher returns",
+            "B": "It reduces risk by spreading investments across different countries and economies",
+            "C": "It eliminates all investment risk",
+            "D": "It increases your tax burden"
+          },
+          "correctKey": "B",
+          "explanation": "International diversification reduces risk by spreading investments across different countries and economies. This helps protect against country-specific risks and can provide access to growth opportunities in other markets."
+        },
+        {
+          "id": 9,
+          "prompt": "What is the difference between a growth and income portfolio?",
+          "options": {
+            "A": "Growth portfolios focus on capital appreciation, income portfolios focus on regular income",
+            "B": "There is no difference between the two",
+            "C": "Growth portfolios are always riskier",
+            "D": "Income portfolios are always safer"
+          },
+          "correctKey": "A",
+          "explanation": "Growth portfolios focus on capital appreciation (increasing value over time), while income portfolios focus on generating regular income through dividends and interest payments."
+        },
+        {
+          "id": 10,
+          "prompt": "What is the 'core and satellite' approach?",
+          "options": {
+            "A": "Investing only in core stocks",
+            "B": "Having a core of low-cost index funds with satellite investments in specific opportunities",
+            "C": "Investing only in satellite companies",
+            "D": "There is no such approach"
+          },
+          "correctKey": "B",
+          "explanation": "The core and satellite approach involves having a core of low-cost index funds for broad market exposure, with smaller satellite investments in specific opportunities, sectors, or strategies."
+        },
+        {
+          "id": 11,
+          "prompt": "What is the importance of keeping investment costs low?",
+          "options": {
+            "A": "It guarantees higher returns",
+            "B": "Lower costs mean more of your money stays invested and compounds over time",
+            "C": "It eliminates all risk",
+            "D": "It's not important"
+          },
+          "correctKey": "B",
+          "explanation": "Lower investment costs mean more of your money stays invested and compounds over time. Even small differences in fees can significantly impact long-term returns due to the power of compounding."
+        },
+        {
+          "id": 12,
+          "prompt": "What is the difference between a taxable and tax-advantaged account?",
+          "options": {
+            "A": "Taxable accounts are always better",
+            "B": "Tax-advantaged accounts offer tax benefits like deductions or tax-free growth",
+            "C": "There is no difference between the two",
+            "D": "Tax-advantaged accounts are always riskier"
+          },
+          "correctKey": "B",
+          "explanation": "Tax-advantaged accounts (like 401(k)s, IRAs) offer tax benefits such as tax deductions on contributions or tax-free growth, while taxable accounts don't offer these benefits but provide more flexibility."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the 'bucket strategy' for retirement planning?",
+          "options": {
+            "A": "Putting all your money in one investment",
+            "B": "Dividing your portfolio into buckets for different time horizons and needs",
+            "C": "Only investing in bucket companies",
+            "D": "There is no such strategy"
+          },
+          "correctKey": "B",
+          "explanation": "The bucket strategy divides your portfolio into buckets for different time horizons and needs. For example, bucket 1 for immediate needs (cash), bucket 2 for medium-term needs (bonds), and bucket 3 for long-term growth (stocks)."
+        },
+        {
+          "id": 14,
+          "prompt": "What is the importance of having an emergency fund before investing?",
+          "options": {
+            "A": "It's not important",
+            "B": "It provides financial security so you don't have to sell investments during emergencies",
+            "C": "It guarantees investment returns",
+            "D": "It reduces investment risk"
+          },
+          "correctKey": "B",
+          "explanation": "An emergency fund provides financial security so you don't have to sell investments during emergencies or market downturns. This allows your investments to stay invested and benefit from long-term growth."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the most important factor in long-term portfolio success?",
+          "options": {
+            "A": "Picking the best individual stocks",
+            "B": "Timing the market perfectly",
+            "C": "Staying disciplined with your investment plan and avoiding emotional decisions",
+            "D": "Having the most money to start with"
+          },
+          "correctKey": "C",
+          "explanation": "Staying disciplined with your investment plan and avoiding emotional decisions is the most important factor in long-term success. This includes regular contributions, rebalancing, and not panicking during market downturns."
+        }
+      ]
+    }
+  ]
+}

@@ -24,5 +24,8 @@ const AuthorSchema = new Schema<IAuthor>(
   { timestamps: true }
 );
 
+// Add additional indexes for better performance
+AuthorSchema.index({ name: 1 });
+
 export default models.Author || model<IAuthor>("Author", AuthorSchema);
 export type { IAuthor };

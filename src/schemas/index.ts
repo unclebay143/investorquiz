@@ -31,7 +31,7 @@ export const TopicSchema = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
   description: z.string().optional(),
-  isNew: z.boolean().optional(),
+  isNewTopic: z.boolean().optional(),
 });
 export type TopicInput = z.infer<typeof TopicSchema>;
 
@@ -82,7 +82,7 @@ export const AttemptSchema = z.object({
   topic: ObjectIdString.optional(),
   attemptNumber: z.number().int().positive(),
   score: z.number().nonnegative(),
-  timeSpentInSeconds: z.number().int().nonnegative(),
+  timeSpentInSeconds: z.number().int().nonnegative().optional(),
   completedAt: z.string().or(z.date()),
   // Record keys must be ZodString|ZodNumber|ZodSymbol. Use string keys (JSON-safe)
   // and cast to numbers where needed in code.

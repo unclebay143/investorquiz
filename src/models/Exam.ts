@@ -46,5 +46,9 @@ const ExamSchema = new Schema(
   { timestamps: true }
 );
 
+// Add additional indexes for better performance
+ExamSchema.index({ title: 1 });
+ExamSchema.index({ topic: 1, title: 1 }); // Compound index for topic + title queries
+
 export default models.Exam || model<IExam>("Exam", ExamSchema);
 export type { IExam };

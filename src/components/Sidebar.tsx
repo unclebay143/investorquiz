@@ -10,6 +10,7 @@ interface SidebarProps {
   query: string;
   selectedExam: string | null;
   isOpen: boolean;
+  loading?: boolean;
   onTopicSelect: (topicId: string) => void;
   onQueryChange: (query: string) => void;
   onClose: () => void;
@@ -21,6 +22,7 @@ export default function Sidebar({
   query,
   selectedExam,
   isOpen,
+  loading = false,
   onTopicSelect,
   onQueryChange,
   onClose,
@@ -38,7 +40,7 @@ export default function Sidebar({
       )} */}
 
       <aside
-        className={`lg:w-80 bg-white border-r border-gray-200 flex flex-col pt-[73px] lg:pt-0 fixed inset-y-0 left-0 z-30 md:relative transition-transform duration-300 ease-out lg:translate-x-0 ${
+        className={`lg:w-80 bg-white border-r border-gray-200 flex flex-col pt-[73px] lg:pt-0 fixed inset-y-0 left-0 z-30 lg:sticky lg:top-[73px] lg:h-[calc(100vh-73px)] transition-transform duration-300 ease-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -58,81 +60,107 @@ export default function Sidebar({
           </div>
         </div>
         <nav className='flex-1 overflow-y-auto p-4 space-y-1'>
-          {/* Leaderboard Link */}
-          {/* <button
-            onClick={() => {
-              onTopicSelect("leaderboard");
-              onClose();
-            }}
-            className={`w-full text-left rounded-lg px-3 py-3 text-sm transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
-              activeId === "leaderboard"
-                ? "bg-blue-50 text-blue-900 border border-blue-200 shadow-sm"
-                : "text-gray-700 hover:text-gray-900"
-            }`}
-          >
-            <div className='flex items-center space-x-3'>
-              <Trophy className='h-4 w-4' />
-              <div>
-                <div className='text-sm font-medium'>Leaderboard</div>
-                <div className='text-xs text-gray-500'>Top performers</div>
-              </div>
-            </div>
-          </button> */}
-
-          {/* Divider */}
-          {/* <div className='my-4 border-t border-gray-200'></div> */}
-
-          {topics.map((topic) => {
-            const isActive = topic.id === activeId;
-            // Allow navigation on result pages, disable only when actively taking an exam
-            const disableInteractions = !isResultPage && !!selectedExam;
-            const hasExams = topic.exams.length > 0;
-            const isDisabled = disableInteractions || !hasExams;
-
-            return (
-              <button
-                key={topic.id}
+          {loading ? (
+            // Skeleton loading state
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className='w-full rounded-lg px-3 py-3 animate-pulse'
+                >
+                  <div className='flex items-center justify-between'>
+                    <div className='h-4 bg-gray-200 rounded w-3/4'></div>
+                    <div className='flex gap-1'>
+                      {i === 1 && (
+                        <div className='h-5 bg-gray-200 rounded-full w-12'></div>
+                      )}
+                    </div>
+                  </div>
+                  <div className='h-3 bg-gray-200 rounded w-full mt-1'></div>
+                  <div className='h-3 bg-gray-200 rounded w-2/3 mt-1'></div>
+                </div>
+              ))}
+            </>
+          ) : (
+            // Actual content
+            <>
+              {/* Leaderboard Link */}
+              {/* <button
                 onClick={() => {
-                  if (isDisabled) return;
-                  onTopicSelect(topic.id);
+                  onTopicSelect("leaderboard");
                   onClose();
                 }}
                 className={`w-full text-left rounded-lg px-3 py-3 text-sm transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
-                  isActive && hasExams
+                  activeId === "leaderboard"
                     ? "bg-blue-50 text-blue-900 border border-blue-200 shadow-sm"
                     : "text-gray-700 hover:text-gray-900"
-                } ${
-                  isDisabled &&
-                  "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-gray-700"
                 }`}
-                disabled={isDisabled}
               >
-                <div className='flex items-center justify-between'>
-                  <div className='text-sm font-medium'>{topic.title}</div>
-                  <div className='flex gap-1'>
-                    {!hasExams ? (
-                      <span className='px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full whitespace-nowrap'>
-                        Coming Soon
-                      </span>
-                    ) : (
-                      topic.isNew && (
-                        <span className='px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full whitespace-nowrap'>
-                          New
-                        </span>
-                      )
-                    )}
+                <div className='flex items-center space-x-3'>
+                  <Trophy className='h-4 w-4' />
+                  <div>
+                    <div className='text-sm font-medium'>Leaderboard</div>
+                    <div className='text-xs text-gray-500'>Top performers</div>
                   </div>
                 </div>
-                <div className='text-xs text-gray-500 mt-1 line-clamp-2'>
-                  {topic.description}
+              </button> */}
+
+              {/* Divider */}
+              {/* <div className='my-4 border-t border-gray-200'></div> */}
+
+              {topics.map((topic) => {
+                const isActive = topic.id === activeId;
+                // Allow navigation on result pages, disable only when actively taking an exam
+                const disableInteractions = !isResultPage && !!selectedExam;
+                const isDisabled = disableInteractions;
+
+                return (
+                  <button
+                    key={topic.id}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      onTopicSelect(topic.id);
+                      onClose();
+                    }}
+                    className={`w-full text-left rounded-lg px-3 py-3 text-sm transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
+                      isActive
+                        ? "bg-blue-50 text-blue-900 border border-blue-200 shadow-sm"
+                        : "text-gray-700 hover:text-gray-900"
+                    } ${
+                      isDisabled &&
+                      "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-gray-700"
+                    }`}
+                    disabled={isDisabled}
+                  >
+                    <div className='flex items-center justify-between'>
+                      <div className='text-sm font-medium'>{topic.title}</div>
+                      <div className='flex gap-1'>
+                        {
+                          // if created in the last 30 days
+                          topic.createdAt &&
+                            topic.createdAt >
+                              new Date(
+                                Date.now() - 30 * 24 * 60 * 60 * 1000
+                              ) && (
+                              <span className='px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full whitespace-nowrap'>
+                                New
+                              </span>
+                            )
+                        }
+                      </div>
+                    </div>
+                    <div className='text-xs text-gray-500 mt-1 line-clamp-2'>
+                      {topic.description}
+                    </div>
+                  </button>
+                );
+              })}
+              {topics.length === 0 && (
+                <div className='text-sm text-gray-500 px-3 py-2'>
+                  No topics found.
                 </div>
-              </button>
-            );
-          })}
-          {topics.length === 0 && (
-            <div className='text-sm text-gray-500 px-3 py-2'>
-              No topics found.
-            </div>
+              )}
+            </>
           )}
         </nav>
       </aside>

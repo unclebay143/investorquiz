@@ -2,72 +2,189 @@
 
 import AuthorModal from "@/components/AuthorModal";
 import Layout from "@/components/Layout";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import ResultsScreen from "@/components/ResultsScreen";
-import { MOCK_TOPICS } from "@/data/mockData";
-import { cleanupAttempts } from "@/lib/retakeUtils";
-import { Author, ExamAttempts } from "@/types";
+import { shuffleQuestionOptions } from "@/lib/utils";
+import { Author, Exam } from "@/types";
+import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ResultPage() {
   const params = useParams();
   const router = useRouter();
-  const topicId = params.topicId as string;
-  const examId = params.examId as string;
+  const { data: session, status } = useSession();
+  const topicSlug = params.topicId as string; // Keep as topicId for backward compatibility
+  const examSlug = params.examId as string; // Keep as examId for backward compatibility
 
-  const [examData, setExamData] = useState<{
+  const [exam, setExam] = useState<Exam | null>(null);
+  const [attemptData, setAttemptData] = useState<{
     score: number;
     timeSpentInSeconds: number;
-    postExamAnswers: { [questionId: number]: string };
-    shuffledQuestions?: {
-      [questionId: number]: {
-        shuffledOptions: { [key: string]: string };
-        keyMapping: { [key: string]: string };
-        correctShuffledKey: string;
-      };
-    };
+    answers: { [questionId: number]: string };
+    completedAt: string;
+    attemptNumber: number;
+    grade: string;
+    isBestScore: boolean;
   } | null>(null);
+  const [shuffledQuestions, setShuffledQuestions] = useState<{
+    [questionId: number]: {
+      shuffledOptions: { [key: string]: string };
+      keyMapping: { [key: string]: string };
+      correctShuffledKey: string;
+    };
+  }>({});
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
-  const [attempts, setAttempts] = useState<ExamAttempts>({});
-  const [attemptSaved, setAttemptSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const topic = MOCK_TOPICS.find((t) => t.id === topicId);
-  const exam = topic?.exams.find((e) => e.id === examId);
-
-  // Load result data and attempts from localStorage
+  // Fetch exam and attempt data from API
   useEffect(() => {
-    const resultKey = `result-${topicId}-${examId}`;
-    const resultData = localStorage.getItem(resultKey);
-    const savedAttempts = localStorage.getItem("exam-attempts");
+    const fetchResultData = async () => {
+      try {
+        setLoading(true);
 
-    if (resultData) {
-      setExamData(JSON.parse(resultData));
-    } else {
-      // If no result data, redirect to topic
-      router.push(`/topic/${topicId}`);
+        // Wait for session to load
+        if (status === "loading") {
+          return;
+        }
+
+        if (!session?.user) {
+          console.log("No session, redirecting to topic");
+          router.push(`/topic/${topicSlug}`);
+          return;
+        }
+
+        // Fetch exam data
+        const examRes = await fetch(`/api/exams/${examSlug}`);
+        if (!examRes.ok) {
+          router.push(`/topic/${topicSlug}`);
+          return;
+        }
+        const examData = await examRes.json();
+
+        const transformedExam: Exam = {
+          id: examData.slug,
+          title: examData.title,
+          description: examData.description || "",
+          totalPoints: examData.totalPoints,
+          questions: (examData.questions || []).map((q: any) => ({
+            id: q.id,
+            prompt: q.prompt,
+            options: q.options,
+            correctKey: q.correctKey,
+            explanation: q.explanation,
+          })),
+          reviewMode: examData.reviewMode,
+          isNew: examData.isNew,
+          author: examData.author
+            ? {
+                id: examData.author.slug || String(examData.author._id),
+                name: examData.author.name,
+                title: examData.author.title || "",
+                bio: examData.author.bio || "",
+                profileImage: examData.author.profileImage,
+                socialLinks: examData.author.socialLinks,
+                books: examData.author.books,
+                quote: examData.author.quote,
+              }
+            : undefined,
+          retakeSettings: examData.retakeSettings || {
+            enabled: false,
+            maxAttempts: 1,
+            coolDownDays: 0,
+          },
+        };
+        setExam(transformedExam);
+
+        // Generate shuffled questions for display
+        const shuffled: {
+          [questionId: number]: {
+            shuffledOptions: { [key: string]: string };
+            keyMapping: { [key: string]: string };
+            correctShuffledKey: string;
+          };
+        } = {};
+        transformedExam.questions.forEach((question) => {
+          shuffled[question.id] = shuffleQuestionOptions(question);
+        });
+        setShuffledQuestions(shuffled);
+
+        // Fetch the latest completed attempt for this exam
+        console.log("Fetching attempt status for:", { topicSlug, examSlug });
+        const attemptRes = await fetch(
+          `/api/attempts/status?topicSlug=${topicSlug}&examSlug=${examSlug}`
+        );
+        console.log("Attempt status response:", attemptRes.status);
+
+        if (attemptRes.ok) {
+          const attemptStatus = await attemptRes.json();
+          console.log("Attempt status data:", attemptStatus);
+
+          if (attemptStatus.status === "completed" && attemptStatus.attemptId) {
+            // Fetch the full attempt data
+            console.log(
+              "Fetching full attempt data for ID:",
+              attemptStatus.attemptId
+            );
+            const fullAttemptRes = await fetch(
+              `/api/attempts/${attemptStatus.attemptId}`
+            );
+            console.log("Full attempt response:", fullAttemptRes.status);
+
+            if (fullAttemptRes.ok) {
+              const fullAttempt = await fullAttemptRes.json();
+              console.log("Full attempt data:", fullAttempt);
+
+              setAttemptData({
+                score: fullAttempt.score,
+                timeSpentInSeconds: Math.floor(
+                  (new Date(fullAttempt.completedAt).getTime() -
+                    new Date(fullAttempt.startedAt).getTime()) /
+                    1000
+                ),
+                answers: fullAttempt.answers,
+                completedAt: fullAttempt.completedAt,
+                attemptNumber: fullAttempt.attemptNumber,
+                grade: fullAttempt.grade,
+                isBestScore: fullAttempt.isBestScore,
+              });
+            } else {
+              console.error("Failed to fetch full attempt data");
+              router.push(`/topic/${topicSlug}`);
+              return;
+            }
+          } else {
+            console.log(
+              "No completed attempt found or no attemptId:",
+              attemptStatus
+            );
+            router.push(`/topic/${topicSlug}`);
+            return;
+          }
+        } else {
+          console.error("Failed to fetch attempt status:", attemptRes.status);
+          router.push(`/topic/${topicSlug}`);
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to fetch result data:", error);
+        router.push(`/topic/${topicSlug}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (topicSlug && examSlug) {
+      fetchResultData();
     }
-
-    if (savedAttempts) {
-      const parsedAttempts = JSON.parse(savedAttempts);
-      // Clean up duplicate attempts and keep only the latest 5 per exam
-      const cleanedAttempts = cleanupAttempts(parsedAttempts, 5);
-      setAttempts(cleanedAttempts);
-      // Save the cleaned attempts back to localStorage
-      localStorage.setItem("exam-attempts", JSON.stringify(cleanedAttempts));
-    }
-  }, [topicId, examId, router]);
-
-  // Note: Attempts are saved when the exam is completed, not when viewing results
+  }, [topicSlug, examSlug, router]);
 
   const handleBackToExams = () => {
-    router.push(`/topic/${topicId}`);
+    router.push(`/topic/${topicSlug}`);
   };
 
   const handleRetakeExam = () => {
-    // Clear current exam session and start fresh
-    const sessionKey = `exam-${topicId}-${examId}`;
-    localStorage.removeItem(sessionKey);
-    router.push(`/exam/${topicId}/${examId}`);
+    router.push(`/exam/${topicSlug}/${examSlug}`);
   };
 
   const handleTopicSelect = (id: string) => {
@@ -78,7 +195,18 @@ export default function ResultPage() {
     }
   };
 
-  if (!topic || !exam || !examData) {
+  if (loading) {
+    return (
+      <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+        <div className='text-center'>
+          <LoadingSpinner className='mb-4' />
+          <p className='text-gray-600'>Loading results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!exam || !attemptData) {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='text-center'>
@@ -102,20 +230,36 @@ export default function ResultPage() {
   return (
     <>
       <Layout
-        activeId={topicId}
+        hideSidebar={true}
+        activeId={topicSlug}
         selectedExam={null}
         onTopicSelect={handleTopicSelect}
       >
         <ResultsScreen
           exam={exam}
-          score={examData.score}
-          timeSpentInSeconds={examData.timeSpentInSeconds}
-          postExamAnswers={examData.postExamAnswers}
-          shuffledQuestions={examData.shuffledQuestions || {}}
-          topicId={topicId}
+          score={attemptData.score}
+          timeSpentInSeconds={attemptData.timeSpentInSeconds}
+          postExamAnswers={attemptData.answers}
+          shuffledQuestions={shuffledQuestions}
+          topicId={topicSlug}
           onBackToExams={handleBackToExams}
           onViewAuthor={setSelectedAuthor}
           onRetakeExam={handleRetakeExam}
+          attempts={{
+            [`${topicSlug}-${exam.id}`]: [
+              {
+                examId: exam.id,
+                topicId: topicSlug,
+                attemptNumber: attemptData.attemptNumber,
+                score: attemptData.score,
+                timeSpentInSeconds: attemptData.timeSpentInSeconds,
+                completedAt: attemptData.completedAt,
+                answers: attemptData.answers,
+                grade: attemptData.grade,
+                isBestScore: attemptData.isBestScore,
+              },
+            ],
+          }}
         />
       </Layout>
 

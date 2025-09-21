@@ -88,8 +88,8 @@ export default function ScoreSummary({
               <Clock className='h-6 w-6 text-white' />
             </div>
             <div className='text-2xl sm:text-3xl font-bold text-purple-600 mb-1 font-mono'>
-              {Math.floor(timeSpentSeconds / 60)}:
-              {(timeSpentSeconds % 60).toString().padStart(2, "0")}
+              {Math.floor(timeSpentSeconds / 60)}m:
+              {(timeSpentSeconds % 60).toString().padStart(2, "0")}s
             </div>
             <div className='text-xs sm:text-sm text-gray-600 font-medium'>
               Time Spent

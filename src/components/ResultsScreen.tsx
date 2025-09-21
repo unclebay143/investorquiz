@@ -8,9 +8,10 @@ import {
   getRetakeStatus,
 } from "@/lib/retakeUtils";
 import { Exam, ExamAttempts, RetakeStatus } from "@/types";
-import { AlertCircle, Calendar, Clock, Trophy } from "lucide-react";
+import { AlertCircle, Calendar, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResultsHeader from "./ResultsHeader";
+import ScoreSummary from "./ScoreSummary";
 
 interface ResultsScreenProps {
   exam: Exam;
@@ -279,113 +280,15 @@ export default function ResultsScreen({
       />
 
       {/* Score Summary */}
-      <div className='bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-lg'>
-        <div className='text-center mb-6'>
-          <h3 className='text-lg font-semibold text-gray-700 mb-2'>
-            Exam Summary
-          </h3>
-          <div className='w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto'></div>
-        </div>
-
-        <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6'>
-          {/* Points Card */}
-          <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
-            <div className='text-center'>
-              <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-3'>
-                <span className='text-white font-bold text-lg'>P</span>
-              </div>
-              <div className='text-2xl sm:text-3xl font-bold text-gray-900 mb-1'>
-                {selectedAttemptData.score}
-                <span className='text-sm sm:text-base text-gray-500 font-normal'>
-                  /{exam.totalPoints}
-                </span>
-              </div>
-              <div className='text-xs sm:text-sm text-gray-600 font-medium'>
-                Points
-              </div>
-            </div>
-          </div>
-
-          {/* Correct Card */}
-          <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
-            <div className='text-center'>
-              <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-3'>
-                <span className='text-white font-bold text-lg'>✓</span>
-              </div>
-              <div className='text-2xl sm:text-3xl font-bold text-green-600 mb-1'>
-                {selectedCorrectCount}
-                <span className='text-sm sm:text-base text-gray-500 font-normal'>
-                  /{exam.questions.length}
-                </span>
-              </div>
-              <div className='text-xs sm:text-sm text-gray-600 font-medium'>
-                Correct
-              </div>
-            </div>
-          </div>
-
-          {/* Incorrect Card */}
-          <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
-            <div className='text-center'>
-              <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-3'>
-                <span className='text-white font-bold text-lg'>✗</span>
-              </div>
-              <div className='text-2xl sm:text-3xl font-bold text-red-600 mb-1'>
-                {selectedIncorrectCount}
-                <span className='text-sm sm:text-base text-gray-500 font-normal'>
-                  /{exam.questions.length}
-                </span>
-              </div>
-              <div className='text-xs sm:text-sm text-gray-600 font-medium'>
-                Incorrect
-              </div>
-            </div>
-          </div>
-
-          {/* Time Card */}
-          <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
-            <div className='text-center'>
-              <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full mb-3'>
-                <Clock className='h-6 w-6 text-white' />
-              </div>
-              <div className='text-2xl sm:text-3xl font-bold text-purple-600 mb-1 font-mono'>
-                {Math.floor(selectedAttemptData.timeSpentInSeconds / 60)}:
-                {(selectedAttemptData.timeSpentInSeconds % 60)
-                  .toString()
-                  .padStart(2, "0")}
-              </div>
-              <div className='text-xs sm:text-sm text-gray-600 font-medium'>
-                Time Spent
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Performance Bar */}
-        <div className='mt-6 pt-6 border-t border-gray-200'>
-          <div className='flex items-center justify-between text-sm text-gray-600 mb-2'>
-            <span>Performance</span>
-            <div className='flex items-center space-x-3'>
-              <span className='font-semibold'>
-                {Math.round(selectedPercentage)}%
-              </span>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${selectedGradeInfo.color}`}
-              >
-                {selectedGradeInfo.grade}
-              </span>
-            </div>
-          </div>
-          <div className='w-full bg-gray-200 rounded-full h-2'>
-            <div
-              className={`h-2 rounded-full transition-all duration-500 bg-gradient-to-r ${selectedGradeInfo.color}`}
-              style={{
-                width: `${selectedPercentage}%`,
-              }}
-            ></div>
-          </div>
-        </div>
-      </div>
+      <ScoreSummary
+        points={{ scored: selectedAttemptData.score, total: exam.totalPoints }}
+        correctCount={selectedCorrectCount}
+        totalQuestions={exam.questions.length}
+        timeSpentSeconds={selectedAttemptData.timeSpentInSeconds}
+        performancePercent={selectedPercentage}
+        gradeLetter={selectedGradeInfo.grade}
+        gradeColorClass={selectedGradeInfo.color}
+      />
 
       {/* Question Breakdown */}
       <div className='space-y-4'>
@@ -509,8 +412,8 @@ export default function ResultsScreen({
         </div>
       </div>
 
-      {/* Retake Status */}
-      {retakeStatus && (
+      {/* Retake Status - Only show if retake is enabled */}
+      {retakeStatus && exam.retakeSettings?.enabled !== false && (
         <div className='bg-white rounded-2xl border border-gray-200 p-6 shadow-sm'>
           <div className='flex items-center gap-3 mb-4'>
             <Calendar className='h-5 w-5 text-blue-600' />
@@ -600,24 +503,26 @@ export default function ResultsScreen({
           Back to Exams
         </button>
 
-        {retakeStatus?.canRetake ? (
-          <button
-            onClick={() => {
-              console.log("Retake button clicked!");
-              onRetakeExam();
-            }}
-            className='flex-1 py-3 px-6 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-          >
-            Retake Exam
-          </button>
-        ) : (
-          <button
-            disabled
-            className='flex-1 py-3 px-6 bg-gray-300 text-gray-500 rounded-xl font-semibold cursor-not-allowed'
-          >
-            Retake Not Available
-          </button>
-        )}
+        {/* Only show retake button if retake is enabled */}
+        {exam.retakeSettings?.enabled !== false &&
+          (retakeStatus?.canRetake ? (
+            <button
+              onClick={() => {
+                console.log("Retake button clicked!");
+                onRetakeExam();
+              }}
+              className='flex-1 py-3 px-6 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+            >
+              Retake Exam
+            </button>
+          ) : (
+            <button
+              disabled
+              className='flex-1 py-3 px-6 bg-gray-300 text-gray-500 rounded-xl font-semibold cursor-not-allowed'
+            >
+              Retake Not Available
+            </button>
+          ))}
       </div>
     </div>
   );

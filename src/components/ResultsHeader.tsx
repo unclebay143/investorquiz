@@ -38,7 +38,7 @@ export default function ResultsHeader({
         </div>
         <div className='ml-4 flex-shrink-0'>
           <div
-            className={`w-full h-16 bg-gradient-to-br ${gradeColorClass} rounded-2xl flex items-center justify-center shadow-lg`}
+            className={`w-16 h-16 bg-gradient-to-br ${gradeColorClass} rounded-2xl flex items-center justify-center shadow-lg`}
           >
             <span className='text-white font-bold text-2xl'>{gradeLetter}</span>
           </div>

@@ -1,0 +1,797 @@
+{
+  "authors": [],
+  "topics": [
+    {
+      "slug": "stock-market-basics",
+      "title": "Stock Market Basics",
+      "description": "Master the fundamentals of stock market investing with a focus on the Nigerian Exchange (NGX) and local market dynamics",
+      "isNewTopic": true
+    }
+  ],
+  "exams": [
+    {
+      "slug": "how-stock-markets-work",
+      "topic": "stock-market-basics",
+      "title": "How Stock Markets Work",
+      "description": "Test your knowledge of how stock markets operate, with specific focus on the Nigerian Exchange (NGX) and market participants.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What does NGX stand for in the Nigerian stock market?",
+          "options": {
+            "A": "Nigerian Government Exchange",
+            "B": "Nigerian Exchange Group",
+            "C": "Nigerian Growth Exchange",
+            "D": "Nigerian Global Exchange"
+          },
+          "correctKey": "B",
+          "explanation": "NGX stands for Nigerian Exchange Group, which is the main stock exchange in Nigeria. It was formerly known as the Nigerian Stock Exchange (NSE) before being demutualized and rebranded."
+        },
+        {
+          "id": 2,
+          "prompt": "What is the primary function of a stock exchange?",
+          "options": {
+            "A": "To provide loans to companies",
+            "B": "To facilitate the buying and selling of securities between investors",
+            "C": "To regulate company operations",
+            "D": "To provide insurance for investments"
+          },
+          "correctKey": "B",
+          "explanation": "A stock exchange's primary function is to provide a regulated marketplace where investors can buy and sell securities (stocks, bonds, etc.) in a transparent and efficient manner."
+        },
+        {
+          "id": 3,
+          "prompt": "What are the main trading sessions on the NGX?",
+          "options": {
+            "A": "Morning session only",
+            "B": "Morning and afternoon sessions",
+            "C": "Continuous trading all day",
+            "D": "Evening session only"
+          },
+          "correctKey": "B",
+          "explanation": "The NGX operates two main trading sessions: the morning session (10:00 AM - 12:00 PM) and the afternoon session (1:00 PM - 2:30 PM), Monday through Friday."
+        },
+        {
+          "id": 4,
+          "prompt": "What is a stockbroker in the Nigerian market?",
+          "options": {
+            "A": "A person who owns stocks",
+            "B": "A licensed intermediary who executes buy and sell orders for clients",
+            "C": "A government regulator",
+            "D": "A company that issues stocks"
+          },
+          "correctKey": "B",
+          "explanation": "A stockbroker is a licensed intermediary who acts on behalf of clients to execute buy and sell orders in the stock market. In Nigeria, stockbrokers must be registered with the Securities and Exchange Commission (SEC)."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the role of the Securities and Exchange Commission (SEC) in Nigeria?",
+          "options": {
+            "A": "To buy and sell stocks",
+            "B": "To regulate and supervise the capital market",
+            "C": "To provide loans to investors",
+            "D": "To manage the NGX operations"
+          },
+          "correctKey": "B",
+          "explanation": "The SEC is the apex regulatory body for the Nigerian capital market. It regulates and supervises all capital market activities, including stock exchanges, brokers, and other market participants."
+        },
+        {
+          "id": 6,
+          "prompt": "What is market capitalization?",
+          "options": {
+            "A": "The total number of shares outstanding",
+            "B": "The total value of all shares of a company (share price × number of shares)",
+            "C": "The total revenue of a company",
+            "D": "The total assets of a company"
+          },
+          "correctKey": "B",
+          "explanation": "Market capitalization is calculated by multiplying the current share price by the total number of outstanding shares. It represents the total market value of a company's equity."
+        },
+        {
+          "id": 7,
+          "prompt": "What is the difference between primary and secondary markets?",
+          "options": {
+            "A": "Primary markets are for new issues, secondary markets are for existing securities",
+            "B": "Primary markets are for large companies, secondary markets are for small companies",
+            "C": "There is no difference between them",
+            "D": "Primary markets are for bonds, secondary markets are for stocks"
+          },
+          "correctKey": "A",
+          "explanation": "Primary markets are where new securities are issued and sold for the first time (like IPOs). Secondary markets are where existing securities are traded between investors (like the regular stock market)."
+        },
+        {
+          "id": 8,
+          "prompt": "What is an IPO (Initial Public Offering)?",
+          "options": {
+            "A": "A type of bond",
+            "B": "When a private company first sells shares to the public",
+            "C": "A government security",
+            "D": "A type of mutual fund"
+          },
+          "correctKey": "B",
+          "explanation": "An IPO is when a private company first offers its shares to the public for purchase. This allows the company to raise capital and gives investors the opportunity to own part of the company."
+        },
+        {
+          "id": 9,
+          "prompt": "What is the role of market makers in the stock market?",
+          "options": {
+            "A": "They regulate the market",
+            "B": "They provide liquidity by continuously buying and selling securities",
+            "C": "They issue new stocks",
+            "D": "They provide investment advice"
+          },
+          "correctKey": "B",
+          "explanation": "Market makers are firms that provide liquidity to the market by continuously quoting both buy and sell prices for securities, ensuring there's always someone willing to trade."
+        },
+        {
+          "id": 10,
+          "prompt": "What is the difference between a bull market and a bear market?",
+          "options": {
+            "A": "Bull markets are for stocks, bear markets are for bonds",
+            "B": "Bull markets have rising prices, bear markets have falling prices",
+            "C": "There is no difference between them",
+            "D": "Bull markets are for large companies, bear markets are for small companies"
+          },
+          "correctKey": "B",
+          "explanation": "A bull market is characterized by rising stock prices and investor optimism, while a bear market is characterized by falling stock prices and investor pessimism."
+        },
+        {
+          "id": 11,
+          "prompt": "What is the All-Share Index (ASI) in Nigeria?",
+          "options": {
+            "A": "The total number of companies listed on the NGX",
+            "B": "A benchmark index that measures the performance of all listed companies",
+            "C": "The total market value of the NGX",
+            "D": "The average share price of all stocks"
+          },
+          "correctKey": "B",
+          "explanation": "The All-Share Index (ASI) is the main benchmark index of the NGX that tracks the performance of all listed companies, weighted by market capitalization."
+        },
+        {
+          "id": 12,
+          "prompt": "What is the minimum lot size for stock trading on the NGX?",
+          "options": {
+            "A": "1 share",
+            "B": "10 shares",
+            "C": "50 shares",
+            "D": "100 shares"
+          },
+          "correctKey": "C",
+          "explanation": "The minimum lot size for stock trading on the NGX is typically 50 shares, meaning you must buy or sell in multiples of 50 shares for most stocks."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the role of the Central Securities Clearing System (CSCS) in Nigeria?",
+          "options": {
+            "A": "To regulate stock prices",
+            "B": "To provide clearing and settlement services for securities transactions",
+            "C": "To issue new stocks",
+            "D": "To provide investment advice"
+          },
+          "correctKey": "B",
+          "explanation": "The CSCS provides clearing and settlement services for securities transactions in Nigeria, ensuring the safe transfer of securities and funds between buyers and sellers."
+        },
+        {
+          "id": 14,
+          "prompt": "What is the difference between listed and unlisted companies?",
+          "options": {
+            "A": "Listed companies are larger than unlisted companies",
+            "B": "Listed companies have their shares traded on a stock exchange, unlisted companies do not",
+            "C": "There is no difference between them",
+            "D": "Listed companies are government-owned, unlisted companies are private"
+          },
+          "correctKey": "B",
+          "explanation": "Listed companies have their shares traded on a stock exchange (like the NGX), while unlisted companies have shares that are not publicly traded on any exchange."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the purpose of market regulation in the Nigerian stock market?",
+          "options": {
+            "A": "To control stock prices",
+            "B": "To protect investors and ensure fair, transparent, and efficient markets",
+            "C": "To prevent companies from making profits",
+            "D": "To limit the number of companies that can list"
+          },
+          "correctKey": "B",
+          "explanation": "Market regulation aims to protect investors, ensure fair and transparent trading, prevent fraud and manipulation, and maintain confidence in the market's integrity."
+        }
+      ]
+    },
+    {
+      "slug": "reading-stock-information",
+      "topic": "stock-market-basics",
+      "title": "Reading Stock Information",
+      "description": "Test your ability to read and interpret stock prices, charts, company data, and financial information on the Nigerian Exchange.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What does the 'Last Price' on a stock quote represent?",
+          "options": {
+            "A": "The highest price the stock has ever reached",
+            "B": "The price at which the last trade was executed",
+            "C": "The opening price of the day",
+            "D": "The closing price of the previous day"
+          },
+          "correctKey": "B",
+          "explanation": "The 'Last Price' shows the price at which the most recent trade was executed. This is the current market price of the stock at that moment."
+        },
+        {
+          "id": 2,
+          "prompt": "What is the difference between 'Bid' and 'Ask' prices?",
+          "options": {
+            "A": "Bid is the buying price, Ask is the selling price",
+            "B": "Bid is the selling price, Ask is the buying price",
+            "C": "There is no difference between them",
+            "D": "Bid is for large orders, Ask is for small orders"
+          },
+          "correctKey": "A",
+          "explanation": "Bid is the highest price buyers are willing to pay for a stock, while Ask (or Offer) is the lowest price sellers are willing to accept. The difference is called the spread."
+        },
+        {
+          "id": 3,
+          "prompt": "What does 'Volume' represent in stock trading?",
+          "options": {
+            "A": "The total value of all trades",
+            "B": "The number of shares traded in a given period",
+            "C": "The price change of the stock",
+            "D": "The number of buyers and sellers"
+          },
+          "correctKey": "B",
+          "explanation": "Volume represents the total number of shares traded during a specific time period. High volume often indicates strong interest in a stock."
+        },
+        {
+          "id": 4,
+          "prompt": "What is a candlestick chart used for?",
+          "options": {
+            "A": "To show company financial statements",
+            "B": "To display stock price movements over time",
+            "C": "To show dividend payments",
+            "D": "To display company news"
+          },
+          "correctKey": "B",
+          "explanation": "Candlestick charts are used to display stock price movements over time, showing the open, high, low, and close prices for each period in a visual format."
+        },
+        {
+          "id": 5,
+          "prompt": "What does 'Market Cap' mean in stock information?",
+          "options": {
+            "A": "The maximum price a stock can reach",
+            "B": "The total market value of a company's shares",
+            "C": "The minimum investment required",
+            "D": "The number of shares outstanding"
+          },
+          "correctKey": "B",
+          "explanation": "Market Cap (Market Capitalization) is calculated by multiplying the current stock price by the total number of outstanding shares, representing the total market value of the company."
+        },
+        {
+          "id": 6,
+          "prompt": "What is the Price-to-Earnings (P/E) ratio?",
+          "options": {
+            "A": "The ratio of stock price to dividend yield",
+            "B": "The ratio of stock price to earnings per share",
+            "C": "The ratio of market cap to revenue",
+            "D": "The ratio of debt to equity"
+          },
+          "correctKey": "B",
+          "explanation": "The P/E ratio is calculated by dividing the current stock price by the earnings per share (EPS). It shows how much investors are willing to pay for each naira of earnings."
+        },
+        {
+          "id": 7,
+          "prompt": "What does '52-Week High' and '52-Week Low' represent?",
+          "options": {
+            "A": "The highest and lowest prices in the last 52 weeks",
+            "B": "The highest and lowest volumes in the last 52 weeks",
+            "C": "The highest and lowest market caps in the last 52 weeks",
+            "D": "The highest and lowest P/E ratios in the last 52 weeks"
+          },
+          "correctKey": "A",
+          "explanation": "52-Week High and Low show the highest and lowest prices the stock has reached in the past 52 weeks, providing context for the current price level."
+        },
+        {
+          "id": 8,
+          "prompt": "What is a stock's 'Beta' in financial analysis?",
+          "options": {
+            "A": "The stock's dividend yield",
+            "B": "A measure of the stock's volatility relative to the market",
+            "C": "The stock's earnings growth rate",
+            "D": "The stock's market capitalization"
+          },
+          "correctKey": "B",
+          "explanation": "Beta measures how much a stock's price moves relative to the overall market. A beta of 1 means it moves with the market, while a beta greater than 1 means it's more volatile."
+        },
+        {
+          "id": 9,
+          "prompt": "What does 'Dividend Yield' represent?",
+          "options": {
+            "A": "The total dividends paid in a year",
+            "B": "The annual dividend as a percentage of the stock price",
+            "C": "The number of times dividends are paid per year",
+            "D": "The growth rate of dividends"
+          },
+          "correctKey": "B",
+          "explanation": "Dividend Yield is calculated by dividing the annual dividend per share by the current stock price, expressed as a percentage. It shows the return on investment from dividends alone."
+        },
+        {
+          "id": 10,
+          "prompt": "What is the difference between 'Open' and 'Close' prices?",
+          "options": {
+            "A": "Open is the first trade price of the day, Close is the last trade price",
+            "B": "Open is the highest price, Close is the lowest price",
+            "C": "There is no difference between them",
+            "D": "Open is for buying, Close is for selling"
+          },
+          "correctKey": "A",
+          "explanation": "Open price is the price at which the first trade of the day occurs, while Close price is the price at which the last trade of the day occurs."
+        },
+        {
+          "id": 11,
+          "prompt": "What does 'EPS' (Earnings Per Share) represent?",
+          "options": {
+            "A": "The total earnings of the company",
+            "B": "The company's earnings divided by the number of outstanding shares",
+            "C": "The expected future earnings",
+            "D": "The earnings growth rate"
+          },
+          "correctKey": "B",
+          "explanation": "EPS is calculated by dividing the company's net earnings by the number of outstanding shares. It shows how much profit each share represents."
+        },
+        {
+          "id": 12,
+          "prompt": "What is a 'Moving Average' in stock analysis?",
+          "options": {
+            "A": "The average price of all stocks in the market",
+            "B": "The average price of a stock over a specific period",
+            "C": "The average volume of trades",
+            "D": "The average market capitalization"
+          },
+          "correctKey": "B",
+          "explanation": "A Moving Average is the average price of a stock over a specific period (like 20 days or 50 days), used to smooth out price fluctuations and identify trends."
+        },
+        {
+          "id": 13,
+          "prompt": "What does 'RSI' (Relative Strength Index) measure?",
+          "options": {
+            "A": "The company's financial strength",
+            "B": "Whether a stock is overbought or oversold",
+            "C": "The stock's dividend strength",
+            "D": "The company's market share"
+          },
+          "correctKey": "B",
+          "explanation": "RSI is a technical indicator that measures whether a stock is overbought (RSI > 70) or oversold (RSI < 30), helping identify potential reversal points."
+        },
+        {
+          "id": 14,
+          "prompt": "What is the 'Book Value' of a stock?",
+          "options": {
+            "A": "The current market price",
+            "B": "The value of the company's assets minus liabilities, divided by shares outstanding",
+            "C": "The total market capitalization",
+            "D": "The dividend per share"
+          },
+          "correctKey": "B",
+          "explanation": "Book Value is calculated as (Total Assets - Total Liabilities) ÷ Number of Shares Outstanding. It represents the theoretical value of each share if the company were liquidated."
+        },
+        {
+          "id": 15,
+          "prompt": "What does 'Market Depth' show in stock trading?",
+          "options": {
+            "A": "The total number of shares outstanding",
+            "B": "The number of buy and sell orders at different price levels",
+            "C": "The company's financial depth",
+            "D": "The trading volume depth"
+          },
+          "correctKey": "B",
+          "explanation": "Market Depth shows the number of buy and sell orders at different price levels, giving investors insight into the supply and demand for a stock at various prices."
+        }
+      ]
+    },
+    {
+      "slug": "buying-and-selling-stocks",
+      "topic": "stock-market-basics",
+      "title": "Buying and Selling Stocks",
+      "description": "Test your knowledge of placing orders, choosing trading platforms, and executing stock trades on the Nigerian Exchange.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is a 'Market Order' in stock trading?",
+          "options": {
+            "A": "An order to buy at a specific price",
+            "B": "An order to buy or sell immediately at the current market price",
+            "C": "An order that expires at the end of the day",
+            "D": "An order for a specific number of shares"
+          },
+          "correctKey": "B",
+          "explanation": "A Market Order is an instruction to buy or sell a stock immediately at the current market price. It guarantees execution but not the exact price."
+        },
+        {
+          "id": 2,
+          "prompt": "What is a 'Limit Order' in stock trading?",
+          "options": {
+            "A": "An order with no price limit",
+            "B": "An order to buy or sell at a specific price or better",
+            "C": "An order that must be executed immediately",
+            "D": "An order for unlimited shares"
+          },
+          "correctKey": "B",
+          "explanation": "A Limit Order allows you to specify the maximum price you're willing to pay (for buys) or minimum price you're willing to accept (for sells). It guarantees price but not execution."
+        },
+        {
+          "id": 3,
+          "prompt": "What is the minimum amount needed to start trading stocks in Nigeria?",
+          "options": {
+            "A": "₦1,000",
+            "B": "₦5,000",
+            "C": "₦10,000",
+            "D": "There is no minimum amount"
+          },
+          "correctKey": "D",
+          "explanation": "There is no official minimum amount to start trading stocks in Nigeria. However, you need enough to buy at least one lot (usually 50 shares) of the stock you want to purchase."
+        },
+        {
+          "id": 4,
+          "prompt": "What is a 'Stop Loss' order?",
+          "options": {
+            "A": "An order to buy more shares",
+            "B": "An order to automatically sell if the price drops to a certain level",
+            "C": "An order to hold shares indefinitely",
+            "D": "An order to buy at market price"
+          },
+          "correctKey": "B",
+          "explanation": "A Stop Loss order automatically sells your shares if the price drops to a predetermined level, helping limit your potential losses."
+        },
+        {
+          "id": 5,
+          "prompt": "What is the difference between 'Day Order' and 'Good Till Cancelled' (GTC) order?",
+          "options": {
+            "A": "Day Order expires at end of day, GTC remains active until cancelled",
+            "B": "Day Order is for buying, GTC is for selling",
+            "C": "There is no difference between them",
+            "D": "Day Order is for large amounts, GTC is for small amounts"
+          },
+          "correctKey": "A",
+          "explanation": "A Day Order expires at the end of the trading day if not executed, while a Good Till Cancelled order remains active until it's executed or manually cancelled."
+        },
+        {
+          "id": 6,
+          "prompt": "What is a 'Brokerage Account'?",
+          "options": {
+            "A": "A bank account for storing money",
+            "B": "An account with a stockbroker to buy and sell securities",
+            "C": "A savings account",
+            "D": "A credit card account"
+          },
+          "correctKey": "B",
+          "explanation": "A Brokerage Account is an account you open with a licensed stockbroker that allows you to buy and sell stocks, bonds, and other securities."
+        },
+        {
+          "id": 7,
+          "prompt": "What is the 'Settlement Period' for stock trades in Nigeria?",
+          "options": {
+            "A": "T+0 (same day)",
+            "B": "T+1 (next day)",
+            "C": "T+2 (two days)",
+            "D": "T+3 (three days)"
+          },
+          "correctKey": "D",
+          "explanation": "In Nigeria, stock trades settle on T+3, meaning the transaction is completed three business days after the trade date."
+        },
+        {
+          "id": 8,
+          "prompt": "What is a 'Demat Account' in the Nigerian context?",
+          "options": {
+            "A": "A bank account",
+            "B": "An account that holds your shares in electronic form",
+            "C": "A savings account",
+            "D": "A credit account"
+          },
+          "correctKey": "B",
+          "explanation": "A Demat (Dematerialized) Account holds your shares in electronic form, replacing physical share certificates. It's managed by the Central Securities Clearing System (CSCS)."
+        },
+        {
+          "id": 9,
+          "prompt": "What are 'Brokerage Fees'?",
+          "options": {
+            "A": "Fees paid to the government",
+            "B": "Fees charged by your stockbroker for executing trades",
+            "C": "Fees paid to the company",
+            "D": "Fees for opening an account"
+          },
+          "correctKey": "B",
+          "explanation": "Brokerage Fees are charges levied by your stockbroker for executing buy and sell orders on your behalf. These fees vary between brokers."
+        },
+        {
+          "id": 10,
+          "prompt": "What is the 'Bid-Ask Spread'?",
+          "options": {
+            "A": "The difference between the highest bid and lowest ask prices",
+            "B": "The total value of all trades",
+            "C": "The number of shares traded",
+            "D": "The time between order and execution"
+          },
+          "correctKey": "A",
+          "explanation": "The Bid-Ask Spread is the difference between the highest price buyers are willing to pay (bid) and the lowest price sellers are willing to accept (ask)."
+        },
+        {
+          "id": 11,
+          "prompt": "What is a 'Fill or Kill' order?",
+          "options": {
+            "A": "An order that must be executed immediately or cancelled",
+            "B": "An order that can be partially filled",
+            "C": "An order that never expires",
+            "D": "An order for unlimited shares"
+          },
+          "correctKey": "A",
+          "explanation": "A Fill or Kill order must be executed immediately in its entirety or it will be cancelled. It's used when you need the full order filled or nothing at all."
+        },
+        {
+          "id": 12,
+          "prompt": "What is 'Pre-Market' and 'After-Hours' trading?",
+          "options": {
+            "A": "Trading before and after regular market hours",
+            "B": "Trading for large institutions only",
+            "C": "Trading for small investors only",
+            "D": "Trading for government securities only"
+          },
+          "correctKey": "A",
+          "explanation": "Pre-Market trading occurs before regular market hours, and After-Hours trading occurs after regular market hours. These sessions have different rules and liquidity."
+        },
+        {
+          "id": 13,
+          "prompt": "What is the 'All or None' order type?",
+          "options": {
+            "A": "An order that must be filled completely or not at all",
+            "B": "An order that can be partially filled",
+            "C": "An order that expires at market close",
+            "D": "An order for market price only"
+          },
+          "correctKey": "A",
+          "explanation": "An All or None order must be executed in its entirety or not at all. It won't be partially filled, ensuring you get the exact quantity you want or nothing."
+        },
+        {
+          "id": 14,
+          "prompt": "What is 'Slippage' in stock trading?",
+          "options": {
+            "A": "The difference between expected and actual execution price",
+            "B": "The time delay in order execution",
+            "C": "The brokerage fees charged",
+            "D": "The settlement period"
+          },
+          "correctKey": "A",
+          "explanation": "Slippage occurs when the actual execution price differs from the expected price, often due to market volatility or low liquidity."
+        },
+        {
+          "id": 15,
+          "prompt": "What is the 'Order Book' in stock trading?",
+          "options": {
+            "A": "A physical book with stock prices",
+            "B": "A list of all pending buy and sell orders for a stock",
+            "C": "A record of completed trades",
+            "D": "A list of available stocks"
+          },
+          "correctKey": "B",
+          "explanation": "The Order Book is a real-time list of all pending buy and sell orders for a particular stock, showing the quantities and prices at which investors are willing to trade."
+        }
+      ]
+    },
+    {
+      "slug": "stock-analysis-fundamentals",
+      "topic": "stock-market-basics",
+      "title": "Stock Analysis Fundamentals",
+      "description": "Test your knowledge of stock analysis fundamentals, company evaluation, and investment decision-making in the Nigerian market.",
+      "totalPoints": 150,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is 'Fundamental Analysis' in stock investing?",
+          "options": {
+            "A": "Analyzing stock price charts",
+            "B": "Evaluating a company's financial health and business prospects",
+            "C": "Following market trends",
+            "D": "Analyzing trading volume"
+          },
+          "correctKey": "B",
+          "explanation": "Fundamental Analysis involves evaluating a company's financial statements, business model, industry position, and economic factors to determine its intrinsic value and investment potential."
+        },
+        {
+          "id": 2,
+          "prompt": "What is 'Technical Analysis' in stock investing?",
+          "options": {
+            "A": "Analyzing company financial statements",
+            "B": "Studying price charts and trading patterns to predict future movements",
+            "C": "Reading company news",
+            "D": "Analyzing industry trends"
+          },
+          "correctKey": "B",
+          "explanation": "Technical Analysis involves studying historical price and volume data, charts, and trading patterns to predict future stock price movements."
+        },
+        {
+          "id": 3,
+          "prompt": "What is the 'Price-to-Book (P/B) Ratio'?",
+          "options": {
+            "A": "The ratio of stock price to earnings",
+            "B": "The ratio of stock price to book value per share",
+            "C": "The ratio of market cap to revenue",
+            "D": "The ratio of debt to equity"
+          },
+          "correctKey": "B",
+          "explanation": "The P/B ratio compares a stock's market price to its book value per share. A P/B ratio below 1 might indicate the stock is undervalued."
+        },
+        {
+          "id": 4,
+          "prompt": "What does 'ROE' (Return on Equity) measure?",
+          "options": {
+            "A": "The company's total revenue",
+            "B": "How efficiently a company uses shareholders' equity to generate profits",
+            "C": "The company's market share",
+            "D": "The company's debt level"
+          },
+          "correctKey": "B",
+          "explanation": "ROE measures how effectively a company uses shareholders' equity to generate profits. It's calculated as Net Income ÷ Shareholders' Equity."
+        },
+        {
+          "id": 5,
+          "prompt": "What is 'Debt-to-Equity Ratio'?",
+          "options": {
+            "A": "The ratio of total assets to total liabilities",
+            "B": "The ratio of total debt to shareholders' equity",
+            "C": "The ratio of current assets to current liabilities",
+            "D": "The ratio of revenue to expenses"
+          },
+          "correctKey": "B",
+          "explanation": "Debt-to-Equity Ratio compares a company's total debt to its shareholders' equity, indicating how much debt the company uses relative to equity financing."
+        },
+        {
+          "id": 6,
+          "prompt": "What is 'Current Ratio'?",
+          "options": {
+            "A": "The ratio of current assets to current liabilities",
+            "B": "The ratio of total assets to total liabilities",
+            "C": "The ratio of revenue to expenses",
+            "D": "The ratio of debt to equity"
+          },
+          "correctKey": "A",
+          "explanation": "Current Ratio measures a company's ability to pay short-term obligations by comparing current assets to current liabilities. A ratio above 1 indicates good short-term liquidity."
+        },
+        {
+          "id": 7,
+          "prompt": "What is 'EPS Growth'?",
+          "options": {
+            "A": "The current earnings per share",
+            "B": "The rate at which earnings per share are increasing over time",
+            "C": "The total earnings of the company",
+            "D": "The dividend per share"
+          },
+          "correctKey": "B",
+          "explanation": "EPS Growth measures the rate at which a company's earnings per share are increasing over time, indicating the company's profitability growth."
+        },
+        {
+          "id": 8,
+          "prompt": "What is 'Market Share'?",
+          "options": {
+            "A": "The company's stock price",
+            "B": "The percentage of total market sales that a company controls",
+            "C": "The company's market capitalization",
+            "D": "The number of shares outstanding"
+          },
+          "correctKey": "B",
+          "explanation": "Market Share represents the percentage of total industry sales that a company controls, indicating its competitive position in the market."
+        },
+        {
+          "id": 9,
+          "prompt": "What is 'Revenue Growth'?",
+          "options": {
+            "A": "The total revenue of the company",
+            "B": "The rate at which a company's sales are increasing over time",
+            "C": "The profit margin",
+            "D": "The dividend yield"
+          },
+          "correctKey": "B",
+          "explanation": "Revenue Growth measures the rate at which a company's sales are increasing over time, indicating business expansion and market demand."
+        },
+        {
+          "id": 10,
+          "prompt": "What is 'Free Cash Flow'?",
+          "options": {
+            "A": "The total cash in the company",
+            "B": "Cash generated from operations minus capital expenditures",
+            "C": "The dividend payments",
+            "D": "The total revenue"
+          },
+          "correctKey": "B",
+          "explanation": "Free Cash Flow is the cash a company generates from operations after subtracting capital expenditures. It shows how much cash is available for dividends, debt repayment, or growth."
+        },
+        {
+          "id": 11,
+          "prompt": "What is 'Support' and 'Resistance' in technical analysis?",
+          "options": {
+            "A": "Support is where prices tend to fall, Resistance is where prices tend to rise",
+            "B": "Support is where prices tend to rise, Resistance is where prices tend to fall",
+            "C": "There is no difference between them",
+            "D": "Support is for buying, Resistance is for selling"
+          },
+          "correctKey": "B",
+          "explanation": "Support is a price level where a stock tends to find buying interest and bounce higher, while Resistance is a price level where selling pressure tends to emerge."
+        },
+        {
+          "id": 12,
+          "prompt": "What is 'Moving Average Crossover'?",
+          "options": {
+            "A": "When two moving averages cross each other",
+            "B": "When a stock price crosses a moving average",
+            "C": "When volume crosses a moving average",
+            "D": "When earnings cross a moving average"
+          },
+          "correctKey": "A",
+          "explanation": "Moving Average Crossover occurs when two moving averages (like 50-day and 200-day) cross each other, often used as a buy or sell signal."
+        },
+        {
+          "id": 13,
+          "prompt": "What is 'Market Sentiment'?",
+          "options": {
+            "A": "The total market value",
+            "B": "The overall attitude of investors toward the market or a particular stock",
+            "C": "The trading volume",
+            "D": "The interest rates"
+          },
+          "correctKey": "B",
+          "explanation": "Market Sentiment refers to the overall attitude of investors toward the market or a specific stock, which can influence buying and selling decisions."
+        },
+        {
+          "id": 14,
+          "prompt": "What is 'Value Investing'?",
+          "options": {
+            "A": "Investing in high-growth stocks",
+            "B": "Investing in stocks that appear undervalued relative to their intrinsic worth",
+            "C": "Investing in large-cap stocks only",
+            "D": "Investing in dividend-paying stocks only"
+          },
+          "correctKey": "B",
+          "explanation": "Value Investing involves finding stocks that are trading below their intrinsic value, based on fundamental analysis, with the expectation that the market will eventually recognize their true worth."
+        },
+        {
+          "id": 15,
+          "prompt": "What is 'Growth Investing'?",
+          "options": {
+            "A": "Investing in undervalued stocks",
+            "B": "Investing in companies with above-average growth potential",
+            "C": "Investing in large-cap stocks only",
+            "D": "Investing in dividend-paying stocks only"
+          },
+          "correctKey": "B",
+          "explanation": "Growth Investing focuses on companies with above-average growth potential, even if their stocks appear expensive, with the expectation that growth will drive future returns."
+        }
+      ]
+    }
+  ]
+}

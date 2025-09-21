@@ -1,0 +1,67 @@
+{
+  "authors": [
+    {
+      "slug": "john-doe",
+      "name": "John Doe",
+      "title": "Senior Investment Analyst",
+      "bio": "John has over 10 years of experience in investment analysis and portfolio management.",
+      "profileImage": "https://github.com/unclebay143.png",
+      "socialLinks": {
+        "linkedin": "https://linkedin.com/in/johndoe",
+        "twitter": "https://twitter.com/johndoe"
+      },
+      "quote": "Understanding market fundamentals is key to successful investing."
+    }
+  ],
+  "topics": [
+    {
+      "slug": "investment-basics",
+      "title": "Investment Basics",
+      "description": "Fundamental concepts every investor should know",
+      "isNewTopic": true
+    }
+  ],
+  "exams": [
+    {
+      "slug": "stocks-fundamentals",
+      "topic": "investment-basics",
+      "author": "john-doe",
+      "title": "Stock Market Fundamentals",
+      "description": "Test your knowledge of basic stock market concepts",
+      "totalPoints": 100,
+      "reviewMode": "post",
+      "isNew": true,
+      "retakeSettings": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "coolDownDays": 1
+      },
+      "questions": [
+        {
+          "id": 1,
+          "prompt": "What is a stock?",
+          "options": {
+            "A": "A type of bond",
+            "B": "Ownership share in a company",
+            "C": "A savings account",
+            "D": "A type of insurance"
+          },
+          "correctKey": "B",
+          "explanation": "A stock represents ownership in a company. When you buy a stock, you become a shareholder."
+        },
+        {
+          "id": 2,
+          "prompt": "What does IPO stand for?",
+          "options": {
+            "A": "Initial Public Offering",
+            "B": "International Portfolio Option",
+            "C": "Investment Portfolio Organization",
+            "D": "Individual Purchase Order"
+          },
+          "correctKey": "A",
+          "explanation": "IPO stands for Initial Public Offering, which is when a private company first sells shares to the public."
+        }
+      ]
+    }
+  ]
+}

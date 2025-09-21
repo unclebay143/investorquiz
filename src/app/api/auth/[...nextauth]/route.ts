@@ -1,10 +1,10 @@
 import { connectViaMongoose } from "@/lib/db";
 import User, { IUser } from "@/models/User";
 import bcrypt from "bcryptjs";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     Credentials({
       name: "Credentials",
@@ -47,6 +47,8 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

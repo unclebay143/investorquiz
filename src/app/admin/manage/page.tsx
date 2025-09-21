@@ -36,7 +36,7 @@ export default function AdminManagePage() {
     slug: "",
     title: "",
     description: "",
-    isNew: false,
+    isNewTopic: false,
   });
   const [exam, setExam] = useState({
     slug: "",
@@ -282,9 +282,9 @@ export default function AdminManagePage() {
               <label className='flex items-center gap-2'>
                 <input
                   type='checkbox'
-                  checked={topic.isNew}
+                  checked={topic.isNewTopic}
                   onChange={(e) =>
-                    setTopic({ ...topic, isNew: e.target.checked })
+                    setTopic({ ...topic, isNewTopic: e.target.checked })
                   }
                 />
                 <span className='text-sm font-medium text-gray-700'>
@@ -300,7 +300,7 @@ export default function AdminManagePage() {
                 slug: topic.slug,
                 title: topic.title,
                 description: topic.description || undefined,
-                isNew: topic.isNew,
+                isNewTopic: topic.isNewTopic,
               })
             }
           >
