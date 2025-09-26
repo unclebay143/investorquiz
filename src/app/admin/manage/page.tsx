@@ -620,7 +620,7 @@ export default function AdminManagePage() {
           <button
             className='mt-3 px-3 py-2 rounded bg-gray-900 text-white'
             onClick={() =>
-              submit("/api/adminquizzes", { ...quiz, questions: quizQuestions })
+              submit("/api/admin/quizzes", { ...quiz, questions: quizQuestions })
             }
           >
             Save Quiz
