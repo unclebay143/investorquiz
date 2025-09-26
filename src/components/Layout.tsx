@@ -5,26 +5,30 @@ import Sidebar from "@/components/Sidebar";
 import { MOCK_CURRENT_USER } from "@/data/leaderboardData";
 import { useTopics } from "@/hooks/useTopics";
 import { CurrentUser } from "@/types";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface LayoutProps {
   children: ReactNode;
   activeId: string;
-  selectedExam?: string | null;
+  selectedQuiz?: string | null;
   currentUser?: CurrentUser;
   onTopicSelect: (id: string) => void;
-  hideSidebar?: boolean;
+  defaultCollapsed?: boolean; // collapse sidebar by default on desktop
 }
 
 export default function Layout({
   children,
   activeId,
-  selectedExam = null,
+  selectedQuiz = null,
   currentUser = MOCK_CURRENT_USER,
   onTopicSelect,
-  hideSidebar = false,
+  defaultCollapsed = false,
 }: LayoutProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // mobile drawer
+  const [collapsed, setCollapsed] = useState(defaultCollapsed); // desktop sidebar collapse
+  useEffect(() => {
+    setCollapsed(defaultCollapsed);
+  }, [defaultCollapsed]);
   const [query, setQuery] = useState("");
 
   // Use TanStack Query for topics
@@ -40,39 +44,46 @@ export default function Layout({
     <div className='min-h-screen bg-gray-50'>
       <Header
         isOpen={open}
-        onToggleMenu={() => setOpen((v) => !v)}
+        desktopOpen={!collapsed}
+        onToggleMenu={() => {
+          // Toggle mobile drawer on small screens, collapse on desktop
+          if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+            setCollapsed((v) => !v);
+          } else {
+            setOpen((v) => !v);
+          }
+        }}
         currentUser={currentUser}
       />
 
       <div className='flex min-h-[calc(100vh-73px)]'>
         {/* Sidebar */}
-        {!hideSidebar && (
-          <div className='lg:w-80 flex-shrink-0'>
-            <Sidebar
-              topics={filtered}
-              activeId={activeId}
-              query={query}
-              selectedExam={selectedExam}
-              isOpen={open}
-              loading={loading}
-              onTopicSelect={onTopicSelect}
-              onQueryChange={setQuery}
-              onClose={() => setOpen(false)}
-            />
-          </div>
-        )}
+        <div
+          className={`lg:w-80 flex-shrink-0 ${
+            collapsed ? "lg:hidden" : "lg:block"
+          }`}
+        >
+          <Sidebar
+            topics={filtered}
+            activeId={activeId}
+            query={query}
+            selectedQuiz={selectedQuiz}
+            isOpen={open}
+            loading={loading}
+            onTopicSelect={onTopicSelect}
+            onQueryChange={setQuery}
+            onClose={() => setOpen(false)}
+            onToggle={() => setCollapsed((v) => !v)}
+          />
+        </div>
 
         {/* Main Content */}
         <main
           className={`flex-1 overflow-y-auto bg-gray-50 ${
-            hideSidebar ? "max-w-6xl mx-auto" : "max-w-5xl mx-auto"
+            collapsed ? "max-w-7xl mx-auto" : "lg:max-w-8/12 mx-auto"
           }`}
         >
-          <div
-            className={`${hideSidebar ? "p-6 lg:p-8" : "p-4 sm:p-6 lg:p-8"}`}
-          >
-            {children}
-          </div>
+          <div className='p-4 sm:p-6 lg:p-8'>{children}</div>
         </main>
       </div>
     </div>

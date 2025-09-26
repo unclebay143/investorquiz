@@ -61,16 +61,15 @@ Your JSON file should follow this structure:
       "isNewTopic": true
     }
   ],
-  "exams": [
+  "quizzes": [
     {
-      "slug": "exam-slug",
+      "slug": "quiz-slug",
       "topic": "topic-slug",
       "author": "author-slug",
-      "title": "Exam Title",
-      "description": "Exam description...",
+      "title": "Quiz Title",
+      "description": "Quiz description...",
       "totalPoints": 100,
       "reviewMode": "post",
-      "isNew": true,
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -112,15 +111,14 @@ Your JSON file should follow this structure:
 - `description`: Topic description (optional)
 - `isNewTopic`: Mark as new topic (optional)
 
-### Exams
+### Quizzes
 - `slug`: Unique identifier (URL-friendly)
 - `topic`: Reference to topic slug
 - `author`: Reference to author slug
-- `title`: Exam title
-- `description`: Exam description (optional)
-- `totalPoints`: Total points for the exam
+- `title`: Quiz title
+- `description`: Quiz description (optional)
+- `totalPoints`: Total points for the quiz
 - `reviewMode`: "immediate" or "post"
-- `isNew`: Mark as new exam (optional)
 - `retakeSettings`: Retake configuration (optional)
 - `questions`: Array of questions
 
@@ -154,7 +152,7 @@ Your JSON file should follow this structure:
       "description": "Learn about stock market basics"
     }
   ],
-  "exams": [
+  "quizzes": [
     {
       "slug": "stock-basics",
       "topic": "stocks",
@@ -185,13 +183,13 @@ Your JSON file should follow this structure:
 
 1. **API Connection Issues**: Make sure your Next.js server is running
 2. **Validation Errors**: Check that all required fields are present
-3. **Reference Errors**: Ensure topic and author slugs exist before importing exams
+3. **Reference Errors**: Ensure topic and author slugs exist before importing quizzes
 4. **Duplicate Slugs**: The system will update existing records with the same slug
 
 ## Tips
 
-- Import authors first, then topics, then exams
+- Import authors first, then topics, then quizzes
 - Use descriptive slugs that are URL-friendly
 - Test with small datasets first
-- Keep question IDs unique within each exam
+- Keep question IDs unique within each quiz
 - Use the sample data to test the import process

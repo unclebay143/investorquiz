@@ -96,7 +96,7 @@ export default function Leaderboard({
               className='w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
             >
               <option value='score'>Total Score</option>
-              <option value='exams'>Exams Completed</option>
+              <option value='quizzes'>Quizzes Completed</option>
               <option value='average'>Average Score</option>
               <option value='time'>Time Spent</option>
             </select>
@@ -199,9 +199,9 @@ export default function Leaderboard({
                     </div>
                     <div className='text-center'>
                       <div className='font-semibold text-gray-900'>
-                        {entry.user.totalExams}
+                        {entry.user.totalQuizzes}
                       </div>
-                      <div className='text-gray-500 text-xs'>Exams</div>
+                      <div className='text-gray-500 text-xs'>Quizzes</div>
                     </div>
                     <div className='text-center'>
                       <div className='font-semibold text-gray-900'>

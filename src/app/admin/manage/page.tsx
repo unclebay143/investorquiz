@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Tab = "authors" | "topics" | "exams";
+type Tab = "authors" | "topics" | "quizzes";
 
 function Section({
   title,
@@ -38,7 +38,7 @@ export default function AdminManagePage() {
     description: "",
     isNewTopic: false,
   });
-  const [exam, setExam] = useState({
+  const [quiz, setQuiz] = useState({
     slug: "",
     topic: "",
     author: "",
@@ -57,7 +57,7 @@ export default function AdminManagePage() {
     correctKey: "A" as "A" | "B" | "C" | "D",
     explanation: "",
   });
-  const [examQuestions, setExamQuestions] = useState<any[]>([]);
+  const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
 
   const submit = async (path: string, payload: any) => {
@@ -100,13 +100,13 @@ export default function AdminManagePage() {
         </button>
         <button
           className={`px-4 py-2 font-medium ${
-            activeTab === "exams"
+            activeTab === "quizzes"
               ? "border-b-2 border-gray-900 text-gray-900"
               : "text-gray-500 hover:text-gray-700"
           }`}
-          onClick={() => setActiveTab("exams")}
+          onClick={() => setActiveTab("quizzes")}
         >
-          Exams
+          Quizzes
         </button>
       </div>
 
@@ -309,8 +309,8 @@ export default function AdminManagePage() {
         </Section>
       )}
 
-      {activeTab === "exams" && (
-        <Section title='Create Exam'>
+      {activeTab === "quizzes" && (
+        <Section title='Create Quiz'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-1'>
@@ -318,9 +318,9 @@ export default function AdminManagePage() {
               </label>
               <input
                 className='w-full border rounded px-2 py-1'
-                placeholder='exam-slug'
-                value={exam.slug}
-                onChange={(e) => setExam({ ...exam, slug: e.target.value })}
+                placeholder='quiz-slug'
+                value={quiz.slug}
+                onChange={(e) => setQuiz({ ...quiz, slug: e.target.value })}
               />
             </div>
             <div>
@@ -330,8 +330,8 @@ export default function AdminManagePage() {
               <input
                 className='w-full border rounded px-2 py-1'
                 placeholder='topic-slug'
-                value={exam.topic}
-                onChange={(e) => setExam({ ...exam, topic: e.target.value })}
+                value={quiz.topic}
+                onChange={(e) => setQuiz({ ...quiz, topic: e.target.value })}
               />
             </div>
             <div>
@@ -341,8 +341,8 @@ export default function AdminManagePage() {
               <input
                 className='w-full border rounded px-2 py-1'
                 placeholder='author-slug'
-                value={exam.author}
-                onChange={(e) => setExam({ ...exam, author: e.target.value })}
+                value={quiz.author}
+                onChange={(e) => setQuiz({ ...quiz, author: e.target.value })}
               />
             </div>
             <div>
@@ -351,9 +351,9 @@ export default function AdminManagePage() {
               </label>
               <input
                 className='w-full border rounded px-2 py-1'
-                placeholder='Exam Title'
-                value={exam.title}
-                onChange={(e) => setExam({ ...exam, title: e.target.value })}
+                placeholder='Quiz Title'
+                value={quiz.title}
+                onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
               />
             </div>
             <div className='md:col-span-2'>
@@ -362,11 +362,11 @@ export default function AdminManagePage() {
               </label>
               <textarea
                 className='w-full border rounded px-2 py-1'
-                placeholder='Exam description...'
+                placeholder='Quiz description...'
                 rows={3}
-                value={exam.description}
+                value={quiz.description}
                 onChange={(e) =>
-                  setExam({ ...exam, description: e.target.value })
+                  setQuiz({ ...quiz, description: e.target.value })
                 }
               />
             </div>
@@ -378,9 +378,9 @@ export default function AdminManagePage() {
                 className='w-full border rounded px-2 py-1'
                 placeholder='10'
                 type='number'
-                value={exam.totalPoints}
+                value={quiz.totalPoints}
                 onChange={(e) =>
-                  setExam({ ...exam, totalPoints: Number(e.target.value) })
+                  setQuiz({ ...quiz, totalPoints: Number(e.target.value) })
                 }
               />
             </div>
@@ -390,12 +390,12 @@ export default function AdminManagePage() {
               </label>
               <select
                 className='w-full border rounded px-2 py-1'
-                value={exam.reviewMode}
+                value={quiz.reviewMode}
                 onChange={(e) =>
-                  setExam({ ...exam, reviewMode: e.target.value as any })
+                  setQuiz({ ...quiz, reviewMode: e.target.value as any })
                 }
               >
-                <option value='post'>Post Exam</option>
+                <option value='post'>Post Quiz</option>
                 <option value='immediate'>Immediate</option>
               </select>
             </div>
@@ -515,10 +515,10 @@ export default function AdminManagePage() {
                 !question.D.trim()
               }
               onClick={() => {
-                setExamQuestions([
-                  ...examQuestions,
+                setQuizQuestions([
+                  ...quizQuestions,
                   {
-                    id: examQuestions.length + 1,
+                    id: quizQuestions.length + 1,
                     prompt: question.prompt,
                     options: {
                       A: question.A,
@@ -531,7 +531,7 @@ export default function AdminManagePage() {
                   },
                 ]);
                 setQuestion({
-                  id: examQuestions.length + 2,
+                  id: quizQuestions.length + 2,
                   prompt: "",
                   A: "",
                   B: "",
@@ -545,12 +545,12 @@ export default function AdminManagePage() {
               Add question
             </button>
 
-            {examQuestions.length > 0 && (
+            {quizQuestions.length > 0 && (
               <div className='mt-4 space-y-3'>
                 <h4 className='font-medium text-gray-900'>
-                  Added Questions ({examQuestions.length})
+                  Added Questions ({quizQuestions.length})
                 </h4>
-                {examQuestions.map((q, index) => (
+                {quizQuestions.map((q, index) => (
                   <div key={index} className='border rounded p-3 bg-gray-50'>
                     <div className='flex justify-between items-start mb-2'>
                       <span className='text-sm font-medium text-gray-700'>
@@ -559,8 +559,8 @@ export default function AdminManagePage() {
                       <button
                         className='text-red-600 hover:text-red-800 text-sm'
                         onClick={() => {
-                          setExamQuestions(
-                            examQuestions.filter((_, i) => i !== index)
+                          setQuizQuestions(
+                            quizQuestions.filter((_, i) => i !== index)
                           );
                         }}
                       >
@@ -620,10 +620,10 @@ export default function AdminManagePage() {
           <button
             className='mt-3 px-3 py-2 rounded bg-gray-900 text-white'
             onClick={() =>
-              submit("/api/admin/exams", { ...exam, questions: examQuestions })
+              submit("/api/adminquizzes", { ...quiz, questions: quizQuestions })
             }
           >
-            Save Exam
+            Save Quiz
           </button>
         </Section>
       )}

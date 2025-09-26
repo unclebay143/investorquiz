@@ -29,9 +29,9 @@ async function testTopicsAPI() {
   });
 }
 
-async function testExamsAPI(topicSlug) {
-  return await measureTime(`Exams API (${topicSlug})`, async () => {
-    const response = await fetch(`${BASE_URL}/api/topics/${topicSlug}/exams`);
+async function testQuizzesAPI(topicSlug) {
+  return await measureTime(`Quizzes API (${topicSlug})`, async () => {
+    const response = await fetch(`${BASE_URL}/api/topics/${topicSlug}/quizzes`);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
@@ -40,9 +40,9 @@ async function testExamsAPI(topicSlug) {
   });
 }
 
-async function testExamAPI(examSlug) {
-  return await measureTime(`Single Exam API (${examSlug})`, async () => {
-    const response = await fetch(`${BASE_URL}/api/exams/${examSlug}`);
+async function testQuizAPI(quizSlug) {
+  return await measureTime(`Single Quiz API (${quizSlug})`, async () => {
+    const response = await fetch(`${BASE_URL}/apiquizzes/${quizSlug}`);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
@@ -56,8 +56,8 @@ async function runPerformanceTest() {
 
   const results = {
     topics: [],
-    exams: [],
-    singleExam: [],
+    quizzes: [],
+    singleQuiz: [],
   };
 
   // Run multiple tests to get average performance
@@ -74,18 +74,18 @@ async function runPerformanceTest() {
       const topics = topicsResult.result;
       console.log(`📊 Found ${topics.length} topics`);
 
-      // Test exams API for first topic
+      // Test quizzes API for first topic
       if (topics.length > 0) {
-        const examsResult = await testExamsAPI(topics[0].slug);
-        if (examsResult.success) {
-          results.exams.push(examsResult.duration);
+        const quizResult = await testQuizzesAPI(topics[0].slug);
+        if (quizResult.success) {
+          results.quizzes.push(quizResult.duration);
 
-          if (examsResult.result.length > 0) {
-            // Test single exam API for first exam
-            const firstExam = examsResult.result[0];
-            const examResult = await testExamAPI(firstExam.slug);
-            if (examResult.success) {
-              results.singleExam.push(examResult.duration);
+          if (quizResult.result.length > 0) {
+            // Test single quiz API for first quiz
+            const firstQuiz = quizResult.result[0];
+            const quizResult = await testQuizAPI(firstQuiz.slug);
+            if (quizResult.success) {
+              results.singleQuiz.push(quizResult.duration);
             }
           }
         }
@@ -104,13 +104,13 @@ async function runPerformanceTest() {
     )}ms (avg)`
   );
   console.log(
-    `Exams API: ${Math.round(
-      results.exams.reduce((a, b) => a + b, 0) / results.exams.length
+    `Quizzes API: ${Math.round(
+      results.quizzes.reduce((a, b) => a + b, 0) / results.quizzes.length
     )}ms (avg)`
   );
   console.log(
-    `Single Exam API: ${Math.round(
-      results.singleExam.reduce((a, b) => a + b, 0) / results.singleExam.length
+    `Single Quiz API: ${Math.round(
+      results.singleQuiz.reduce((a, b) => a + b, 0) / results.singleQuiz.length
     )}ms (avg)`
   );
 

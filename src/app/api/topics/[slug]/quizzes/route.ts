@@ -2,7 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { connectViaMongoose } from "@/lib/db";
 import Attempt from "@/models/Attempt";
 import Author from "@/models/Author";
-import Exam from "@/models/Exam";
+import Quiz from "@/models/Quiz";
 import Topic from "@/models/Topic";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -12,10 +12,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const session = (await getServerSession(authOptions)) as any;
-    if (!session?.userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const session = (await getServerSession(authOptions)) as { userId?: string } | null;
 
     await connectViaMongoose();
     const { slug } = await params;
@@ -29,41 +26,52 @@ export async function GET(
       return NextResponse.json({ error: "Topic not found" }, { status: 404 });
     }
 
-    const exams = await Exam.find({ topic: topic._id })
+    const quizzes = await Quiz.find({ topic: topic._id })
       .populate({
         path: "author",
         select: "name title bio profileImage slug socialLinks books quote", // All author fields
         model: Author,
       })
       .select(
-        "slug title description totalPoints reviewMode isNew retakeSettings questions"
+        "slug title description totalPoints reviewMode retakeSettings questions"
       )
       .sort({ createdAt: 1 })
       .lean();
 
-    // Fetch attempt statuses for all exams
-    const attemptStatuses: Record<string, any> = {};
+    // Remove answer-related fields from questions before responding
+    const sanitizedQuizzes = quizzes.map((quiz: any) => ({
+      ...quiz,
+      questions: Array.isArray(quiz.questions)
+        ? quiz.questions.map((q: any) => {
+            const { correctKey, explanation, ...rest } = q || {};
+            return rest;
+          })
+        : [],
+    }));
 
-    if (exams.length > 0) {
-      const examIds = exams.map((exam) => exam._id);
+    // Fetch attempt statuses for all quizzes (only when authenticated)
+    const attemptStatuses: Record<string, unknown> = {};
 
-      // Get all attempts for this user and these exams
+    if (quizzes.length > 0 && session?.userId) {
+      const quizIds = quizzes.map((quiz) => quiz._id);
+
+      // Get all attempts for this user and these quizzes
       const attempts = await Attempt.find({
         $or: [{ user: session.userId }, { user: String(session.userId) }],
-        exam: { $in: examIds },
+        quiz: { $in: quizIds },
       })
-        .select("exam inProgress attemptNumber completedAt score")
+        .select("quiz inProgress attemptNumber completedAt score")
         .sort({ attemptNumber: -1 })
         .lean();
 
-      // Process attempts to determine status for each exam
-      for (const exam of exams) {
-        const examAttempts = attempts.filter(
-          (attempt) => String(attempt.exam) === String(exam._id)
+      // Process attempts to determine status for each quiz
+      for (const quiz of quizzes) {
+        const quizAttempts = attempts.filter(
+          (attempt) => String(attempt.quiz) === String(quiz._id)
         );
 
-        if (examAttempts.length === 0) {
-          attemptStatuses[exam.slug] = {
+        if (quizAttempts.length === 0) {
+          attemptStatuses[quiz.slug] = {
             status: "none",
             canRetake: false,
             attemptsRemaining: 0,
@@ -71,11 +79,11 @@ export async function GET(
           continue;
         }
 
-        const inProgressAttempt = examAttempts.find(
+        const inProgressAttempt = quizAttempts.find(
           (attempt) => attempt.inProgress
         );
         if (inProgressAttempt) {
-          attemptStatuses[exam.slug] = {
+          attemptStatuses[quiz.slug] = {
             status: "in-progress",
             attemptId: String(inProgressAttempt._id),
             attemptNumber: inProgressAttempt.attemptNumber,
@@ -85,12 +93,12 @@ export async function GET(
         }
 
         // Check completed attempts
-        const completedAttempts = examAttempts.filter(
+        const completedAttempts = quizAttempts.filter(
           (attempt) => !attempt.inProgress
         );
         if (completedAttempts.length > 0) {
           const latestAttempt = completedAttempts[0];
-          const retakeSettings = exam.retakeSettings || {
+          const retakeSettings = quiz.retakeSettings || {
             enabled: false,
             maxAttempts: 1,
             coolDownDays: 0,
@@ -122,7 +130,7 @@ export async function GET(
             }
           }
 
-          attemptStatuses[exam.slug] = {
+          attemptStatuses[quiz.slug] = {
             status: "completed",
             attemptId: String(latestAttempt._id),
             attemptNumber: latestAttempt.attemptNumber,
@@ -134,23 +142,23 @@ export async function GET(
       }
     }
 
-    return NextResponse.json(
-      {
-        exams,
-        attemptStatuses,
-      },
-      {
-        headers: {
-          // Cache for 30 seconds per user - short enough to feel real-time
-          // but long enough to avoid excessive database queries
-          "Cache-Control": `private, max-age=30, s-maxage=0`,
-          // Add user-specific cache key to prevent cross-user cache pollution
-          "X-Cache-Key": `user-${session.userId}-topic-${slug}`,
-        },
-      }
-    );
+    const headers: Record<string, string> = {
+      // Prevent cross-user caching issues by disabling CDN caching
+      "Cache-Control": session?.userId
+        ? `private, no-store`
+        : `public, max-age=30, s-maxage=0`,
+      Vary: "Cookie",
+    };
+    if (session?.userId) {
+      headers["X-Cache-Key"] = `user-${session.userId}-topic-${slug}`;
+    }
+
+    return NextResponse.json({ quizzes: sanitizedQuizzes, attemptStatuses }, { headers });
   } catch (error: unknown) {
-    const message = (error as any)?.message || "Failed to fetch exams";
+    const message =
+      typeof error === "object" && error && "message" in error
+        ? String((error as { message?: unknown }).message || "Failed to fetch quizzes")
+        : "Failed to fetch quizzes";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

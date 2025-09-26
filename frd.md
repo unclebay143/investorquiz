@@ -1,18 +1,18 @@
-### Functional Requirements Document (FRD) — Investment Exams Platform
+### Functional Requirements Document (FRD) — Investment Quizzes Platform
 
-Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/). Exam-only; no teaching or hints.
+Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/). Quiz-only; no teaching or hints.
 
 ## 1. Overview
-- **Purpose**: An exam platform for investment topics (stocks, bonds, funds, order types, risk, financial statements).
+- **Purpose**: An quiz platform for investment topics (stocks, bonds, funds, order types, risk, financial statements).
 - **Access model**: Authenticated only; all features free.
 - **Format**: Categories → Sessions → Ordered single-choice questions (A–D).
-- **Exam policy**: Max 2 attempts per question; 10 points per correct; no penalty; highest per question counts.
+- **Quiz policy**: Max 2 attempts per question; 10 points per correct; no penalty; highest per question counts.
 - **Gamification**: Leaderboards (all-time, weekly, monthly; ties allowed) and badges.
 - **Admin**: Content imported via CSV; badges defined dynamically; publish/unpublish controls.
 
 ## 2. Goals and Non-Goals
 - **Goals**
-  - Deliver exam-style assessments with strict rules and zero teaching.
+  - Deliver quiz-style assessments with strict rules and zero teaching.
   - Track and display user progress and scores.
   - Provide competitive leaderboards and badge achievements.
   - Simple admin imports and badge management.
@@ -22,7 +22,7 @@ Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/
   - No payments or premium tiers.
 
 ## 3. Users & Roles
-- **End User**: Takes exams, views scores, competes on leaderboards, earns badges.
+- **End User**: Takes quizzes, views scores, competes on leaderboards, earns badges.
 - **Admin**: Manages categories, sessions, questions via CSV; manages badges; toggles publish state.
 
 ## 4. Platform & Constraints
@@ -60,7 +60,7 @@ Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/
 - Questions are displayed without revealing the correct key.
 - Optional admin toggle to include explanation text post-result (default off).
 
-### 5.5 Exam Flow & Attempts
+### 5.5 Quiz Flow & Attempts
 - For each question:
   - Display options; user selects one and submits.
   - System validates remaining attempts (1–2).
@@ -137,7 +137,7 @@ Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/
   - Server-side input validation (Zod).
   - Role-based admin endpoints.
 - Privacy & Compliance:
-  - Educational exam platform; no financial advice.
+  - Educational quiz platform; no financial advice.
   - Account delete and data export endpoints planned.
 - Observability:
   - Error tracking via Sentry; basic traffic via Vercel Analytics.
@@ -185,7 +185,7 @@ Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/
   - As a user, I can browse categories and sessions in the sidebar.
   - AC: Only published sessions visible, in configured order.
 
-- Take exam question
+- Take quiz question
   - As a user, I can answer a question and immediately see correct/incorrect with attempt count.
   - AC: After two attempts, question locked; best score recorded.
 
@@ -223,4 +223,4 @@ Reference: Inspired by [`https://css-questions.com/`](https://css-questions.com/
 - M4: Badges + notifications (in-app + email).
 - M5: Admin UI polish, exports, and optional explanations toggle.
 
-- FRD defines the exam-only product closely modeled after `https://css-questions.com/`: strict single-choice assessments, progress tracking, leaderboards with ties, dynamic badges, and CSV-driven content management.
+- FRD defines the quiz-only product closely modeled after `https://css-questions.com/`: strict single-choice assessments, progress tracking, leaderboards with ties, dynamic badges, and CSV-driven content management.

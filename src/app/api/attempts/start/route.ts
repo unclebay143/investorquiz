@@ -1,22 +1,22 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { connectViaMongoose } from "@/lib/db";
 import Attempt from "@/models/Attempt";
-import Exam from "@/models/Exam";
+import Quiz from "@/models/Quiz";
 import Topic from "@/models/Topic";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const session = (await getServerSession(authOptions)) as any;
+    const session = (await getServerSession(authOptions)) as { userId?: string } | null;
     if (!session?.userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { topicSlug, examSlug } = await req.json();
-    if (!topicSlug || !examSlug) {
+    const { topicSlug, quizSlug } = await req.json();
+    if (!topicSlug || !quizSlug) {
       return NextResponse.json(
-        { error: "topicSlug and examSlug required" },
+        { error: "topicSlug and quizSlug required" },
         { status: 400 }
       );
     }
@@ -29,16 +29,19 @@ export async function POST(req: Request) {
     if (!topic)
       return NextResponse.json({ error: "Topic not found" }, { status: 404 });
 
-    const exam = (await Exam.findOne({ slug: examSlug })
+    const quiz = (await Quiz.findOne({ slug: quizSlug })
       .select("_id retakeSettings")
-      .lean()) as { _id: unknown; retakeSettings?: any } | null;
-    if (!exam)
-      return NextResponse.json({ error: "Exam not found" }, { status: 404 });
+      .lean<{ _id: unknown; retakeSettings?: { enabled?: boolean; maxAttempts?: number; coolDownDays?: number } } | null>()) as {
+      _id: unknown;
+      retakeSettings?: { enabled?: boolean; maxAttempts?: number; coolDownDays?: number };
+    } | null;
+    if (!quiz)
+      return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
 
     // Check for existing in-progress attempt
     const existingInProgress = await Attempt.findOne({
       user: session.userId,
-      exam: exam._id,
+      quiz: quiz._id,
       inProgress: true,
     }).lean();
 
@@ -52,16 +55,16 @@ export async function POST(req: Request) {
     // Check completed attempts and retake eligibility
     const completedAttempts = (await Attempt.find({
       user: session.userId,
-      exam: exam._id,
+      quiz: quiz._id,
       inProgress: false,
     })
       .select("attemptNumber completedAt")
       .sort({ attemptNumber: -1 })
-      .lean()) as unknown as { attemptNumber: number; completedAt: Date }[];
+      .lean<{ attemptNumber: number; completedAt: Date }[]>()) as { attemptNumber: number; completedAt: Date }[];
 
     if (completedAttempts.length > 0) {
       const latestAttempt = completedAttempts[0];
-      const retakeSettings = exam.retakeSettings || {};
+      const retakeSettings = quiz.retakeSettings || {};
       const maxAttempts = retakeSettings.maxAttempts || 1;
       const coolDownDays = retakeSettings.coolDownDays || 0;
       const retakesEnabled = retakeSettings.enabled || false;
@@ -104,7 +107,7 @@ export async function POST(req: Request) {
 
     const created = await Attempt.create({
       user: session.userId,
-      exam: exam._id,
+      quiz: quiz._id,
       topic: topic._id,
       attemptNumber,
       currentQuestion: 0,
@@ -128,7 +131,10 @@ export async function POST(req: Request) {
       }
     );
   } catch (e: unknown) {
-    const message = (e as any)?.message || "Failed to start attempt";
+    const message =
+      typeof e === "object" && e && "message" in e
+        ? String((e as { message?: unknown }).message || "Failed to start attempt")
+        : "Failed to start attempt";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

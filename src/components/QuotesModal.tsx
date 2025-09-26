@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerTitle
+} from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 
 interface QuotesModalProps {
@@ -61,52 +68,45 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-      <div className='bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden'>
-        {/* Header */}
-        <div className='flex items-center justify-between p-6 border-b border-gray-200'>
-          <div className='flex gap-2'>
-            <button
-              onClick={() => setActiveTab("quotes")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "quotes"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              Investment Wisdom
-            </button>
-            <button
-              onClick={() => setActiveTab("tips")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "tips"
-                  ? "bg-emerald-100 text-emerald-700"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              Pro Tips
-            </button>
+    <Drawer open={isOpen} onOpenChange={(o: boolean) => !o && onClose()}>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerHeader className='flex items-center justify-between'>
+          <DrawerTitle className='sr-only'>Quotes</DrawerTitle>
+          <div className='w-full'>
+            <div className='flex items-center justify-center gap-2 w-full'>
+              <div className='flex w-full sm:w-auto bg-gray-200 rounded-xl p-1'>
+                <button
+                  onClick={() => setActiveTab("quotes")}
+                  className={`flex-1 text-xs sm:text-base sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-medium transition-all ${
+                    activeTab === "quotes"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-gray-700 hover:text-gray-900"
+                  }`}
+                >
+                  Investment Wisdom
+                </button>
+                <button
+                  onClick={() => setActiveTab("tips")}
+                  className={`flex-1 text-xs sm:text-base sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-medium transition-all ${
+                    activeTab === "tips"
+                      ? "bg-emerald-600 text-white shadow-sm"
+                      : "text-gray-700 hover:text-gray-900"
+                  }`}
+                >
+                  Pro Tips
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            className='p-2 hover:bg-gray-100 rounded-lg transition-colors'
-          >
-            <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
-              <path
-                fillRule='evenodd'
-                d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
-                clipRule='evenodd'
-              />
-            </svg>
-          </button>
-        </div>
+        </DrawerHeader>
 
         {/* Content */}
-        <div className='p-8'>
+        <div className='p-5 sm:p-8 overflow-y-auto bg-gradient-to-b from-white to-gray-50 max-h-[70svh] sm:max-h-[70vh]'>
           <div className='text-center'>
             {/* Icon */}
             <div
-              className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg ${
+              className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg ring-1 ring-black/5 ${
                 activeTab === "quotes"
                   ? "bg-gradient-to-br from-blue-500 to-indigo-600"
                   : "bg-gradient-to-br from-emerald-500 to-green-600"
@@ -114,7 +114,7 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
             >
               {activeTab === "quotes" ? (
                 <svg
-                  className='w-8 h-8 text-white'
+                  className='w-6 h-6 sm:w-8 sm:h-8 text-white'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -126,7 +126,7 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
                 </svg>
               ) : (
                 <svg
-                  className='w-8 h-8 text-white'
+                  className='w-6 h-6 sm:w-8 sm:h-8 text-white'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -140,13 +140,13 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
             </div>
 
             {/* Content */}
-            <h3 className='text-2xl font-bold text-gray-900 mb-6'>
+            <h3 className='text-[19px] sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6'>
               {activeTab === "quotes" ? "Investment Wisdom" : "Pro Tip"}
             </h3>
 
-            <div className='min-h-[120px] flex items-center justify-center'>
+            <div className='min-h-[120px] sm:min-h-[140px] flex items-center justify-center px-2'>
               <p
-                className={`text-lg leading-relaxed ${
+                className={`text-[15px] sm:text-lg leading-relaxed ${
                   activeTab === "quotes"
                     ? "italic text-gray-700"
                     : "text-gray-700"
@@ -157,13 +157,13 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
             </div>
 
             {/* Navigation */}
-            <div className='flex items-center justify-center gap-4 mt-8'>
+            <div className='flex items-center justify-center gap-4 sm:gap-5 mt-6 sm:mt-8'>
               <button
                 onClick={prevItem}
-                className='p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors'
+                className='p-3 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors active:scale-95'
               >
                 <svg
-                  className='w-5 h-5'
+                  className='w-4 h-4 sm:w-5 sm:h-5'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -175,15 +175,15 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
                 </svg>
               </button>
 
-              <div className='flex gap-2'>
+              <div className='flex gap-2 sm:gap-2.5'>
                 {currentContent.map((_, index) => (
                   <div
                     key={index}
-                    className={`w-2 h-2 rounded-full transition-all ${
+                    className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all ${
                       index === currentIndex
                         ? activeTab === "quotes"
-                          ? "bg-blue-500 scale-125"
-                          : "bg-emerald-500 scale-125"
+                          ? "bg-blue-600 scale-125 shadow"
+                          : "bg-emerald-600 scale-125 shadow"
                         : "bg-gray-300"
                     }`}
                   />
@@ -192,10 +192,10 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
 
               <button
                 onClick={nextItem}
-                className='p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors'
+                className='p-3 sm:p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors active:scale-95'
               >
                 <svg
-                  className='w-5 h-5'
+                  className='w-4 h-4 sm:w-5 sm:h-5'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -209,12 +209,12 @@ export default function QuotesModal({ isOpen, onClose }: QuotesModalProps) {
             </div>
 
             {/* Counter */}
-            <p className='text-sm text-gray-500 mt-4'>
+            <p className='text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4'>
               {currentIndex + 1} of {currentContent.length}
             </p>
           </div>
         </div>
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 }

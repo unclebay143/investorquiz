@@ -35,8 +35,8 @@ export const TopicSchema = z.object({
 });
 export type TopicInput = z.infer<typeof TopicSchema>;
 
-// Exam Question
-export const ExamQuestionSchema = z.object({
+// Quiz Question
+export const QuizQuestionSchema = z.object({
   id: z.number().int().nonnegative(),
   prompt: z.string().min(1),
   options: z.object({
@@ -49,12 +49,11 @@ export const ExamQuestionSchema = z.object({
   explanation: z.string().optional(),
   topic: ObjectIdString.optional(),
   author: ObjectIdString.optional(),
-  isNew: z.boolean().optional(),
 });
-export type ExamQuestionInput = z.infer<typeof ExamQuestionSchema>;
+export type QuizQuestionInput = z.infer<typeof QuizQuestionSchema>;
 
-// Exam
-export const ExamSchema = z.object({
+// Quiz
+export const QuizSchema = z.object({
   slug: z.string().min(1),
   topic: ObjectIdString.optional(),
   author: ObjectIdString.optional(),
@@ -62,7 +61,6 @@ export const ExamSchema = z.object({
   description: z.string().optional(),
   totalPoints: z.number().int().positive(),
   reviewMode: z.enum(["immediate", "post"]),
-  isNew: z.boolean().optional(),
   retakeSettings: z
     .object({
       enabled: z.boolean(),
@@ -71,14 +69,14 @@ export const ExamSchema = z.object({
     })
     .partial()
     .optional(),
-  questions: z.array(ExamQuestionSchema).min(1),
+  questions: z.array(QuizQuestionSchema).min(1),
 });
-export type ExamInput = z.infer<typeof ExamSchema>;
+export type QuizInput = z.infer<typeof QuizSchema>;
 
 // Attempt
 export const AttemptSchema = z.object({
   user: ObjectIdString.optional(),
-  exam: ObjectIdString.optional(),
+  quiz: ObjectIdString.optional(),
   topic: ObjectIdString.optional(),
   attemptNumber: z.number().int().positive(),
   score: z.number().nonnegative(),

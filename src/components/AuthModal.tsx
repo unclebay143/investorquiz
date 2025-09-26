@@ -34,6 +34,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           email,
           password,
         });
+        window.location.reload();
         if (res?.error) throw new Error("Invalid email or password");
         close();
       } else {
@@ -116,6 +117,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             onChange={(e) => setPassword(e.target.value)}
             type='password'
             required
+            autoComplete="on"
           />
           {error && <p className='text-red-600 text-sm'>{error}</p>}
           <button

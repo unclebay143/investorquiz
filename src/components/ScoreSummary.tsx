@@ -22,21 +22,21 @@ export default function ScoreSummary({
   gradeColorClass,
 }: ScoreSummaryProps) {
   return (
-    <div className='bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-lg'>
+    <div className='bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-2xl border border-gray-200 p-5 sm:p-8 shadow-lg'>
       <div className='text-center mb-6'>
         <h3 className='text-lg font-semibold text-gray-700 mb-2'>
-          Exam Summary
+          Quiz Summary
         </h3>
         <div className='w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto'></div>
       </div>
 
-      <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6'>
+      <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6'>
         <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
           <div className='text-center'>
-            <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-3'>
+            <div className='inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-3'>
               <span className='text-white font-bold text-lg'>P</span>
             </div>
-            <div className='text-2xl sm:text-3xl font-bold text-gray-900 mb-1'>
+            <div className='text-xl sm:text-3xl font-bold text-gray-900 mb-1'>
               {points.scored}
               <span className='text-sm sm:text-base text-gray-500 font-normal'>
                 /{points.total}
@@ -50,10 +50,10 @@ export default function ScoreSummary({
 
         <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
           <div className='text-center'>
-            <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-3'>
+            <div className='inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-3'>
               <span className='text-white font-bold text-lg'>✓</span>
             </div>
-            <div className='text-2xl sm:text-3xl font-bold text-green-600 mb-1'>
+            <div className='text-xl sm:text-3xl font-bold text-green-600 mb-1'>
               {correctCount}
               <span className='text-sm sm:text-base text-gray-500 font-normal'>
                 /{totalQuestions}
@@ -67,10 +67,10 @@ export default function ScoreSummary({
 
         <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
           <div className='text-center'>
-            <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-3'>
+            <div className='inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-3'>
               <span className='text-white font-bold text-lg'>✗</span>
             </div>
-            <div className='text-2xl sm:text-3xl font-bold text-red-600 mb-1'>
+            <div className='text-xl sm:text-3xl font-bold text-red-600 mb-1'>
               {totalQuestions - correctCount}
               <span className='text-sm sm:text-base text-gray-500 font-normal'>
                 /{totalQuestions}
@@ -84,10 +84,10 @@ export default function ScoreSummary({
 
         <div className='bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200'>
           <div className='text-center'>
-            <div className='inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full mb-3'>
+            <div className='inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full mb-3'>
               <Clock className='h-6 w-6 text-white' />
             </div>
-            <div className='text-2xl sm:text-3xl font-bold text-purple-600 mb-1 font-mono'>
+            <div className='text-xl sm:text-3xl font-bold text-purple-600 mb-1 font-mono'>
               {Math.floor(timeSpentSeconds / 60)}m:
               {(timeSpentSeconds % 60).toString().padStart(2, "0")}s
             </div>

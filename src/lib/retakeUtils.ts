@@ -1,4 +1,4 @@
-import { Exam, ExamAttempt, ExamAttempts, RetakeStatus } from "@/types";
+import { Quiz, QuizAttempt, QuizAttempts, RetakeStatus } from "@/types";
 
 // Calculate grade based on percentage
 export const calculateGrade = (percentage: number) => {
@@ -28,15 +28,15 @@ export const calculateGrade = (percentage: number) => {
   return { grade: "F", color: "from-red-600 to-red-700" };
 };
 
-// Check if user can retake an exam
+// Check if user can retake an quiz
 export const getRetakeStatus = (
-  exam: Exam,
+  quiz: Quiz,
   topicId: string,
-  attempts: ExamAttempts
+  attempts: QuizAttempts
 ): RetakeStatus => {
-  const examKey = `${topicId}-${exam.id}`;
-  const examAttempts = attempts[examKey] || [];
-  const retakeSettings = exam.retakeSettings || {
+  const quizKey = `${topicId}-${quiz.id}`;
+  const quizAttempts = attempts[quizKey] || [];
+  const retakeSettings = quiz.retakeSettings || {
     enabled: true,
     maxAttempts: 2,
     coolDownDays: 0.0001, // ~5 seconds for testing (0.0001 days = ~8.6 seconds)
@@ -46,24 +46,24 @@ export const getRetakeStatus = (
   if (!retakeSettings.enabled) {
     return {
       canRetake: false,
-      reason: "Retakes are disabled for this exam",
+      reason: "Retakes are disabled for this quiz",
       attemptsRemaining: 0,
-      currentAttempt: examAttempts.length,
+      currentAttempt: quizAttempts.length,
     };
   }
 
   // If max attempts reached
-  if (examAttempts.length >= retakeSettings.maxAttempts) {
+  if (quizAttempts.length >= retakeSettings.maxAttempts) {
     return {
       canRetake: false,
       reason: `Maximum attempts (${retakeSettings.maxAttempts}) reached`,
       attemptsRemaining: 0,
-      currentAttempt: examAttempts.length,
+      currentAttempt: quizAttempts.length,
     };
   }
 
   // If no attempts yet, can retake (current attempt will be attempt 1)
-  if (examAttempts.length === 0) {
+  if (quizAttempts.length === 0) {
     return {
       canRetake: true,
       attemptsRemaining: retakeSettings.maxAttempts - 1, // -1 because current attempt counts
@@ -72,7 +72,7 @@ export const getRetakeStatus = (
   }
 
   // Check cooldown period
-  const lastAttempt = examAttempts[examAttempts.length - 1];
+  const lastAttempt = quizAttempts[quizAttempts.length - 1];
   const lastAttemptDate = new Date(lastAttempt.completedAt);
   const cooldownEndDate = new Date(
     lastAttemptDate.getTime() +
@@ -85,59 +85,50 @@ export const getRetakeStatus = (
       canRetake: false,
       reason: `Wait ${retakeSettings.coolDownDays} days between attempts`,
       nextRetakeDate: cooldownEndDate.toISOString(),
-      attemptsRemaining: retakeSettings.maxAttempts - examAttempts.length - 1, // -1 for current attempt
-      currentAttempt: examAttempts.length + 1, // +1 for current attempt
+      attemptsRemaining: retakeSettings.maxAttempts - quizAttempts.length - 1, // -1 for current attempt
+      currentAttempt: quizAttempts.length + 1, // +1 for current attempt
     };
   }
 
   return {
     canRetake: true,
-    attemptsRemaining: retakeSettings.maxAttempts - examAttempts.length - 1, // -1 for current attempt
-    currentAttempt: examAttempts.length + 1, // +1 for current attempt
+    attemptsRemaining: retakeSettings.maxAttempts - quizAttempts.length - 1, // -1 for current attempt
+    currentAttempt: quizAttempts.length + 1, // +1 for current attempt
   };
 };
 
-// Save exam attempt
-export const saveExamAttempt = (
-  exam: Exam,
+// Save quiz attempt
+export const saveQuizAttempt = (
+  quiz: Quiz,
   topicId: string,
   score: number,
   timeSpentInSeconds: number,
   answers: { [questionId: number]: string },
-  attempts: ExamAttempts
-): ExamAttempts => {
-  const examKey = `${topicId}-${exam.id}`;
-  const examAttempts = attempts[examKey] || [];
-  const attemptNumber = examAttempts.length + 1;
-  const percentage = (score / exam.totalPoints) * 100;
+  attempts: QuizAttempts
+): QuizAttempts => {
+  const quizKey = `${topicId}-${quiz.id}`;
+  const quizAttempts = attempts[quizKey] || [];
+  const attemptNumber = quizAttempts.length + 1;
+  const percentage = (score / quiz.totalPoints) * 100;
   const gradeInfo = calculateGrade(percentage);
 
   // Find the best score so far
   const bestScore =
-    examAttempts.length > 0
-      ? Math.max(...examAttempts.map((a) => a.score))
+    quizAttempts.length > 0
+      ? Math.max(...quizAttempts.map((a) => a.score))
       : -1; // Use -1 for first attempt
   const isNewBestScore = score > bestScore;
 
-  // Debug logging
-  console.log(
-    "saveExamAttempt - score:",
-    score,
-    "bestScore:",
-    bestScore,
-    "isNewBestScore:",
-    isNewBestScore
-  );
 
   // If this is a new best score, mark all previous attempts as not best
   // If this is not a new best score, keep previous best scores as they are
-  const updatedAttempts = examAttempts.map((attempt) => ({
+  const updatedAttempts = quizAttempts.map((attempt) => ({
     ...attempt,
     isBestScore: isNewBestScore ? false : attempt.isBestScore,
   }));
 
-  const newAttempt: ExamAttempt = {
-    examId: exam.id,
+  const newAttempt: QuizAttempt = {
+    quizId: quiz.id,
     topicId,
     attemptNumber,
     score,
@@ -150,28 +141,28 @@ export const saveExamAttempt = (
 
   return {
     ...attempts,
-    [examKey]: [...updatedAttempts, newAttempt],
+    [quizKey]: [...updatedAttempts, newAttempt],
   };
 };
 
-// Get attempt history for an exam
+// Get attempt history for an quiz
 export const getAttemptHistory = (
-  exam: Exam,
+  quiz: Quiz,
   topicId: string,
-  attempts: ExamAttempts
-): ExamAttempt[] => {
-  const examKey = `${topicId}-${exam.id}`;
-  return attempts[examKey] || [];
+  attempts: QuizAttempts
+): QuizAttempt[] => {
+  const quizKey = `${topicId}-${quiz.id}`;
+  return attempts[quizKey] || [];
 };
 
-// Get best attempt for an exam
+// Get best attempt for an quiz
 export const getBestAttempt = (
-  exam: Exam,
+  quiz: Quiz,
   topicId: string,
-  attempts: ExamAttempts
-): ExamAttempt | null => {
-  const examAttempts = getAttemptHistory(exam, topicId, attempts);
-  return examAttempts.find((attempt) => attempt.isBestScore) || null;
+  attempts: QuizAttempts
+): QuizAttempt | null => {
+  const quizAttempts = getAttemptHistory(quiz, topicId, attempts);
+  return quizAttempts.find((attempt) => attempt.isBestScore) || null;
 };
 
 // Format date for display
@@ -207,15 +198,15 @@ export const formatTimeRemaining = (nextRetakeDate: string): string => {
 
 // For testing: Clear cooldown by updating attempt timestamps
 export const clearCooldownForTesting = (
-  attempts: ExamAttempts
-): ExamAttempts => {
+  attempts: QuizAttempts
+): QuizAttempts => {
   const now = new Date();
   const oldDate = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000); // 2 days ago
 
   const updatedAttempts = { ...attempts };
 
-  Object.keys(updatedAttempts).forEach((examKey) => {
-    updatedAttempts[examKey] = updatedAttempts[examKey].map((attempt) => ({
+  Object.keys(updatedAttempts).forEach((quizKey) => {
+    updatedAttempts[quizKey] = updatedAttempts[quizKey].map((attempt) => ({
       ...attempt,
       completedAt: oldDate.toISOString(),
     }));
@@ -224,23 +215,23 @@ export const clearCooldownForTesting = (
   return updatedAttempts;
 };
 
-// Clean up duplicate attempts - keep only the latest few attempts per exam
+// Clean up duplicate attempts - keep only the latest few attempts per quiz
 export const cleanupAttempts = (
-  attempts: ExamAttempts,
-  maxAttemptsPerExam: number = 5
-): ExamAttempts => {
-  const cleanedAttempts: ExamAttempts = {};
+  attempts: QuizAttempts,
+  maxAttemptsPerQuiz: number = 5
+): QuizAttempts => {
+  const cleanedAttempts: QuizAttempts = {};
 
-  Object.keys(attempts).forEach((examKey) => {
-    const examAttempts = attempts[examKey];
+  Object.keys(attempts).forEach((quizKey) => {
+    const quizAttempts = attempts[quizKey];
 
     // Sort by completedAt date (newest first) and take only the latest attempts
-    const sortedAttempts = examAttempts
+    const sortedAttempts = quizAttempts
       .sort(
         (a, b) =>
           new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
       )
-      .slice(0, maxAttemptsPerExam);
+      .slice(0, maxAttemptsPerQuiz);
 
     // Reassign attempt numbers starting from 1
     const renumberedAttempts = sortedAttempts.map((attempt, index) => ({
@@ -255,7 +246,7 @@ export const cleanupAttempts = (
       isBestScore: attempt.score === bestScore && bestScore > 0,
     }));
 
-    cleanedAttempts[examKey] = finalAttempts;
+    cleanedAttempts[quizKey] = finalAttempts;
   });
 
   return cleanedAttempts;
@@ -263,5 +254,5 @@ export const cleanupAttempts = (
 
 // Clear all attempts for testing
 export const clearAllAttempts = (): void => {
-  localStorage.removeItem("exam-attempts");
+  localStorage.removeItem("quiz-attempts");
 };

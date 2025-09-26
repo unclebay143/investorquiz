@@ -4,8 +4,8 @@
 
 ### Average Response Times (3 runs):
 - **Topics API**: 428ms (avg)
-- **Exams API**: 732ms (avg) 
-- **Single Exam API**: 545ms (avg)
+- **Quizzes API**: 732ms (avg) 
+- **Single Quiz API**: 545ms (avg)
 
 ### Performance Trends:
 - **First Run**: Slower due to cold start (522ms, 767ms, 554ms)
@@ -20,7 +20,7 @@
 
 ### 2. Mongoose Population Overhead
 - `populate()` operations are expensive
-- Exams API takes longest due to author population
+- Quizzes API takes longest due to author population
 
 ### 3. No Database Indexing
 - No indexes on frequently queried fields
@@ -44,8 +44,8 @@
 ```javascript
 // Add to models
 TopicSchema.index({ slug: 1 });
-ExamSchema.index({ slug: 1 });
-ExamSchema.index({ topic: 1 });
+QuizSchema.index({ slug: 1 });
+QuizSchema.index({ topic: 1 });
 AuthorSchema.index({ slug: 1 });
 ```
 
@@ -67,15 +67,15 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 ```
 
 #### 4. Lazy Loading
-- Load exam details only when needed
+- Load quiz details only when needed
 - Implement pagination for large datasets
 
 ## Performance Targets
 
 ### Current vs Target:
 - **Topics API**: 428ms → **<200ms** (53% improvement needed)
-- **Exams API**: 732ms → **<300ms** (59% improvement needed)  
-- **Single Exam API**: 545ms → **<250ms** (54% improvement needed)
+- **Quizzes API**: 732ms → **<300ms** (59% improvement needed)  
+- **Single Quiz API**: 545ms → **<250ms** (54% improvement needed)
 
 ### Expected Improvements:
 - **With indexing**: 30-50% faster

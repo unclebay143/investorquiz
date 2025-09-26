@@ -1,52 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface AttemptResponse {
-  _id: string;
-  user: string;
-  exam: string;
-  topic: string;
-  attemptNumber: number;
-  score: number;
-  timeSpentInSeconds?: number;
-  completedAt: string;
-  answers: Record<string, string>;
-  grade: string;
-  isBestScore?: boolean;
-  inProgress?: boolean;
-}
-
-// Fetch attempt status for a specific exam
-export function useAttemptStatus(examSlug: string) {
-  return useQuery({
-    queryKey: ["attemptStatus", examSlug],
-    queryFn: async (): Promise<AttemptResponse | null> => {
-      const response = await fetch(`/api/attempts/status?examSlug=${examSlug}`);
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null; // No attempt found
-        }
-        throw new Error("Failed to fetch attempt status");
-      }
-      return response.json();
-    },
-    staleTime: 30 * 1000, // 30 seconds
-    gcTime: 2 * 60 * 1000, // 2 minutes
-    enabled: !!examSlug,
-  });
-}
+// Removed useAttemptStatus: attempts are read via useQuiz(..., { includeAttempts: true })
 
 // Start a new attempt
 export function useStartAttempt() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (examSlug: string) => {
+    mutationFn: async ({
+      topicSlug,
+      quizSlug,
+    }: {
+      topicSlug: string;
+      quizSlug: string;
+    }) => {
       const response = await fetch("/api/attempts/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ examSlug }),
+        body: JSON.stringify({ topicSlug, quizSlug }),
       });
 
       if (!response.ok) {
@@ -55,9 +28,10 @@ export function useStartAttempt() {
 
       return response.json();
     },
-    onSuccess: (data, examSlug) => {
-      // Invalidate and refetch attempt status
-      queryClient.invalidateQueries({ queryKey: ["attemptStatus", examSlug] });
+    onSuccess: (_data, { quizSlug }) => {
+      // Invalidate single quiz so embedded attempts refresh
+      queryClient.invalidateQueries({ queryKey: ["quiz", quizSlug] });
+      queryClient.invalidateQueries({ queryKey: ["topics"] });
     },
   });
 }
@@ -73,26 +47,30 @@ export function useSubmitAttempt() {
       timeSpentInSeconds: number;
     }) => {
       const response = await fetch(`/api/attempts/${data.attemptId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           answers: data.answers,
           timeSpentInSeconds: data.timeSpentInSeconds,
+          completedAt: new Date().toISOString(),
+          inProgress: false,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit attempt");
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error || "Failed to submit attempt";
+        throw new Error(errorMessage);
       }
 
       return response.json();
     },
-    onSuccess: (data, variables) => {
-      // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ["attemptStatus"] });
-      queryClient.invalidateQueries({ queryKey: ["exams"] });
+    onSuccess: (_res, variables) => {
+      // Invalidate single quiz so results and attempts refresh
+      queryClient.invalidateQueries({ queryKey: ["quiz", variables.attemptId] });
+      queryClient.invalidateQueries({ queryKey: ["topics"] });
     },
   });
 }

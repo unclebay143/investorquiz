@@ -1,17 +1,17 @@
 import { connectViaMongoose } from "@/lib/db";
 import Author from "@/models/Author";
-import Exam from "@/models/Exam";
+import Quiz from "@/models/Quiz";
 import Topic from "@/models/Topic";
-import { ExamSchema } from "@/schemas";
+import { QuizSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-const PayloadSchema = z.object({ exams: z.array(ExamSchema) });
+const PayloadSchema = z.object({ quizzes: z.array(QuizSchema) });
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { exams } = PayloadSchema.parse(body);
+    const { quizzes } = PayloadSchema.parse(body);
 
     await connectViaMongoose();
 
@@ -19,24 +19,24 @@ export async function POST(req: Request) {
     let updated = 0;
     const errors: Array<{ slug?: string; error: string }> = [];
 
-    for (const exam of exams) {
+    for (const quiz of quizzes) {
       try {
         // Ensure topic/author documents exist if provided as slugs
-        const update: any = { ...exam };
-        if (exam.topic) {
+        const update: any = { ...quiz };
+        if (quiz.topic) {
           const topicDoc = (await Topic.findOneAndUpdate(
-            { slug: exam.topic },
-            { $setOnInsert: { slug: exam.topic, title: exam.topic } },
+            { slug: quiz.topic },
+            { $setOnInsert: { slug: quiz.topic, title: quiz.topic } },
             { upsert: true, new: true }
           )
             .select("_id")
             .lean()) as { _id: unknown } | null;
           update.topic = topicDoc?._id;
         }
-        if (exam.author) {
+        if (quiz.author) {
           const authorDoc = (await Author.findOneAndUpdate(
-            { slug: exam.author },
-            { $setOnInsert: { slug: exam.author, name: exam.author } },
+            { slug: quiz.author },
+            { $setOnInsert: { slug: quiz.author, name: quiz.author } },
             { upsert: true, new: true }
           )
             .select("_id")
@@ -44,8 +44,8 @@ export async function POST(req: Request) {
           update.author = authorDoc?._id;
         }
 
-        const res = await Exam.findOneAndUpdate(
-          { slug: exam.slug },
+        const res = await Quiz.findOneAndUpdate(
+          { slug: quiz.slug },
           { $set: update },
           { upsert: true, new: true }
         ).lean();
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
           created += 1;
         }
       } catch (e: any) {
-        errors.push({ slug: exam.slug, error: e.message || "Unknown error" });
+        errors.push({ slug: quiz.slug, error: e.message || "Unknown error" });
       }
     }
 

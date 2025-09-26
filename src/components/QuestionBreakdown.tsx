@@ -1,21 +1,21 @@
 "use client";
 
-import { Exam } from "@/types";
+import { Quiz } from "@/types";
 
 interface QuestionBreakdownProps {
-  exam: Exam;
+  quiz: Quiz;
   selectedAttemptData: {
     attemptNumber: number;
     isCurrent?: boolean;
     answers: { [questionId: number]: string };
   };
-  postExamAnswers: { [questionId: number]: string };
+  postQuizAnswers: { [questionId: number]: string };
 }
 
 export default function QuestionBreakdown({
-  exam,
+  quiz,
   selectedAttemptData,
-  postExamAnswers,
+  postQuizAnswers,
 }: QuestionBreakdownProps) {
   return (
     <div className='space-y-4'>
@@ -26,9 +26,9 @@ export default function QuestionBreakdown({
         </span>
       </h3>
       <div className='space-y-3'>
-        {exam.questions.map((question) => {
+        {quiz.questions.map((question) => {
           const answer = selectedAttemptData.isCurrent
-            ? postExamAnswers[question.id]
+            ? postQuizAnswers[question.id]
             : selectedAttemptData.answers[question.id];
           const correct = answer === question.correctKey;
           return (

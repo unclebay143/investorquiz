@@ -1,15 +1,15 @@
 import { connectViaMongoose } from "@/lib/db";
 import Author from "@/models/Author";
-import Exam from "@/models/Exam";
+import Quiz from "@/models/Quiz";
 import Topic from "@/models/Topic";
-import { ExamSchema } from "@/schemas";
+import { QuizSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
     const json = await req.json();
-    const data = ExamSchema.parse(json);
+    const data = QuizSchema.parse(json);
     await connectViaMongoose();
 
     const update: any = { ...data };
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       update.author = a._id;
     }
 
-    const doc = (await Exam.findOneAndUpdate(
+    const doc = (await Quiz.findOneAndUpdate(
       { slug: data.slug },
       { $set: update },
       { upsert: true, new: true }

@@ -21,9 +21,15 @@ async function fetchTopics(): Promise<Topic[]> {
     id: topic.slug,
     title: topic.title,
     description: topic.description || "",
-    exams: [], // Will be populated separately
-    isNew: topic.isNew,
-    createdAt: topic.createdAt,
+    quizzes: [], // Will be populated separately
+    ...(() => {
+      const createdAtDate = topic.createdAt ? new Date(topic.createdAt) : undefined;
+      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+      return {
+        isNew: createdAtDate ? createdAtDate.getTime() > thirtyDaysAgo : false,
+        createdAt: createdAtDate,
+      };
+    })(),
   }));
 }
 

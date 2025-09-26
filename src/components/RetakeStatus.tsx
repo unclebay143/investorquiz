@@ -12,19 +12,11 @@ interface RetakeStatusData {
 interface RetakeStatusProps {
   status: RetakeStatusData | null;
   formatTimeRemaining: (dateLike: Date | string | number) => string;
-  onFixAttempts?: () => void;
-  onCleanupAttempts?: () => void;
-  onClearAllAttempts?: () => void;
-  isDev?: boolean;
 }
 
 export default function RetakeStatus({
   status,
   formatTimeRemaining,
-  onFixAttempts,
-  onCleanupAttempts,
-  onClearAllAttempts,
-  isDev,
 }: RetakeStatusProps) {
   if (!status) return null;
 
@@ -66,38 +58,6 @@ export default function RetakeStatus({
         {status.nextRetakeDate && (
           <div className='text-sm text-gray-600'>
             Next retake available: {formatTimeRemaining(status.nextRetakeDate)}
-          </div>
-        )}
-
-        {isDev && (
-          <div className='mt-3 pt-3 border-t border-gray-300 space-y-2'>
-            <div className='flex gap-2 flex-wrap'>
-              <button
-                onClick={onFixAttempts}
-                className='px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors'
-              >
-                🔧 Fix Attempts
-              </button>
-              <button
-                onClick={onCleanupAttempts}
-                className='px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors'
-              >
-                🧹 Cleanup Duplicates
-              </button>
-              <button
-                onClick={onClearAllAttempts}
-                className='px-3 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors'
-              >
-                🗑️ Clear All Attempts
-              </button>
-            </div>
-            <div className='text-xs text-gray-500'>
-              Fix: Recalculates isBestScore for existing attempts
-              <br />
-              Cleanup: Removes duplicates, keeps latest 5 per exam
-              <br />
-              Clear All: Removes all attempts (for testing)
-            </div>
           </div>
         )}
       </div>

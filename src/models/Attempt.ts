@@ -4,11 +4,19 @@ import { Document, model, models, Schema, Types } from "mongoose";
 type IAttempt = AttemptInput &
   Document & {
     user?: Types.ObjectId | string;
-    exam?: Types.ObjectId | string;
+    quiz?: Types.ObjectId | string;
     topic?: Types.ObjectId | string;
     inProgress?: boolean;
     currentQuestion?: number;
     startedAt?: Date;
+    shuffledQuestions?: Map<
+      string,
+      {
+        shuffledOptions: { [key: string]: string };
+        keyMapping: { [key: string]: string };
+        correctShuffledKey: string;
+      }
+    >;
     createdAt: Date;
     updatedAt: Date;
   };
@@ -16,7 +24,7 @@ type IAttempt = AttemptInput &
 const AttemptSchema = new Schema<IAttempt>(
   {
     user: { type: Types.ObjectId, ref: "User", index: true, required: false },
-    exam: { type: Types.ObjectId, ref: "Exam", index: true, required: false },
+    quiz: { type: Types.ObjectId, ref: "Quiz", index: true, required: false },
     topic: { type: Types.ObjectId, ref: "Topic", index: true, required: false },
     inProgress: { type: Boolean, default: true, index: true },
     currentQuestion: { type: Number, default: 0 },
@@ -25,6 +33,7 @@ const AttemptSchema = new Schema<IAttempt>(
     score: { type: Number, required: true },
     completedAt: { type: Date },
     answers: { type: Map, of: String, default: {} },
+    shuffledQuestions: { type: Map, of: Object, default: {} },
     grade: { type: String, required: true },
     isBestScore: { type: Boolean, default: false },
     timeSpentInSeconds: { type: Number, required: false },

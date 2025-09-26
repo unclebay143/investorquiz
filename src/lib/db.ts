@@ -5,14 +5,12 @@ const MONGODB_URI = process.env.MONGODB_URI as string;
 if (!MONGODB_URI) {
   // We won't throw at import time to avoid breaking Next build previews without env
   // Consumers should handle connection errors gracefully.
-  // eslint-disable-next-line no-console
   console.warn(
     "MONGODB_URI not set - database connections will fail until configured."
   );
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var mongooseCache:
     | { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null }
     | undefined;

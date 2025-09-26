@@ -8,7 +8,7 @@
       "isNewTopic": true
     }
   ],
-  "exams": [
+  "quizzes": [
     {
       "slug": "how-stock-markets-work",
       "topic": "stock-market-basics",
@@ -16,7 +16,7 @@
       "description": "Test your knowledge of how stock markets operate, with specific focus on the Nigerian Exchange (NGX) and market participants.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -164,7 +164,7 @@
             "C": "50 shares",
             "D": "100 shares"
           },
-          "correctKey": "C",
+          "correctKey": "A",
           "explanation": "The minimum lot size for stock trading on the NGX is typically 50 shares, meaning you must buy or sell in multiples of 50 shares for most stocks."
         },
         {
@@ -212,7 +212,7 @@
       "description": "Test your ability to read and interpret stock prices, charts, company data, and financial information on the Nigerian Exchange.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -408,7 +408,7 @@
       "description": "Test your knowledge of placing orders, choosing trading platforms, and executing stock trades on the Nigerian Exchange.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -497,7 +497,7 @@
             "D": "T+3 (three days)"
           },
           "correctKey": "D",
-          "explanation": "In Nigeria, stock trades settle on T+3, meaning the transaction is completed three business days after the trade date."
+          "explanation": "In Nigeria, before November 28th, 2025. Stock trades settle on T+3, meaning the transaction is completed three business days after the trade date. This is transition to T+2 (Trade Date plus two days) effective November 28th, 2025."
         },
         {
           "id": 8,
@@ -604,7 +604,7 @@
       "description": "Test your knowledge of stock analysis fundamentals, company evaluation, and investment decision-making in the Nigerian market.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,

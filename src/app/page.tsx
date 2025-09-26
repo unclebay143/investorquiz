@@ -15,7 +15,7 @@ export default function Home() {
     }
   }, [topics, router]);
 
-  if (loading) {
+  // if (loading) {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='text-center'>
@@ -24,16 +24,16 @@ export default function Home() {
         </div>
       </div>
     );
-  }
+  // }
 
-  return (
-    <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
-      <div className='text-center'>
-        <h1 className='text-2xl font-bold text-gray-900 mb-4'>
-          No Topics Available
-        </h1>
-        <p className='text-gray-600'>Please check back later.</p>
-      </div>
-    </div>
-  );
+  // return (
+  //   <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+  //     <div className='text-center'>
+  //       <h1 className='text-2xl font-bold text-gray-900 mb-4'>
+  //         No Topics Available
+  //       </h1>
+  //       <p className='text-gray-600'>Please check back later.</p>
+  //     </div>
+  //   </div>
+  // );
 }

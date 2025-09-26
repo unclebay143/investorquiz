@@ -1,3 +1,4 @@
+import type { Question } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -22,7 +23,7 @@ export function formatTime(seconds: number): string {
   }
 }
 
-export function shuffleQuestionOptions(question: any) {
+export function shuffleQuestionOptions(question: Question) {
   const options = question.options;
   const optionKeys = Object.keys(options);
   const shuffledKeys = [...optionKeys].sort(() => Math.random() - 0.5);

@@ -1,52 +1,65 @@
 "use client";
 
-import { MOCK_CURRENT_USER } from "@/data/leaderboardData";
 import { CurrentUser } from "@/types";
 import { Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AuthModal from "./AuthModal";
 
 interface HeaderProps {
-  isOpen: boolean;
+  isOpen: boolean; // mobile drawer state
+  desktopOpen?: boolean; // desktop sidebar expanded state
   onToggleMenu: () => void;
   currentUser?: CurrentUser;
 }
 
 export default function Header({
   isOpen,
+  desktopOpen = true,
   onToggleMenu,
-  currentUser = MOCK_CURRENT_USER,
 }: HeaderProps) {
-  const router = useRouter();
   const { status } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
-
-  const handleLeaderboardClick = () => {
-    router.push("/leaderboard");
-  };
 
   return (
     <header className='sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm'>
       <div className='px-4 sm:px-4 py-4 flex items-center gap-4'>
+        {/* Mobile menu toggle */}
         <button
           className='lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors'
-          aria-label='Toggle menu'
+          aria-label='Toggle sidebar'
           onClick={onToggleMenu}
+          type='button'
         >
           {isOpen ? <X className='h-5 w-5' /> : <Menu className='h-5 w-5' />}
         </button>
-        <Link href='/' className='font-bold text-xl text-gray-900'>
-          Investment Questions
+
+        {/* Desktop collapse toggle */}
+        <button
+          className='hidden lg:inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors'
+          aria-label='Toggle sidebar'
+          onClick={onToggleMenu}
+          type='button'
+        >
+          {desktopOpen ? (
+            <X className='h-5 w-5' />
+          ) : (
+            <Menu className='h-5 w-5' />
+          )}
+        </button>
+        <Link
+          href='/'
+          className='hidden sm:block font-bold text-xl text-gray-900'
+        >
+          InvestorQuiz
         </Link>
 
         {/* User Score Section */}
         <div className='ml-auto flex items-center space-x-2 sm:space-x-4'>
           {/* {status === "authenticated" ? (
             <div className='hidden sm:flex items-center space-x-3 text-sm text-gray-600'>
-              <span>{currentUser.examsCompleted} exams</span>
+              <span>{currentUser.quizzesCompleted} quizzes</span>
               <span className='text-gray-300'>•</span>
               <span>Rank #{currentUser.rank}</span>
             </div>
@@ -66,7 +79,7 @@ export default function Header({
           {status === "authenticated" ? (
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className='px-2 sm:px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-xs sm:text-sm'
+              className='px-2 sm:px-3 whitespace-nowrap py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-xs sm:text-sm'
             >
               Sign out
             </button>

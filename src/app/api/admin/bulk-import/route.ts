@@ -1,15 +1,15 @@
 import { connectViaMongoose } from "@/lib/db";
 import Author from "@/models/Author";
-import Exam from "@/models/Exam";
+import Quiz from "@/models/Quiz";
 import Topic from "@/models/Topic";
-import { AuthorSchema, ExamSchema, TopicSchema } from "@/schemas";
+import { AuthorSchema, QuizSchema, TopicSchema } from "@/schemas";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const BulkImportSchema = z.object({
   authors: z.array(AuthorSchema).optional(),
   topics: z.array(TopicSchema).optional(),
-  exams: z.array(ExamSchema).optional(),
+  quizzes: z.array(QuizSchema).optional(),
 });
 
 export async function POST(req: Request) {
@@ -19,10 +19,20 @@ export async function POST(req: Request) {
 
     await connectViaMongoose();
 
-    const results = {
+    type ImportResultError = { error: string } & (
+      | { author: string }
+      | { topic: string }
+      | { quiz: string }
+    );
+
+    const results: {
+      authors: { imported: number; errors: ImportResultError[] };
+      topics: { imported: number; errors: ImportResultError[] };
+      quizzes: { imported: number; errors: ImportResultError[] };
+    } = {
       authors: { imported: 0, errors: [] },
       topics: { imported: 0, errors: [] },
-      exams: { imported: 0, errors: [] },
+      quizzes: { imported: 0, errors: [] },
     };
 
     // Import Authors
@@ -63,21 +73,21 @@ export async function POST(req: Request) {
       }
     }
 
-    // Import Exams
-    if (data.exams) {
-      for (const exam of data.exams) {
+    // Import Quizzes
+    if (data.quizzes) {
+      for (const quiz of data.quizzes) {
         try {
-          const update: any = { ...exam };
+          const update: Record<string, unknown> = { ...quiz };
 
           // Resolve topic reference
-          if (exam.topic) {
-            const topic = await Topic.findOne({ slug: exam.topic })
+          if (quiz.topic) {
+            const topic = await Topic.findOne({ slug: quiz.topic })
               .select("_id")
-              .lean();
+              .lean<{ _id: string }>();
             if (!topic) {
-              results.exams.errors.push({
-                exam: exam.title,
-                error: `Topic not found: ${exam.topic}`,
+              results.quizzes.errors.push({
+                quiz: quiz.title,
+                error: `Topic not found: ${quiz.topic}`,
               });
               continue;
             }
@@ -85,29 +95,29 @@ export async function POST(req: Request) {
           }
 
           // Resolve author reference
-          if (exam.author) {
-            const author = await Author.findOne({ slug: exam.author })
+          if (quiz.author) {
+            const author = await Author.findOne({ slug: quiz.author })
               .select("_id")
-              .lean();
+              .lean<{ _id: string }>();
             if (!author) {
-              results.exams.errors.push({
-                exam: exam.title,
-                error: `Author not found: ${exam.author}`,
+              results.quizzes.errors.push({
+                quiz: quiz.title,
+                error: `Author not found: ${quiz.author}`,
               });
               continue;
             }
             update.author = author._id;
           }
 
-          await Exam.findOneAndUpdate(
-            { slug: exam.slug },
+          await Quiz.findOneAndUpdate(
+            { slug: quiz.slug },
             { $set: update },
             { upsert: true, new: true }
           );
-          results.exams.imported++;
+          results.quizzes.imported++;
         } catch (error) {
-          results.exams.errors.push({
-            exam: exam.title,
+          results.quizzes.errors.push({
+            quiz: quiz.title,
             error: error instanceof Error ? error.message : "Unknown error",
           });
         }
@@ -126,7 +136,9 @@ export async function POST(req: Request) {
     const message =
       e instanceof z.ZodError
         ? e.issues
-        : (e as any)?.message || "Invalid payload";
+        : (typeof e === "object" && e && "message" in e)
+        ? String((e as { message?: unknown }).message || "Invalid payload")
+        : "Invalid payload";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

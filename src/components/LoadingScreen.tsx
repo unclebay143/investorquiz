@@ -44,7 +44,7 @@ export const investmentTips = [
 ];
 
 export default function LoadingScreen({
-  message = "Loading exam",
+  message = "Loading quiz",
   showProgress = true,
   progress = 0,
   minDisplayTime = 60000, // Default 6 seconds minimum
@@ -170,7 +170,7 @@ export default function LoadingScreen({
   }, [progress, showProgress]);
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-6 relative overflow-hidden'>
+    <div className='flex items-center justify-center p-6 relative overflow-hidden'>
       {/* Background Pattern */}
       <div className='absolute inset-0 opacity-5'>
         <div className='absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl' />

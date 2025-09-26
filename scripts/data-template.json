@@ -21,7 +21,7 @@
       "isNewTopic": true
     }
   ],
-  "exams": [
+  "quizzes": [
     {
       "slug": "stocks-fundamentals",
       "topic": "investment-basics",
@@ -30,7 +30,7 @@
       "description": "Test your knowledge of basic stock market concepts",
       "totalPoints": 100,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,

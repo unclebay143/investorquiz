@@ -91,16 +91,15 @@ async function main() {
             isNewTopic: true,
           },
         ],
-        exams: [
+        quizzes: [
           {
-            slug: "sample-exam",
+            slug: "sample-quiz",
             topic: "sample-topic",
             author: "sample-author",
-            title: "Sample Exam",
-            description: "A sample exam for testing purposes.",
+            title: "Sample Quiz",
+            description: "A sample quiz for testing purposes.",
             totalPoints: 100,
             reviewMode: "post",
-            isNew: true,
             questions: [
               {
                 id: 1,
@@ -121,16 +120,16 @@ async function main() {
     }
 
     // Validate data structure
-    if (!data.authors || !data.topics || !data.exams) {
+    if (!data.authors || !data.topics || !data.quizzes) {
       log(
-        "❌ Invalid data structure. Expected: { authors: [], topics: [], exams: [] }",
+        "❌ Invalid data structure. Expected: { authors: [], topics: [], quizzes: [] }",
         "red"
       );
       process.exit(1);
     }
 
     log(
-      `📊 Found ${data.authors.length} authors, ${data.topics.length} topics, ${data.exams.length} exams`,
+      `📊 Found ${data.authors.length} authors, ${data.topics.length} topics, ${data.quizzes.length} quizzes`,
       "blue"
     );
 
@@ -154,11 +153,11 @@ async function main() {
       });
     }
 
-    log(`✅ Exams: ${result.results.exams.imported} imported`, "green");
-    if (result.results.exams.errors.length > 0) {
-      log(`❌ Exams errors: ${result.results.exams.errors.length}`, "red");
-      result.results.exams.errors.forEach((err) => {
-        log(`   - ${err.exam}: ${err.error}`, "red");
+    log(`✅ Quizzes: ${result.results.quizzes.imported} imported`, "green");
+    if (result.results.quizzes.errors.length > 0) {
+      log(`❌ Quizzes errors: ${result.results.quizzes.errors.length}`, "red");
+      result.results.quizzes.errors.forEach((err) => {
+        log(`   - ${err.quiz}: ${err.error}`, "red");
       });
     }
 

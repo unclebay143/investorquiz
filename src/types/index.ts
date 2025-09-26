@@ -30,14 +30,14 @@ export type Question = {
   explanation?: string;
 };
 
-export type Exam = {
+export type Quiz = {
   id: string;
+  createdAt?: Date;
   title: string;
   description: string;
   totalPoints: number;
   questions: Question[];
-  reviewMode: "immediate" | "post"; // immediate: feedback per question, post: feedback after exam
-  isNew?: boolean;
+  reviewMode: "immediate" | "post"; // immediate: feedback per question, post: feedback after quiz
   author?: Author;
   retakeSettings?: {
     enabled: boolean;
@@ -50,7 +50,7 @@ export type Topic = {
   id: string;
   title: string;
   description: string;
-  exams: Exam[];
+  quizzes: Quiz[];
   createdAt?: Date;
 };
 
@@ -59,14 +59,14 @@ export type UserScore = {
   userName: string;
   userAvatar?: string;
   totalScore: number;
-  totalExams: number;
+  totalQuizzes: number;
   averageScore: number;
   bestScore: number;
   totalTimeSpent: number; // in seconds
   lastActivity: string; // ISO date string
-  completedExams: {
+  completedQuizzes: {
     topicId: string;
-    examId: string;
+    quizId: string;
     score: number;
     timeSpentInSeconds: number;
     completedAt: string;
@@ -82,7 +82,7 @@ export type LeaderboardEntry = {
 export type LeaderboardFilter = {
   timePeriod: "all" | "week" | "month" | "year";
   topicId?: string; // filter by specific topic
-  sortBy: "score" | "exams" | "average" | "time";
+  sortBy: "score" | "quizzes" | "average" | "time";
 };
 
 export type CurrentUser = {
@@ -91,23 +91,30 @@ export type CurrentUser = {
   userAvatar?: string;
   totalScore: number;
   rank: number;
-  examsCompleted: number;
+  quizzesCompleted: number;
 };
 
-export type ExamAttempt = {
-  examId: string;
+export type QuizAttempt = {
+  quizId: string;
   topicId: string;
   attemptNumber: number;
   score: number;
   timeSpentInSeconds: number;
   completedAt: string;
   answers: { [questionId: number]: string };
+  shuffledQuestions?: {
+    [questionId: number]: {
+      shuffledOptions: { [key: string]: string };
+      keyMapping: { [key: string]: string };
+      correctShuffledKey: string;
+    };
+  };
   grade: string;
   isBestScore: boolean; // Track if this is the user's best attempt
 };
 
-export type ExamAttempts = {
-  [examKey: string]: ExamAttempt[]; // examKey = `${topicId}-${examId}`
+export type QuizAttempts = {
+  [quizKey: string]: QuizAttempt[]; // quizKey = `${topicId}-${quizId}`
 };
 
 export type RetakeStatus = {

@@ -1,47 +1,19 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { connectViaMongoose } from "@/lib/db";
+import { calculateGrade } from "@/lib/retakeUtils";
 import Attempt from "@/models/Attempt";
+import type { Question } from "@/types";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ attemptId: string }> }
-) {
-  try {
-    const session = (await getServerSession(authOptions)) as any;
-    if (!session?.userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    await connectViaMongoose();
-    const { attemptId } = await params;
-
-    const attempt = await Attempt.findOne({
-      _id: attemptId,
-      $or: [{ user: session.userId }, { user: String(session.userId) }],
-    })
-      .populate("exam", "slug title totalPoints reviewMode questions")
-      .populate("topic", "slug title")
-      .lean();
-
-    if (!attempt) {
-      return NextResponse.json({ error: "Attempt not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(attempt);
-  } catch (e: unknown) {
-    const message = (e as any)?.message || "Failed to fetch attempt";
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
+// GET removed: attempts are read via GET /api/quizzes/[quizId]?includeAttempts=true
 
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ attemptId: string }> }
 ) {
   try {
-    const session = (await getServerSession(authOptions)) as any;
+    const session = (await getServerSession(authOptions)) as { userId?: string } | null;
     if (!session?.userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -55,13 +27,24 @@ export async function PATCH(
       completedAt,
       inProgress,
       isBestScore,
+      timeSpentInSeconds,
+      shuffledQuestions,
     } = body;
 
     await connectViaMongoose();
     const { attemptId } = await params;
 
-    const update: any = {};
-    if (answers) update.answers = answers;
+    const update: Record<string, unknown> = {};
+    if (answers) {
+      update.answers = answers;
+    }
+    if (shuffledQuestions) {
+      // Merge shuffled questions instead of replacing
+      const existingAttempt = await Attempt.findById(attemptId).lean();
+      const existingShuffled = existingAttempt?.shuffledQuestions || {};
+      const mergedShuffled = { ...existingShuffled, ...shuffledQuestions };
+      update.shuffledQuestions = mergedShuffled;
+    }
     if (typeof currentQuestion === "number")
       update.currentQuestion = currentQuestion;
     if (typeof inProgress === "boolean") update.inProgress = inProgress;
@@ -69,6 +52,93 @@ export async function PATCH(
     if (typeof grade === "string") update.grade = grade;
     if (typeof isBestScore === "boolean") update.isBestScore = isBestScore;
     if (completedAt) update.completedAt = new Date(completedAt);
+    if (typeof timeSpentInSeconds === "number")
+      update.timeSpentInSeconds = timeSpentInSeconds;
+
+    // If quiz is being completed (inProgress = false), validate and calculate score and grade
+    if (typeof inProgress === "boolean" && !inProgress && answers) {
+      const attempt = await Attempt.findById(attemptId)
+        .populate({ path: "quiz", select: "_id questions" })
+        .lean<{ quiz: { _id: unknown; questions: Array<Pick<Question, "id" | "correctKey">> } } | null>();
+      if (attempt && attempt.quiz) {
+        const quiz = attempt.quiz;
+
+        // Validate that all questions are answered before completing the quiz
+        const totalQuestions = quiz.questions.length;
+        const answeredQuestions = Object.keys(answers).length;
+
+        if (answeredQuestions < totalQuestions) {
+          return NextResponse.json(
+            {
+              error: `Incomplete quiz submission. Only ${answeredQuestions} out of ${totalQuestions} questions answered.`,
+            },
+            { status: 400 }
+          );
+        }
+
+        // Validate that all question IDs in answers exist in the quiz
+        const quizQuestionIds = quiz.questions.map((q) => String(q.id));
+        const answerQuestionIds = Object.keys(answers);
+
+        const missingQuestions = quizQuestionIds.filter(
+          (id: string) => !answerQuestionIds.includes(id)
+        );
+        const extraQuestions = answerQuestionIds.filter(
+          (id: string) => !quizQuestionIds.includes(id)
+        );
+
+        if (missingQuestions.length > 0) {
+          return NextResponse.json(
+            {
+              error: `Missing answers for questions: ${missingQuestions.join(
+                ", "
+              )}`,
+            },
+            { status: 400 }
+          );
+        }
+
+        if (extraQuestions.length > 0) {
+          return NextResponse.json(
+            {
+              error: `Invalid question IDs in answers: ${extraQuestions.join(
+                ", "
+              )}`,
+            },
+            { status: 400 }
+          );
+        }
+        let calculatedScore = 0;
+
+        // Calculate score based on correct answers
+        quiz.questions.forEach((question) => {
+          if (answers[String(question.id)] === question.correctKey) {
+            calculatedScore += 1;
+          }
+        });
+
+        // Calculate grade based on percentage
+        const percentage = (calculatedScore / quiz.questions.length) * 100;
+        const gradeInfo = calculateGrade(percentage);
+
+        update.score = calculatedScore;
+        update.grade = gradeInfo.grade;
+
+        // Check if this is the best score for this user and quiz
+        const userAttempts = await Attempt.find({
+          user: session.userId,
+          quiz: quiz._id,
+          inProgress: false,
+        }).lean();
+
+        const bestScore =
+          userAttempts.length > 0
+            ? Math.max(...userAttempts.map((a: { score?: number }) => a.score || 0))
+            : -1;
+
+        update.isBestScore = calculatedScore > bestScore;
+      }
+    }
 
     const doc = await Attempt.findOneAndUpdate(
       {
@@ -93,7 +163,10 @@ export async function PATCH(
       }
     );
   } catch (e: unknown) {
-    const message = (e as any)?.message || "Failed to update attempt";
+    const message =
+      typeof e === "object" && e && "message" in e
+        ? String((e as { message?: unknown }).message || "Failed to update attempt")
+        : "Failed to update attempt";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

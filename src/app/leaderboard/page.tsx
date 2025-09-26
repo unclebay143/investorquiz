@@ -17,8 +17,8 @@ export default function LeaderboardPage() {
   // Filter and sort leaderboard entries based on current filter
   const filteredEntries = MOCK_LEADERBOARD.filter((entry) => {
     if (filter.topicId) {
-      return entry.user.completedExams.some(
-        (exam) => exam.topicId === filter.topicId
+      return entry.user.completedQuizzes.some(
+        (quiz) => quiz.topicId === filter.topicId
       );
     }
     return true;
@@ -27,8 +27,8 @@ export default function LeaderboardPage() {
       switch (filter.sortBy) {
         case "score":
           return b.user.totalScore - a.user.totalScore;
-        case "exams":
-          return b.user.totalExams - a.user.totalExams;
+        case "quizzes":
+          return b.user.totalQuizzes - a.user.totalQuizzes;
         case "average":
           return b.user.averageScore - a.user.averageScore;
         case "time":
@@ -54,7 +54,7 @@ export default function LeaderboardPage() {
   return (
     <Layout
       activeId='leaderboard'
-      selectedExam={null}
+      selectedQuiz={null}
       onTopicSelect={handleTopicSelect}
     >
       <div className='mb-8'>

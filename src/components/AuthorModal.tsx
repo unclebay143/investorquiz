@@ -60,7 +60,7 @@ export default function AuthorModal({ author, onClose }: AuthorModalProps) {
           {/* Quote */}
           {author.quote && (
             <div className='mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500'>
-              <p className='text-sm italic text-blue-900'>"{author.quote}"</p>
+              <p className='text-sm italic text-blue-900'>&quot;{author.quote}&quot;</p>
             </div>
           )}
 

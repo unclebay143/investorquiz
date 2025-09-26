@@ -3,26 +3,23 @@
 import { useEffect, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
 
-interface ExamLoadingScreenProps {
-  examTitle?: string;
-  currentStep?: string;
+interface QuizLoadingScreenProps {
+  quizTitle?: string;
   onComplete?: () => void;
 }
 
-export default function ExamLoadingScreen({
-  examTitle = "Loading exam",
-  currentStep = "Preparing questions...",
+export default function QuizLoadingScreen({
+  quizTitle = "Loading quiz",
   onComplete,
-}: ExamLoadingScreenProps) {
+}: QuizLoadingScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [step, setStep] = useState(currentStep);
   const [isComplete, setIsComplete] = useState(false);
   const [startTime] = useState(Date.now());
 
   const loadingSteps = [
     { text: "Connecting to server...", progress: 15 },
     { text: "Authenticating user...", progress: 25 },
-    { text: "Loading exam questions...", progress: 45 },
+    { text: "Loading quiz questions...", progress: 45 },
     { text: "Shuffling options...", progress: 65 },
     { text: "Setting up timer...", progress: 80 },
     { text: "Preparing interface...", progress: 90 },
@@ -36,7 +33,6 @@ export default function ExamLoadingScreen({
 
     const interval = setInterval(() => {
       if (currentStepIndex < loadingSteps.length) {
-        setStep(loadingSteps[currentStepIndex].text);
         setProgress(loadingSteps[currentStepIndex].progress);
         currentStepIndex++;
       } else {
@@ -58,7 +54,7 @@ export default function ExamLoadingScreen({
 
   return (
     <LoadingScreen
-      message={isComplete ? "Ready!" : examTitle}
+      message={isComplete ? "Ready!" : quizTitle}
       showProgress={true}
       progress={progress}
       onMinimumTimeReached={onComplete}

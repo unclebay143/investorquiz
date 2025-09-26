@@ -8,7 +8,7 @@
       "isNewTopic": true
     }
   ],
-  "exams": [
+  "quizzes": [
     {
       "slug": "what-is-investing",
       "topic": "investment-fundamentals",
@@ -16,7 +16,7 @@
       "description": "Test your knowledge of fundamental investing concepts, including the difference between investing and saving, compound interest, and setting investment goals.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -212,7 +212,7 @@
       "description": "Test your understanding of the relationship between risk, return, and time. Assess your knowledge of risk tolerance and investment strategy decision-making.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -408,7 +408,7 @@
       "description": "Test your knowledge of different investment vehicles and their characteristics, benefits, and risks.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,
@@ -604,7 +604,7 @@
       "description": "Test your ability to create a personalized investment strategy. Assess your knowledge of portfolio building, monitoring, and rebalancing.",
       "totalPoints": 150,
       "reviewMode": "post",
-      "isNew": true,
+      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,

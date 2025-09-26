@@ -6,7 +6,7 @@
  * Usage:
  * node scripts/bulk-import.js
  *
- * This script will read from the data.json file and import topics, authors, and exams
+ * This script will read from the data.json file and import topics, authors, and quizzes
  */
 
 const fs = require("fs");
@@ -81,15 +81,15 @@ async function importTopics(topics) {
   }
 }
 
-async function importExams(exams) {
-  log("\n📋 Importing Exams...", "cyan");
+async function importQuizzes(quizzes) {
+  log("\n📋 Importing Quizzes...", "cyan");
 
-  for (const exam of exams) {
+  for (const quiz of quizzes) {
     try {
-      const result = await makeRequest("exams", exam);
-      log(`✅ Exam "${exam.title}" imported successfully`, "green");
+      const result = await makeRequest("quizzes", quiz);
+      log(`✅ Quiz "${quiz.title}" imported successfully`, "green");
     } catch (error) {
-      log(`❌ Failed to import exam "${exam.title}": ${error.message}`, "red");
+      log(`❌ Failed to import quiz "${quiz.title}": ${error.message}`, "red");
     }
   }
 }
@@ -113,23 +113,23 @@ async function main() {
     const data = JSON.parse(rawData);
 
     // Validate data structure
-    if (!data.authors || !data.topics || !data.exams) {
+    if (!data.authors || !data.topics || !data.quizzes) {
       log(
-        "❌ Invalid data structure. Expected: { authors: [], topics: [], exams: [] }",
+        "❌ Invalid data structure. Expected: { authors: [], topics: [], quizzes: [] }",
         "red"
       );
       process.exit(1);
     }
 
     log(
-      `📊 Found ${data.authors.length} authors, ${data.topics.length} topics, ${data.exams.length} exams`,
+      `📊 Found ${data.authors.length} authors, ${data.topics.length} topics, ${data.quizzes.length} quizzes`,
       "blue"
     );
 
-    // Import in order: authors first, then topics, then exams
+    // Import in order: authors first, then topics, then quizzes
     await importAuthors(data.authors);
     await importTopics(data.topics);
-    await importExams(data.exams);
+    await importQuizzes(data.quizzes);
 
     log("\n🎉 Bulk import completed!", "green");
   } catch (error) {
@@ -143,4 +143,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { main, importAuthors, importTopics, importExams };
+module.exports = { main, importAuthors, importTopics, importQuizzes };

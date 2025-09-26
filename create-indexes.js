@@ -18,29 +18,29 @@ async function createIndexes() {
     await db.collection("topics").createIndex({ title: 1 });
     console.log("✅ Topics indexes created");
 
-    await db.collection("exams").createIndex({ slug: 1 }, { unique: true });
-    await db.collection("exams").createIndex({ topic: 1 });
-    await db.collection("exams").createIndex({ title: 1 });
-    await db.collection("exams").createIndex({ topic: 1, title: 1 });
-    console.log("✅ Exams indexes created");
+    await db.collection("quizzes").createIndex({ slug: 1 }, { unique: true });
+    await db.collection("quizzes").createIndex({ topic: 1 });
+    await db.collection("quizzes").createIndex({ title: 1 });
+    await db.collection("quizzes").createIndex({ topic: 1, title: 1 });
+    console.log("✅ Quizzes indexes created");
 
     await db.collection("authors").createIndex({ slug: 1 }, { unique: true });
     await db.collection("authors").createIndex({ name: 1 });
     console.log("✅ Authors indexes created");
 
     await db.collection("attempts").createIndex({ user: 1 });
-    await db.collection("attempts").createIndex({ exam: 1 });
+    await db.collection("attempts").createIndex({ quiz: 1 });
     await db.collection("attempts").createIndex({ inProgress: 1 });
     await db
       .collection("attempts")
-      .createIndex({ user: 1, exam: 1, inProgress: 1 });
+      .createIndex({ user: 1, quiz: 1, inProgress: 1 });
     console.log("✅ Attempts indexes created");
 
     console.log("\n🎉 All indexes created successfully!");
 
     // Show index information
     console.log("\n📋 Index Summary:");
-    const collections = ["topics", "exams", "authors", "attempts"];
+    const collections = ["topics", "quizzes", "authors", "attempts"];
     for (const collection of collections) {
       const indexes = await db.collection(collection).listIndexes().toArray();
       console.log(`\n${collection}:`);

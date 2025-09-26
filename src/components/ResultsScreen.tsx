@@ -2,22 +2,20 @@
 
 import {
   calculateGrade,
-  cleanupAttempts,
-  clearAllAttempts,
   formatTimeRemaining,
   getRetakeStatus,
 } from "@/lib/retakeUtils";
-import { Exam, ExamAttempts, RetakeStatus } from "@/types";
+import { Author, Quiz, QuizAttempt, QuizAttempts, RetakeStatus } from "@/types";
 import { AlertCircle, Calendar, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import ResultsHeader from "./ResultsHeader";
 import ScoreSummary from "./ScoreSummary";
 
 interface ResultsScreenProps {
-  exam: Exam;
+  quiz: Quiz;
   score: number;
   timeSpentInSeconds: number;
-  postExamAnswers: { [questionId: number]: string };
+  postQuizAnswers: { [questionId: number]: string };
   shuffledQuestions?: {
     [questionId: number]: {
       shuffledOptions: { [key: string]: string };
@@ -26,35 +24,32 @@ interface ResultsScreenProps {
     };
   };
   topicId: string;
-  onBackToExams: () => void;
-  onViewAuthor: (author: any) => void;
-  onRetakeExam: () => void;
-  attempts?: ExamAttempts; // Optional for backward compatibility
+  onBackToQuizzes: () => void;
+  onViewAuthor: (author: Author) => void;
+  onRetakeQuiz: () => void;
+  attempts?: QuizAttempts; // Optional for backward compatibility
 }
 
 export default function ResultsScreen({
-  exam,
-  score,
-  timeSpentInSeconds,
-  postExamAnswers,
+  quiz,
+  postQuizAnswers,
   shuffledQuestions = {},
   topicId,
-  onBackToExams,
+  onBackToQuizzes,
   onViewAuthor,
-  onRetakeExam,
+  onRetakeQuiz,
   attempts: propAttempts,
 }: ResultsScreenProps) {
-  const correctCount = exam.questions.filter(
-    (q) => postExamAnswers[q.id] === q.correctKey
-  ).length;
-  const incorrectCount = exam.questions.length - correctCount;
+  const hasAnswers = !!postQuizAnswers;
+  const safeAnswers = postQuizAnswers || {};
 
-  // Calculate grade based on percentage
-  const percentage = (correctCount / exam.questions.length) * 100;
-  const gradeInfo = calculateGrade(percentage);
+  const correctCount = quiz.questions.filter(
+    (q) => safeAnswers[q.id] === q.correctKey
+  ).length;
+
 
   // State for attempt history and retake status
-  const [attempts, setAttempts] = useState<ExamAttempts>({});
+  const [attempts, setAttempts] = useState<QuizAttempts>({});
   const [retakeStatus, setRetakeStatus] = useState<RetakeStatus | null>(null);
   const [selectedAttempt, setSelectedAttempt] = useState<number>(1); // 1+ = attempt numbers
 
@@ -63,25 +58,23 @@ export default function ResultsScreen({
     if (propAttempts) {
       setAttempts(propAttempts);
     } else {
-      const savedAttempts = localStorage.getItem("exam-attempts");
+      const savedAttempts = localStorage.getItem("quiz-attempts");
       if (savedAttempts) {
-        const parsedAttempts = JSON.parse(savedAttempts);
-        console.log("Loading attempts from localStorage:", parsedAttempts);
+        const parsedAttempts = JSON.parse(savedAttempts) as QuizAttempts;
 
         // Auto-fix attempts if they have incorrect isBestScore values
-        const examKey = `${topicId}-${exam.id}`;
-        const examAttempts = parsedAttempts[examKey] || [];
+        const quizKey = `${topicId}-${quiz.id}`;
+        const quizAttempts = (parsedAttempts[quizKey] || []) as QuizAttempt[];
 
-        if (examAttempts.length > 0) {
+        if (quizAttempts.length > 0) {
           // Check if any attempt has isBestScore: true
-          const hasBestScore = examAttempts.some(
-            (attempt: any) => attempt.isBestScore === true
+          const hasBestScore = quizAttempts.some(
+            (attempt) => attempt.isBestScore === true
           );
 
           if (!hasBestScore) {
-            console.log("No best score found, auto-fixing attempts...");
             // Auto-fix the attempts
-            const sortedAttempts = [...examAttempts].sort(
+            const sortedAttempts = [...quizAttempts].sort(
               (a, b) => a.attemptNumber - b.attemptNumber
             );
             let bestScoreSoFar = -1;
@@ -98,15 +91,14 @@ export default function ResultsScreen({
 
             const updatedAttempts = {
               ...parsedAttempts,
-              [examKey]: fixedAttempts,
+              [quizKey]: fixedAttempts,
             };
 
             setAttempts(updatedAttempts);
             localStorage.setItem(
-              "exam-attempts",
+              "quiz-attempts",
               JSON.stringify(updatedAttempts)
             );
-            console.log("Auto-fixed attempts:", fixedAttempts);
             return;
           }
         }
@@ -114,78 +106,29 @@ export default function ResultsScreen({
         setAttempts(parsedAttempts);
       }
     }
-  }, [propAttempts, topicId, exam.id]);
+  }, [propAttempts, topicId, quiz.id]);
 
   // Set selectedAttempt to the latest attempt when attempts are loaded
   useEffect(() => {
-    const examAttempts = attempts[`${topicId}-${exam.id}`] || [];
-    if (examAttempts.length > 0) {
-      const latestAttempt = examAttempts.sort(
+    const quizAttempts = attempts[`${topicId}-${quiz.id}`] || [];
+    if (quizAttempts.length > 0) {
+      const latestAttempt = quizAttempts.sort(
         (a, b) =>
           new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
       )[0];
       setSelectedAttempt(latestAttempt.attemptNumber);
     }
-  }, [attempts, topicId, exam.id]);
+  }, [attempts, topicId, quiz.id]);
 
   // Update retake status when attempts change
   useEffect(() => {
-    const status = getRetakeStatus(exam, topicId, attempts);
+    const status = getRetakeStatus(quiz, topicId, attempts);
     setRetakeStatus(status);
-  }, [exam, topicId, attempts]);
-
-  // Cleanup function for testing
-  const handleCleanupAttempts = () => {
-    const cleanedAttempts = cleanupAttempts(attempts, 5);
-    setAttempts(cleanedAttempts);
-    localStorage.setItem("exam-attempts", JSON.stringify(cleanedAttempts));
-  };
-
-  // Clear all attempts for testing
-  const handleClearAllAttempts = () => {
-    clearAllAttempts();
-    setAttempts({});
-    window.location.reload(); // Refresh to see changes
-  };
-
-  // Fix existing attempts data (recalculate isBestScore)
-  const handleFixAttempts = () => {
-    const examKey = `${topicId}-${exam.id}`;
-    const examAttempts = attempts[examKey] || [];
-
-    if (examAttempts.length === 0) return;
-
-    // Sort by attempt number to process in order
-    const sortedAttempts = [...examAttempts].sort(
-      (a, b) => a.attemptNumber - b.attemptNumber
-    );
-
-    // Recalculate isBestScore for each attempt
-    let bestScoreSoFar = -1;
-    const fixedAttempts = sortedAttempts.map((attempt) => {
-      const isBest = attempt.score > bestScoreSoFar;
-      if (isBest) {
-        bestScoreSoFar = attempt.score;
-      }
-      return {
-        ...attempt,
-        isBestScore: isBest,
-      };
-    });
-
-    const updatedAttempts = {
-      ...attempts,
-      [examKey]: fixedAttempts,
-    };
-
-    setAttempts(updatedAttempts);
-    localStorage.setItem("exam-attempts", JSON.stringify(updatedAttempts));
-    console.log("Fixed attempts data:", fixedAttempts);
-  };
+  }, [quiz, topicId, attempts]);
 
   // Get saved attempts (current attempt should already be saved)
-  const examAttempts = attempts[`${topicId}-${exam.id}`] || [];
-  const allAttempts = examAttempts
+  const quizAttempts = attempts[`${topicId}-${quiz.id}`] || [];
+  const allAttempts = quizAttempts
     .map((attempt) => ({
       ...attempt,
       isCurrent: false,
@@ -195,32 +138,20 @@ export default function ResultsScreen({
         new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
     );
 
-  // Debug logging
-  console.log("ResultsScreen - allAttempts:", allAttempts);
-  console.log("ResultsScreen - examAttempts:", examAttempts);
-  allAttempts.forEach((attempt, index) => {
-    console.log(`Attempt ${index + 1}:`, {
-      attemptNumber: attempt.attemptNumber,
-      score: attempt.score,
-      isBestScore: attempt.isBestScore,
-      timeSpentInSeconds: attempt.timeSpentInSeconds,
-    });
-  });
-
   // Get the selected attempt data
   const selectedAttemptData =
     allAttempts.find((attempt) => attempt.attemptNumber === selectedAttempt) ||
     allAttempts[0]; // Fallback to first attempt if not found
 
-  // Calculate stats for selected attempt (with fallback to current exam data)
+  // Calculate stats for selected attempt (with fallback to current quiz data)
   const selectedCorrectCount = selectedAttemptData
-    ? exam.questions.filter(
-        (q) => (selectedAttemptData as any).answers[q.id] === q.correctKey
-      ).length
-    : correctCount; // Fallback to current exam stats
-  const selectedIncorrectCount = exam.questions.length - selectedCorrectCount;
+    ? quiz.questions.filter((q) => {
+        const answers = (selectedAttemptData as { answers?: Record<string, string> }).answers || {};
+        return answers[String(q.id)] === q.correctKey;
+      }).length
+    : correctCount; // Fallback to current quiz stats
   const selectedPercentage =
-    (selectedCorrectCount / exam.questions.length) * 100;
+    (selectedCorrectCount / quiz.questions.length) * 100;
   const selectedGradeInfo = calculateGrade(selectedPercentage);
 
   // If no attempts exist, show a message
@@ -233,13 +164,13 @@ export default function ResultsScreen({
               No Attempts Found
             </h2>
             <p className='text-gray-600 mb-6'>
-              No exam attempts were found. Please complete an exam first.
+              No quiz attempts were found. Please complete an quiz first.
             </p>
             <button
-              onClick={onBackToExams}
+              onClick={onBackToQuizzes}
               className='px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
             >
-              Back to Exams
+              Back to Quizzes
             </button>
           </div>
         </div>
@@ -249,10 +180,28 @@ export default function ResultsScreen({
 
   return (
     <div className='space-y-6'>
+      {!hasAnswers && (
+        <div className='bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm'>
+          <div className='text-center'>
+            <h2 className='text-2xl font-bold text-gray-900 mb-3'>
+              Error Loading Results
+            </h2>
+            <p className='text-gray-600 mb-4'>
+              Unable to load quiz results. Please try again.
+            </p>
+            <button
+              onClick={onBackToQuizzes}
+              className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700'
+            >
+              Back to Quizzes
+            </button>
+          </div>
+        </div>
+      )}
       {allAttempts.length > 1 && (
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2 overflow-x-auto no-scrollbar -mx-3 sm:mx-0 px-3 sm:px-0'>
           <div className='flex gap-1'>
-            {allAttempts.map((attempt, index) => (
+            {allAttempts.map((attempt) => (
               <button
                 key={attempt.attemptNumber}
                 onClick={() => setSelectedAttempt(attempt.attemptNumber)}
@@ -272,7 +221,9 @@ export default function ResultsScreen({
         </div>
       )}
       <ResultsHeader
-        exam={exam}
+        quiz={quiz}
+        score={selectedAttemptData.score}
+        totalQuestions={quiz.questions.length}
         gradeLetter={selectedGradeInfo.grade}
         gradeColorClass={selectedGradeInfo.color}
         isBestScore={!!selectedAttemptData.isBestScore}
@@ -281,9 +232,9 @@ export default function ResultsScreen({
 
       {/* Score Summary */}
       <ScoreSummary
-        points={{ scored: selectedAttemptData.score, total: exam.totalPoints }}
+        points={{ scored: selectedAttemptData.score, total: quiz.totalPoints }}
         correctCount={selectedCorrectCount}
-        totalQuestions={exam.questions.length}
+        totalQuestions={quiz.questions.length}
         timeSpentSeconds={selectedAttemptData.timeSpentInSeconds}
         performancePercent={selectedPercentage}
         gradeLetter={selectedGradeInfo.grade}
@@ -301,13 +252,17 @@ export default function ResultsScreen({
           ) : null}
         </h3>
         <div className='space-y-3'>
-          {exam.questions.map((question) => {
+          {quiz.questions.map((question) => {
             const answerOriginalKey = selectedAttemptData.isCurrent
-              ? postExamAnswers[question.id]
-              : (selectedAttemptData as any).answers?.[question.id] ??
-                postExamAnswers[question.id];
+              ? safeAnswers[question.id]
+              : (selectedAttemptData as { answers?: Record<string, string> }).answers?.[question.id] ??
+                (selectedAttemptData as { answers?: Record<string, string> }).answers?.[String(question.id)] ??
+                safeAnswers[question.id];
+
             const correct = answerOriginalKey === question.correctKey;
-            const shuffled = shuffledQuestions[question.id];
+            const shuffled =
+              (selectedAttemptData as { shuffledQuestions?: Record<string, { shuffledOptions: Record<string, string>; keyMapping: Record<string, string>; correctShuffledKey: string }> }).shuffledQuestions?.[question.id] ||
+              shuffledQuestions[question.id];
             // Map original to shuffled key label for display when available
             const displaySelectedKey = shuffled
               ? Object.keys(shuffled.keyMapping).find(
@@ -315,6 +270,7 @@ export default function ResultsScreen({
                     shuffled.keyMapping[shuffledKey] === answerOriginalKey
                 ) || answerOriginalKey
               : answerOriginalKey;
+
             const displayCorrectKey = shuffled
               ? shuffled.correctShuffledKey
               : question.correctKey;
@@ -345,7 +301,7 @@ export default function ResultsScreen({
                         Question {question.id}
                       </span>
                     </div>
-                    <div className='text-base font-semibold text-gray-900 mb-3'>
+                    <div className='text-base sm:text-lg font-semibold text-gray-900 mb-3'>
                       {question.prompt}
                     </div>
                   </div>
@@ -358,10 +314,11 @@ export default function ResultsScreen({
                       ([optKey, optVal]) => {
                         const isCorrect = optKey === displayCorrectKey;
                         const isSelected = optKey === displaySelectedKey;
+
                         return (
                           <div
                             key={optKey}
-                            className={`p-3 rounded-lg border text-sm flex items-start justify-between ${
+                            className={`relative p-3 rounded-lg border text-sm sm:text-base flex items-start ${
                               isCorrect && isSelected
                                 ? "border-green-300 bg-green-50"
                                 : isCorrect
@@ -371,13 +328,17 @@ export default function ResultsScreen({
                                 : "border-gray-200 bg-white"
                             }`}
                           >
-                            <div className='pr-3'>
+                            <div
+                              className={`${
+                                isSelected || isCorrect ? "pb-6 sm:pb-7" : ""
+                              }`}
+                            >
                               <span className='font-semibold mr-2'>
                                 {optKey}.
                               </span>
                               {optVal}
                             </div>
-                            <div className='flex gap-1'>
+                            <div className='absolute bottom-2 left-2 flex gap-1 whitespace-nowrap'>
                               {isCorrect && (
                                 <span className='px-2 py-0.5 rounded-full text-xs font-semibold text-green-800 bg-green-100'>
                                   Correct
@@ -396,11 +357,11 @@ export default function ResultsScreen({
                   </div>
 
                   {question.explanation && (
-                    <div className='p-4 rounded-lg border bg-green-50 border-green-200'>
+                    <div className='p-3 sm:p-4 rounded-lg border bg-green-50 border-green-200'>
                       <div className='text-sm font-semibold text-green-800 mb-2'>
                         Explanation
                       </div>
-                      <div className='text-sm text-green-900 leading-relaxed'>
+                      <div className='text-sm sm:text-base text-green-900 leading-relaxed'>
                         {question.explanation}
                       </div>
                     </div>
@@ -413,7 +374,7 @@ export default function ResultsScreen({
       </div>
 
       {/* Retake Status - Only show if retake is enabled */}
-      {retakeStatus && exam.retakeSettings?.enabled !== false && (
+      {retakeStatus && quiz.retakeSettings?.enabled !== false && (
         <div className='bg-white rounded-2xl border border-gray-200 p-6 shadow-sm'>
           <div className='flex items-center gap-3 mb-4'>
             <Calendar className='h-5 w-5 text-blue-600' />
@@ -460,60 +421,28 @@ export default function ResultsScreen({
             )}
 
             {/* Cleanup buttons for testing */}
-            {process.env.NODE_ENV === "development" && (
-              <div className='mt-3 pt-3 border-t border-gray-300 space-y-2'>
-                <div className='flex gap-2 flex-wrap'>
-                  <button
-                    onClick={handleFixAttempts}
-                    className='px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors'
-                  >
-                    🔧 Fix Attempts
-                  </button>
-                  <button
-                    onClick={handleCleanupAttempts}
-                    className='px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors'
-                  >
-                    🧹 Cleanup Duplicates
-                  </button>
-                  <button
-                    onClick={handleClearAllAttempts}
-                    className='px-3 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors'
-                  >
-                    🗑️ Clear All Attempts
-                  </button>
-                </div>
-                <div className='text-xs text-gray-500'>
-                  Fix: Recalculates isBestScore for existing attempts
-                  <br />
-                  Cleanup: Removes duplicates, keeps latest 5 per exam
-                  <br />
-                  Clear All: Removes all attempts (for testing)
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
 
       <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
         <button
-          onClick={onBackToExams}
+          onClick={onBackToQuizzes}
           className='flex-1 py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
         >
-          Back to Exams
+          Back to Quizzes
         </button>
 
         {/* Only show retake button if retake is enabled */}
-        {exam.retakeSettings?.enabled !== false &&
+        {quiz.retakeSettings?.enabled !== false &&
           (retakeStatus?.canRetake ? (
             <button
               onClick={() => {
-                console.log("Retake button clicked!");
-                onRetakeExam();
+                onRetakeQuiz();
               }}
               className='flex-1 py-3 px-6 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
             >
-              Retake Exam
+              Retake Quiz
             </button>
           ) : (
             <button
