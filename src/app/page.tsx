@@ -1,26 +1,23 @@
 "use client";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { useTopics } from "@/hooks/useTopics";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const { data: topics, isLoading: loading } = useTopics();
+  // const { data: topics, isLoading: loading } = useTopics();
 
   useEffect(() => {
-    if (topics && topics.length > 0) {
-      router.push(`/topic/${topics[0].id}`);
-    }
-  }, [topics, router]);
+      router.push("/topic/investment-fundamentals");
+  }, [router]);
 
   // if (loading) {
     return (
       <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
         <div className='text-center'>
           <LoadingSpinner className='mb-4' />
-          <p className='text-gray-600'>Looking for topics...</p>
+          <p className='text-gray-600'>Setting up quiz...</p>
         </div>
       </div>
     );

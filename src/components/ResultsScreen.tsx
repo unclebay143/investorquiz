@@ -272,7 +272,10 @@ export default function ResultsScreen({
               : answerOriginalKey;
 
             const displayCorrectKey = shuffled
-              ? shuffled.correctShuffledKey
+              ? Object.keys(shuffled.keyMapping).find(
+                  (shuffledKey) =>
+                    shuffled.keyMapping[shuffledKey] === question.correctKey
+                ) || question.correctKey
               : question.correctKey;
             const optionsForDisplay: { [key: string]: string } =
               (shuffled && shuffled.shuffledOptions) || question.options;

@@ -4,8 +4,7 @@
     {
       "slug": "stock-market-basics",
       "title": "Stock Market Basics",
-      "description": "Master the fundamentals of stock market investing with a focus on the Nigerian Exchange (NGX) and local market dynamics",
-      "isNewTopic": true
+      "description": "Master the fundamentals of stock market investing with a focus on the Nigerian Exchange (NGX) and local market dynamics"
     }
   ],
   "quizzes": [
@@ -16,7 +15,6 @@
       "description": "Test your knowledge of how stock markets operate, with specific focus on the Nigerian Exchange (NGX) and market participants.",
       "totalPoints": 150,
       "reviewMode": "post",
-      
       "retakeSettings": {
         "enabled": true,
         "maxAttempts": 3,

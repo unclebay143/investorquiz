@@ -43,8 +43,10 @@ export default function ResultPage() {
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [isLoadingAttempt, setIsLoadingAttempt] = useState(true);
 
-  // Use TanStack Query for single quiz data
-  const { data: quizData, isLoading: loading } = useQuiz(quizSlug);
+  const { data: quizData, isLoading: loading } = useQuiz(quizSlug, { 
+    includeAttempts: true, 
+    includeAnswers: true 
+  });
   const quiz = useMemo(() => {
     if (!quizData) return null;
     return {
