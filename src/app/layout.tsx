@@ -25,6 +25,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+
+      <script
+        defer
+        data-website-id="68d734160b8d2a124e0a3291"
+        data-domain="quiz.naijainvestors.com"
+        src="https://datafa.st/js/script.js">
+      </script>
+      
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
