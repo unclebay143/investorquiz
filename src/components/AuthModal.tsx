@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { useState } from "react";
 
 interface AuthModalProps {
@@ -62,48 +63,81 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
   };
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm'>
-      <div className='w-full max-w-md rounded-lg bg-white shadow-lg'>
-        <div className='flex items-center justify-between px-4 py-3 border-b'>
-          <div className='flex gap-2 text-sm'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300'>
+      <div className='w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-100 relative'>
+        <div className='flex flex-col items-center justify-center pt-6 pb-2 px-6 border-b'>
+          {/* <div className='flex items-center gap-2 mb-2'>
+            <Image
+              src='/favicon.ico'
+              alt='Logo'
+              width={32}
+              height={32}
+              className='rounded'
+            />
+            <span className='font-semibold text-lg text-gray-900'>
+              InvestorQuiz
+            </span>
+          </div> */}
+          <div className='flex gap-2 text-sm w-full justify-center'>
             <button
-              className={`px-3 py-1 rounded ${
-                tab === "signin" ? "bg-gray-900 text-white" : "bg-gray-100"
+              className={`px-4 py-1 rounded-full font-medium transition-colors duration-150 ${
+                tab === "signin"
+                  ? "bg-gray-900 text-white shadow"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => setTab("signin")}
             >
               Sign in
             </button>
             <button
-              className={`px-3 py-1 rounded ${
-                tab === "signup" ? "bg-gray-900 text-white" : "bg-gray-100"
+              className={`px-4 py-1 rounded-full font-medium transition-colors duration-150 ${
+                tab === "signup"
+                  ? "bg-gray-900 text-white shadow"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => setTab("signup")}
             >
               Sign up
             </button>
           </div>
-          <button
-            className='text-sm text-gray-500 hover:text-gray-900'
-            onClick={close}
-          >
-            Close
-          </button>
         </div>
-        <form onSubmit={onSubmit} className='p-4 space-y-3'>
+        <form onSubmit={onSubmit} className='p-6 space-y-4'>
+          <button
+            type='button'
+            className='w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold shadow-sm transition disabled:opacity-50'
+            onClick={() => signIn("google")}
+            disabled={loading}
+          >
+            <Image
+              src='/google.png'
+              alt="Google's logo"
+              width={20}
+              height={20}
+            />
+            Continue with Google
+          </button>
+          <div className='relative my-6'>
+            <div className='absolute inset-0 flex items-center'>
+              <div className='w-full border-b border-gray-200'></div>
+            </div>
+            <div className='relative flex justify-center text-sm'>
+              <span className='bg-white px-3 text-gray-400 font-medium'>
+                or
+              </span>
+            </div>
+          </div>
+
           {tab === "signup" && (
-            <>
-              <input
-                className='w-full border rounded px-3 py-2'
-                placeholder='Username'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </>
+            <input
+              className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
+              placeholder='Username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           )}
           <input
-            className='w-full border rounded px-3 py-2'
+            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
             placeholder='Email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -111,20 +145,42 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             required
           />
           <input
-            className='w-full border rounded px-3 py-2'
+            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type='password'
             required
-            autoComplete="on"
+            autoComplete='on'
           />
-          {error && <p className='text-red-600 text-sm'>{error}</p>}
+          {error && <p className='text-red-600 text-sm text-center'>{error}</p>}
           <button
             type='submit'
-            className='w-full bg-gray-900 text-white rounded px-3 py-2 disabled:opacity-50'
+            className='w-full bg-black hover:bg-black text-white rounded-lg px-3 py-2 font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2'
             disabled={loading}
           >
+            {loading && (
+              <svg
+                className='animate-spin h-5 w-5 text-white'
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <circle
+                  className='opacity-25'
+                  cx='12'
+                  cy='12'
+                  r='10'
+                  stroke='currentColor'
+                  strokeWidth='4'
+                ></circle>
+                <path
+                  className='opacity-75'
+                  fill='currentColor'
+                  d='M4 12a8 8 0 018-8v8z'
+                ></path>
+              </svg>
+            )}
             {loading
               ? tab === "signin"
                 ? "Signing in..."
@@ -134,6 +190,13 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               : "Sign up"}
           </button>
         </form>
+        <button
+          className='absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition text-lg'
+          onClick={close}
+          aria-label='Close modal'
+        >
+          &times;
+        </button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import GoogleProvider from "next-auth/providers/google";
 import { connectViaMongoose } from "@/lib/db";
 import User, { IUser } from "@/models/User";
 import bcrypt from "bcryptjs";
@@ -17,9 +18,7 @@ export const authOptions: NextAuthOptions = {
       ) {
         if (!credentials?.email || !credentials?.password) return null;
         await connectViaMongoose();
-        const user = (await User.findOne({
-          email: credentials.email,
-        }).lean()) as IUser | null;
+        const user = await User.findOne({ email: credentials.email });
         if (!user || !user.passwordHash) return null;
         const ok = await bcrypt.compare(
           credentials.password,
@@ -28,22 +27,37 @@ export const authOptions: NextAuthOptions = {
         if (!ok) return null;
         return {
           id: String(user._id),
-          username: user.username,
           email: user.email,
+          username: user.username,
           image: user.avatarUrl,
         };
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
-      if (user) token.uid = user.id;
+      const email = user?.email || token?.email;
+      if (email) {
+        await connectViaMongoose();
+        const dbUser = await User.findOne({ email });
+        if (dbUser) {
+          token.uid = String(dbUser._id);
+        }
+      }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      if (token?.uid) session.userId = token.uid;
+      if (token?.uid) {
+        session.userId = token.uid;
+        session.id = token.uid;
+      }
       return session;
     },
   },
