@@ -23,6 +23,7 @@ export default function TopicPage() {
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [showQuotesModal, setShowQuotesModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [loadingQuizId, setLoadingQuizId] = useState<string | null>(null);
 
   // Use TanStack Query for data
   const { data: topics } = useTopics();
@@ -39,7 +40,7 @@ export default function TopicPage() {
       totalPoints: quiz.totalPoints,
       questions: quiz.questions || [],
       reviewMode: quiz.reviewMode,
-      
+
       author: quiz.author
         ? {
             id: quiz.author._id || quiz.author.slug,
@@ -72,9 +73,8 @@ export default function TopicPage() {
 
     if (loadingUIVisible) {
       if (!loadingTip) {
-        const tip = investmentTips[
-          Math.floor(Math.random() * investmentTips.length)
-        ];
+        const tip =
+          investmentTips[Math.floor(Math.random() * investmentTips.length)];
         setLoadingTip(tip);
       }
     } else {
@@ -100,7 +100,6 @@ export default function TopicPage() {
     }
   }, [error]);
 
-
   // Handle error state
   if (error) {
     return (
@@ -125,17 +124,18 @@ export default function TopicPage() {
 
   const handleStartQuiz = async (quizId: string) => {
     if (!session?.user) {
-      // Show existing auth modal for non-authenticated users
       setShowAuthModal(true);
       return;
     }
-
-    // If an attempt is already in progress, just navigate to the quiz
+    setLoadingQuizId(quizId);
     try {
-      const quizRes = await fetch(`/api/quizzes/${quizId}?includeAttempts=true`, {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const quizRes = await fetch(
+        `/api/quizzes/${quizId}?includeAttempts=true`,
+        {
+          credentials: "include",
+          cache: "no-store",
+        }
+      );
       if (quizRes.ok) {
         const quizData = await quizRes.json();
         const inProgress = Array.isArray(quizData?.attempts)
@@ -143,11 +143,10 @@ export default function TopicPage() {
           : null;
         if (inProgress) {
           router.push(`/quiz/${topicSlug}/${quizId}`);
+          setLoadingQuizId(null);
           return;
         }
       }
-
-      // Otherwise, start a new attempt
       const res = await fetch("/api/attempts/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -156,20 +155,18 @@ export default function TopicPage() {
           quizSlug: quizId,
         }),
       });
-
       if (res.ok) {
-        // Successfully started attempt, navigate to quiz
         router.push(`/quiz/${topicSlug}/${quizId}`);
       } else {
         const error = await res.json();
         console.error("Failed to start attempt:", error);
-        // Still navigate to quiz page - it will handle the error
         router.push(`/quiz/${topicSlug}/${quizId}`);
       }
     } catch (error) {
       console.error("Failed to start attempt:", error);
-      // Still navigate to quiz page - it will handle the error
       router.push(`/quiz/${topicSlug}/${quizId}`);
+    } finally {
+      setLoadingQuizId(null);
     }
   };
 
@@ -189,7 +186,6 @@ export default function TopicPage() {
     }
   };
 
-
   return (
     <>
       <Layout
@@ -197,7 +193,7 @@ export default function TopicPage() {
         selectedQuiz={null}
         onTopicSelect={handleTopicSelect}
       >
-        {isLoading||quizzes.length === 0 ? (
+        {isLoading || quizzes.length === 0 ? (
           <div className='flex flex-col text-center items-center justify-center py-16'>
             <div className='relative mb-8'>
               <div className='w-16 h-16 border-4 border-blue-200 rounded-full animate-spin'></div>
@@ -213,9 +209,7 @@ export default function TopicPage() {
                   Did you know?
                 </span>
               </div>
-              <p className='text-gray-700 leading-relaxed'>
-                {loadingTip}
-              </p>
+              <p className='text-gray-700 leading-relaxed'>{loadingTip}</p>
             </div>
           </div>
         ) : (
@@ -263,7 +257,8 @@ export default function TopicPage() {
                     Available Quizzes
                   </h2>
                   <p className='text-gray-600 mt-1'>
-                    {quizzes.length} quiz{quizzes.length !== 1 ? "zes" : ""} available
+                    {quizzes.length} quiz{quizzes.length !== 1 ? "zes" : ""}{" "}
+                    available
                   </p>
                 </div>
               </div>
@@ -308,21 +303,23 @@ export default function TopicPage() {
                       onButtonClick = handleStartQuiz;
                     }
 
-              
-
                     return (
                       <QuizCard
                         key={quiz.id}
                         quiz={quiz}
-                        selectedQuiz={null}
-                        onStartQuiz={onButtonClick}
+                        selectedQuiz={loadingQuizId ? quiz.id : null}
+                        onStartQuiz={async (quizId) => {
+                          if (!loadingQuizId) await onButtonClick(quizId);
+                        }}
                         onViewAuthor={setSelectedAuthor}
                         onViewResult={
                           attemptStatus?.status === "completed"
                             ? handleViewResult
                             : undefined
                         }
-                        buttonState={buttonState}
+                        buttonState={
+                          loadingQuizId === quiz.id ? "loading" : buttonState
+                        }
                         attemptInfo={attemptStatus}
                       />
                     );
@@ -342,8 +339,8 @@ export default function TopicPage() {
                     </h3>
                     <p className='text-gray-600 mb-6 max-w-md mx-auto leading-relaxed'>
                       We&apos;re working hard to bring you comprehensive quiz
-                      content. New quizzes will be added regularly to enhance your
-                      learning experience.
+                      content. New quizzes will be added regularly to enhance
+                      your learning experience.
                     </p>
                     <div className='flex items-center justify-center gap-2 text-sm text-gray-500'>
                       <div className='w-2 h-2 bg-blue-500 rounded-full animate-pulse'></div>
