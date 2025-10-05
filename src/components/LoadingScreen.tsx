@@ -38,7 +38,7 @@ export const investmentTips = [
   "Keep your investment costs low - fees can significantly impact returns.",
   "Stay informed but don't let daily market noise affect your long-term strategy.",
   "Have an emergency fund before you start investing.",
-  "Understand the difference between investing and speculating.",
+  "Understanding the difference between investing and speculating is key to successful investing.",
   "Review and rebalance your portfolio periodically, but not too frequently.",
   "Consider your risk tolerance and investment timeline before making decisions.",
 ];
