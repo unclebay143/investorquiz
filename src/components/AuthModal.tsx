@@ -65,7 +65,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-opacity duration-300'>
       <div className='w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-100 relative'>
-        <div className='flex flex-col items-center justify-center pt-6 pb-2 px-6 border-b'>
+        <div className='hidden flex-col items-center justify-center pt-6 pb-2 px-6 border-b'>
           {/* <div className='flex items-center gap-2 mb-2'>
             <Image
               src='/favicon.ico'
@@ -101,7 +101,16 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             </button>
           </div>
         </div>
-        <form onSubmit={onSubmit} className='p-6 space-y-4'>
+        <div className='px-6 pt-6 text-center'>
+          <h2 className='text-2xl font-bold text-gray-900 mb-2 mt-6'>
+            Unlock Your Experience
+          </h2>
+          <p className='text-gray-600 text-sm'>
+            Get full access to quizzes, track your progress over time, and
+            compete against others on the leaderboard.
+          </p>
+        </div>
+        <form onSubmit={onSubmit} className='px-6 py-4 space-y-4'>
           <button
             type='button'
             className='w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold shadow-sm transition disabled:opacity-50'
@@ -116,7 +125,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             />
             Continue with Google
           </button>
-          <div className='relative my-6'>
+          <div className='relative my-6 hidden'>
             <div className='absolute inset-0 flex items-center'>
               <div className='w-full border-b border-gray-200'></div>
             </div>
@@ -129,7 +138,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
           {tab === "signup" && (
             <input
-              className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
+              className='w-full hidden border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
               placeholder='Username'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -137,7 +146,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             />
           )}
           <input
-            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
+            className='w-full hidden border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
             placeholder='Email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -145,7 +154,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             required
           />
           <input
-            className='w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
+            className='w-full border hidden border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black transition'
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -156,7 +165,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           {error && <p className='text-red-600 text-sm text-center'>{error}</p>}
           <button
             type='submit'
-            className='w-full bg-black hover:bg-black text-white rounded-lg px-3 py-2 font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2'
+            className='w-full bg-black hover:bg-black text-white rounded-lg px-3 py-2 font-semibold transition disabled:opacity-50 hidden items-center justify-center gap-2'
             disabled={loading}
           >
             {loading && (

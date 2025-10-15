@@ -8,7 +8,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const session = (await getServerSession(authOptions)) as { userId?: string } | null;
+    const session = (await getServerSession(authOptions)) as {
+      userId?: string;
+    } | null;
+    console.log(session);
     if (!session?.userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -31,9 +34,20 @@ export async function POST(req: Request) {
 
     const quiz = (await Quiz.findOne({ slug: quizSlug })
       .select("_id retakeSettings")
-      .lean<{ _id: unknown; retakeSettings?: { enabled?: boolean; maxAttempts?: number; coolDownDays?: number } } | null>()) as {
+      .lean<{
+        _id: unknown;
+        retakeSettings?: {
+          enabled?: boolean;
+          maxAttempts?: number;
+          coolDownDays?: number;
+        };
+      } | null>()) as {
       _id: unknown;
-      retakeSettings?: { enabled?: boolean; maxAttempts?: number; coolDownDays?: number };
+      retakeSettings?: {
+        enabled?: boolean;
+        maxAttempts?: number;
+        coolDownDays?: number;
+      };
     } | null;
     if (!quiz)
       return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
@@ -60,7 +74,10 @@ export async function POST(req: Request) {
     })
       .select("attemptNumber completedAt")
       .sort({ attemptNumber: -1 })
-      .lean<{ attemptNumber: number; completedAt: Date }[]>()) as { attemptNumber: number; completedAt: Date }[];
+      .lean<{ attemptNumber: number; completedAt: Date }[]>()) as {
+      attemptNumber: number;
+      completedAt: Date;
+    }[];
 
     if (completedAttempts.length > 0) {
       const latestAttempt = completedAttempts[0];
@@ -133,7 +150,9 @@ export async function POST(req: Request) {
   } catch (e: unknown) {
     const message =
       typeof e === "object" && e && "message" in e
-        ? String((e as { message?: unknown }).message || "Failed to start attempt")
+        ? String(
+            (e as { message?: unknown }).message || "Failed to start attempt"
+          )
         : "Failed to start attempt";
     return NextResponse.json({ error: message }, { status: 500 });
   }
