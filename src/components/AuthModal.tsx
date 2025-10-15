@@ -101,7 +101,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             </button>
           </div>
         </div>
-        <div className='px-6 pt-6 text-center'>
+        <div className='px-6 text-center'>
           <h2 className='text-2xl font-bold text-gray-900 mb-2 mt-6'>
             Unlock Your Experience
           </h2>
@@ -200,7 +200,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           </button>
         </form>
         <button
-          className='absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition text-lg'
+          className='absolute top-1 right-4 text-gray-400 hover:text-gray-700 transition text-lg'
           onClick={close}
           aria-label='Close modal'
         >
