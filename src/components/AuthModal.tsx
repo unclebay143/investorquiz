@@ -35,7 +35,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           email,
           password,
         });
-        // window.location.reload();
+        window.location.reload();
         if (res?.error) throw new Error("Invalid email or password");
         close();
       } else {
