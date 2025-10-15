@@ -19,7 +19,8 @@ export default function Header({
   desktopOpen = true,
   onToggleMenu,
 }: HeaderProps) {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
+  console.log(status, session);
   const [authOpen, setAuthOpen] = useState(false);
 
   return (
